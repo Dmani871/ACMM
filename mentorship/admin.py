@@ -1,13 +1,16 @@
 from django.contrib import admin
+from django.core import serializers
+from django.http import HttpResponse
+from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from .models import User,MentorProfile,MenteeProfile
-
 # Define an inline admin descriptor for MentorProfile model
 class MentorProfileInline(admin.StackedInline):
     model = MentorProfile
     can_delete = True
-    verbose_name_plural = 'user'
+    verbose_name_plural = 'Mentor Profile'
+    fk_name = 'user'
 
 # Define a new User admin
 class UserAdmin(BaseUserAdmin):
@@ -31,7 +34,20 @@ class UserAdmin(BaseUserAdmin):
     ordering = ('email',)
     filter_horizontal = ()
 
+
+class MenteeAdmin(admin.ModelAdmin):
+    list_display = ['first_name','last_name','entrance_exam_experience','interview_experience','year_applied','subjects']
+    actions = ['make_published']
+    def make_published(self, request, queryset):
+        print('je')
+        print()
+        for x in queryset:
+            print(x);
+    make_published.short_description = "Mark selected stories as published"
+
+
 # Re-register UserAdmin
 admin.site.register(User, UserAdmin)
-admin.site.register(MenteeProfile)
+admin.site.register(MenteeProfile,MenteeAdmin)
+admin.site.register(MentorProfile)
 admin.site.unregister(Group)
