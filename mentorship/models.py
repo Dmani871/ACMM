@@ -10,12 +10,6 @@ from django_countries.fields import CountryField
 from multiselectfield import MultiSelectField
 
 
-def min_value_year():
-    return MaxValueValidator(current_year())(value)
-
-
-def max_value_current_year(value):
-    return MaxValueValidator(current_year())(value)
 
 class UserManager(BaseUserManager):
     def create_user(
@@ -128,7 +122,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 class MentorProfile(models.Model):
-    user=models.OneToOneField(User, on_delete=models.CASCADE)
+    user=models.OneToOneField(User, on_delete=models.CASCADE,related_name="user_profile",)
     OCCUPATION_CHOICES = [
     ('Doctor', 'Doctor'),
     ('Dentist', 'Dentist'),
@@ -151,8 +145,8 @@ class MentorProfile(models.Model):
     ('Additional guidance for mentors (one off)', 'Additional guidance for mentors (one off)')]
 
     current_occupation= models.CharField(max_length=100, default='Doctor', choices=OCCUPATION_CHOICES)
-    areas_of_intrest= MultiSelectField(choices=INTREST_CHOICES)
-    position_specialty= models.CharField(max_length=100, default='N/A')
+    intrests= MultiSelectField(choices=INTREST_CHOICES)
+    specialty= models.CharField(max_length=100, default='N/A')
     location  = CountryField(blank_label='(select country)',default='N/A')
     year_of_study = models.PositiveIntegerField(default=1, validators=[MinValueValidator(1), MaxValueValidator(5)])
     hear_about_us= models.CharField(max_length=100, default='Word of mouth', choices=INTREST_CHOICES)
@@ -166,6 +160,8 @@ class MentorProfile(models.Model):
             'Designates whether this user should be treated as a mentor.'
         ),
     )
+    def __str__(self):  # __unicode__ for Python 2
+        return self.user.email
 
 class MenteeProfile(models.Model):
     INTERVIEW_EXPERIENCE_CHOICES = [
@@ -183,6 +179,11 @@ class MenteeProfile(models.Model):
     ('BMAT', 'BMAT'),
     ('UKCAT', 'UKCAT'),
     ('GAMSAT', 'GAMSAT')]
+    COUSRSE_CHOICES = [
+    ('Medicine', 'Medicine'),
+    ('Graduate Medicine', 'Graduate Medicine'),
+    ('Dentistry', 'Dentistry')]
+
     email = models.EmailField(
         verbose_name=_("Mentee's email address"), max_length=255, unique=True,primary_key=True
     )
@@ -190,7 +191,15 @@ class MenteeProfile(models.Model):
     last_name = models.CharField("Mentee's last name", max_length=30)
     entrance_exam_experience=MultiSelectField(choices=ENTRANCE_EXAM_CHOICES)
     interview_experience=MultiSelectField(choices=INTERVIEW_EXPERIENCE_CHOICES)
-    year_applied=MultiSelectField(choices=YEAR_APPlIED_CHOICES)
-    subjects = models.CharField(max_length=1024)
-
+    year_applied=models.CharField(max_length=100, default='A level', choices=YEAR_APPlIED_CHOICES)
+    subjects = models.CharField(max_length=1024,blank=True)
+    universities=models.CharField(max_length=1024,blank=True)
+    course=models.CharField(max_length=100, default='Medicine', choices=YEAR_APPlIED_CHOICES)
+    applied_this_year = models.BooleanField(
+        _('applied this year status'),
+        default=True)
+    assigned_mentor=models.OneToOneField(MentorProfile, on_delete=models.SET_NULL,null=True,blank=True)
+    date_joined = models.DateTimeField(
+        _('date joined'), default=timezone.now
+    )
     
