@@ -4,6 +4,7 @@ from django.contrib.auth.models import (
 from django.db import models
 from django.utils import timezone
 import datetime
+from django.contrib.postgres.fields import ArrayField
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.utils.translation import gettext_lazy as _
 from django_countries.fields import CountryField
@@ -144,8 +145,12 @@ class MentorProfile(models.Model):
     ('Provision of work experience/volunteering opportunities', 'Provision of work experience/volunteering opportunities'),
     ('Additional guidance for mentors (one off)', 'Additional guidance for mentors (one off)')]
 
-    current_occupation= models.CharField(max_length=100, default='Doctor', choices=OCCUPATION_CHOICES)
-    intrests= MultiSelectField(choices=INTREST_CHOICES)
+    occupation= models.CharField(max_length=100, default='Doctor', choices=OCCUPATION_CHOICES)
+    intrests= ArrayField(
+        models.CharField(max_length=100, blank=True),
+        blank = True,
+        null = True,
+        )
     specialty= models.CharField(max_length=100, default='N/A')
     location  = CountryField(blank_label='(select country)',default='N/A')
     year_of_study = models.PositiveIntegerField(default=1, validators=[MinValueValidator(1), MaxValueValidator(5)])
@@ -189,11 +194,23 @@ class MenteeProfile(models.Model):
     )
     first_name = models.CharField("Mentee's first name", max_length=30)
     last_name = models.CharField("Mentee's last name", max_length=30)
-    entrance_exam_experience=MultiSelectField(choices=ENTRANCE_EXAM_CHOICES)
-    interview_experience=MultiSelectField(choices=INTERVIEW_EXPERIENCE_CHOICES)
+    entrance_exam_experience=ArrayField(
+        models.CharField(max_length=100, blank=True),
+        blank = True,
+        null = True,
+        )
+    interview_experience=ArrayField(
+        models.CharField(max_length=100, blank=True),
+        blank = True,
+        null = True,
+        )
     year_applied=models.CharField(max_length=100, default='A level', choices=YEAR_APPlIED_CHOICES)
-    subjects = models.CharField(max_length=1024,blank=True)
-    universities=models.CharField(max_length=1024,blank=True)
+    subjects = ArrayField(MultiSelectField(choices=INTERVIEW_EXPERIENCE_CHOICES))
+    universities=ArrayField(
+        models.CharField(max_length=100, blank=True),
+        blank = True,
+        null = True,
+        )
     course=models.CharField(max_length=100, default='Medicine', choices=YEAR_APPlIED_CHOICES)
     applied_this_year = models.BooleanField(
         _('applied this year status'),
