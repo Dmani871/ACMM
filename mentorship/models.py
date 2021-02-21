@@ -141,35 +141,6 @@ class MentorProfile(models.Model):
             'Designates whether this user should be treated as a mentor.'
         ),
     )
-    def __str__(self):  # __unicode__ for Python 2
-        return self.user.email
-
-class MenteeProfile(models.Model):
-    INTERVIEW_EXPERIENCE_CHOICES = [
-    ('Panel', 'Panel'),
-    ('MMI', 'MMI'),
-    ('Group', 'Group')]
-
-    YEAR_APPlIED_CHOICES = [
-    ('A level', 'A level'),
-    ('International Baccalaureate', 'International Baccalaureate'),
-    ('Graduate', 'Graduate')]
-
-
-    ENTRANCE_EXAM_CHOICES = [
-    ('BMAT', 'BMAT'),
-    ('UKCAT', 'UKCAT'),
-    ('GAMSAT', 'GAMSAT')]
-    COUSRSE_CHOICES = [
-    ('Medicine', 'Medicine'),
-    ('Graduate Medicine', 'Graduate Medicine'),
-    ('Dentistry', 'Dentistry')]
-
-    email = models.EmailField(
-        verbose_name=_("Mentee's email address"), max_length=255, unique=True,primary_key=True
-    )
-    first_name = models.CharField("Mentee's first name", max_length=30)
-    last_name = models.CharField("Mentee's last name", max_length=30)
     entrance_exam_experience=ArrayField(
         models.CharField(max_length=100, blank=True),
         blank = True,
@@ -180,14 +151,25 @@ class MenteeProfile(models.Model):
         blank = True,
         null = True,
         )
-    year_applied=models.CharField(max_length=100, default='A level', choices=YEAR_APPlIED_CHOICES)
-    subjects = ArrayField(MultiSelectField(choices=INTERVIEW_EXPERIENCE_CHOICES))
-    universities=ArrayField(
+    year_applied=models.CharField(max_length=255,blank = True,null = True)
+    def __str__(self):  # __unicode__ for Python 2
+        return self.user.email
+
+class MenteeProfile(models.Model):
+    email = models.EmailField(
+        verbose_name=_("Mentee's email address"), max_length=255, unique=True,primary_key=True
+    )
+    first_name = models.CharField("First name", max_length=30)
+    last_name = models.CharField("Last name", max_length=30)
+    entrance_exam=ArrayField(
         models.CharField(max_length=100, blank=True),
         blank = True,
         null = True,
         )
-    course=models.CharField(max_length=100, default='Medicine', choices=YEAR_APPlIED_CHOICES)
+    course = models.CharField(max_length=255, default='Medicine')
+    help_needed=models.CharField(max_length=255, blank = True,null = True)
+    preparation=models.TextField(null=True, blank=True)
+    confidence = models.PositiveIntegerField(default =1 )
     applied_this_year = models.BooleanField(
         _('applied this year status'),
         default=True)

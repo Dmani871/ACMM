@@ -5,7 +5,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from .models import User,MentorProfile,MenteeProfile
-
+from .forms import UserCreationForm
 # Define an inline admin descriptor for MentorProfile model
 
 
@@ -46,7 +46,7 @@ class UserAdmin(BaseUserAdmin):
 
 
 class MenteeAdmin(admin.ModelAdmin):
-    list_display = ['first_name','last_name','entrance_exam_experience','interview_experience','year_applied','subjects']
+    list_display = ['first_name','last_name']
     actions = ['make_published']
     def make_published(self, request, queryset):
         print('je')

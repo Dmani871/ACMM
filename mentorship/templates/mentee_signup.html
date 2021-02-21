@@ -1,5 +1,5 @@
 {% extends 'base.html' %} {% load crispy_forms_tags %} {% block content %}
-<h1>Sign Up to be a Mentor</h1>
+<h1>Pre-Interview Mentee Application</h1>
 <form method="post">
   {% csrf_token %}
   <div class="form-row">
@@ -12,32 +12,23 @@
   </div>
   {{ form.email|as_crispy_field }}
   <div class="form-row">
-    <div class="form-group col-md-6 mb-0">
-      {{ form.current_occupation|as_crispy_field }}
+    <div class="form-group col-md-5 mb-0">
+      {{ form.applied_this_year|as_crispy_field}}
     </div>
-    <div class="form-group col-md-6 mb-0">
-      {{ form.year_of_study|as_crispy_field }}
+    <div class="form-group col-md-4 mb-0">{{ form.course|as_crispy_field}}</div>
+    <div class="form-group col-md-3 mb-0">
+      {{ form.entrance_exam|as_crispy_field}}
     </div>
   </div>
-
   <div class="form-row">
     <div class="form-group col-md-6 mb-0">
-      {{ form.specialty|as_crispy_field }}
+      {{ form.confidence|as_crispy_field}} {{ form.help_needed|as_crispy_field}}
     </div>
     <div class="form-group col-md-6 mb-0">
-      {{ form.country|as_crispy_field }}
+      {{ form.preparation|as_crispy_field}}
     </div>
   </div>
 
-  <div class="form-row">
-    <div class="form-group col-md-6 mb-0">
-      {{ form.interests|as_crispy_field }}
-    </div>
-    <div class="form-group col-md-6 mb-0">
-      {{form.hear_about_us|as_crispy_field }}
-    </div>
-  </div>
-
-  <button type="submit" class="btn btn-primary">Register</button>
+  <button type="submit" class="btn btn-primary">Apply</button>
 </form>
 {% endblock %}
