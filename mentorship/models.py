@@ -124,7 +124,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 class MentorProfile(models.Model):
     user=models.OneToOneField(User, on_delete=models.CASCADE,related_name="profile",)
-    occupation= models.CharField(max_length=255, default='Doctor')
+    occupation= models.CharField(max_length=255,blank = True,null = True)
     interests= ArrayField(
         models.CharField(max_length=255, blank=True),
         blank = True,
@@ -173,7 +173,7 @@ class MenteeProfile(models.Model):
     applied_this_year = models.BooleanField(
         _('applied this year status'),
         default=True)
-    assigned_mentor=models.OneToOneField(MentorProfile, on_delete=models.SET_NULL,null=True,blank=True)
+    assigned_mentor=models.OneToOneField(MentorProfile, on_delete=models.SET_NULL,null=True,blank=True,related_name="mentee")
     date_joined = models.DateTimeField(
         _('date joined'), default=timezone.now
     )

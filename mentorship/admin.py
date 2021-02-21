@@ -47,13 +47,18 @@ class UserAdmin(BaseUserAdmin):
 
 class MenteeAdmin(admin.ModelAdmin):
     list_display = ['first_name','last_name']
-    actions = ['make_published']
-    def make_published(self, request, queryset):
-        print('je')
-        print()
-        for x in queryset:
-            print(x);
-    make_published.short_description = "Mark selected stories as published"
+    actions = ['assign_mentor']
+    def assign_mentor(self, request, queryset):
+        available_mentors = MentorProfile.objects.filter(mentee__isnull=True)
+        available_mentors=list(available_mentors)
+        for mentee in queryset:
+            if available_mentors !=[]:
+                available_mentor=available_mentors.pop()
+                
+                mentee.assigned_mentor=available_mentor
+                mentee.save()
+        #for x in queryset:print(x);
+    assign_mentor.short_description = "Assign a mentor to each mentee"
 
 
 # Re-register UserAdmin
