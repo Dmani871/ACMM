@@ -5,7 +5,10 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from .models import User,MentorProfile,MenteeProfile
+
 # Define an inline admin descriptor for MentorProfile model
+
+
 class MentorProfileInline(admin.StackedInline):
     model = MentorProfile
     can_delete = True
@@ -14,11 +17,14 @@ class MentorProfileInline(admin.StackedInline):
 
 # Define a new User admin
 class UserAdmin(BaseUserAdmin):
+    #form = UserChangeForm
+    #add_form = UserCreationForm
     inlines = (MentorProfileInline,)
-    list_display = ('email', 'first_name','last_name')
-    list_filter = ('is_admin',)
+    list_display = ('email', 'first_name','last_name','get_is_mentor')
+    list_select_related = ('profile', )
+    list_filter = ('is_admin','is_staff',)
     fieldsets = (
-        (None, {'fields': ('email', 'first_name','last_name',)}),
+        (None, {'fields': ('email', 'first_name','last_name','password',)}),
         ('Personal info', {'fields': ('is_staff',)}),
         ('Permissions', {'fields': ('is_admin',)}),
     )
@@ -27,9 +33,13 @@ class UserAdmin(BaseUserAdmin):
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('email', 'first_name','last_name'),
+            'fields': ('email', 'first_name','last_name','password1', 'password2'),
         }),
     )
+    def get_is_mentor(self, instance):
+        return instance.profile.is_mentor
+    get_is_mentor.short_description = 'Mentor'
+
     search_fields = ('email',)
     ordering = ('email',)
     filter_horizontal = ()

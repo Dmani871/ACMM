@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_countries',
     'mentorship',
+    'crispy_forms',
     'multiselectfield',
 ]
 
@@ -57,7 +58,8 @@ ROOT_URLCONF = 'ACMM.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [ os.path.join(BASE_DIR, 'mentorship/templates')],
+       
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -126,3 +128,4 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 AUTH_USER_MODEL = 'mentorship.User'
+CRISPY_TEMPLATE_PACK = 'bootstrap4'

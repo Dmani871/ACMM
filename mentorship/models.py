@@ -9,7 +9,8 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.utils.translation import gettext_lazy as _
 from django_countries.fields import CountryField
 from multiselectfield import MultiSelectField
-
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
 class UserManager(BaseUserManager):
@@ -64,8 +65,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     )
     # password field supplied by AbstractBaseUser
     # last_login field supplied by AbstractBaseUser
-    first_name = models.CharField(_('first name'), max_length=30, blank=True)
-    last_name = models.CharField(_('last name'), max_length=150, blank=True)
+    first_name = models.CharField(_('first name'), max_length=30)
+    last_name = models.CharField(_('last name'), max_length=150)
     
     is_admin = models.BooleanField(default=False)
 
@@ -99,7 +100,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     # is_superuser field provided by PermissionsMixin
     # groups field provided by PermissionsMixin
     # user_permissions field provided by PermissionsMixin
-
     def get_full_name(self):
         """
         Return the first_name plus the last_name, with a space in between.
@@ -123,41 +123,17 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 class MentorProfile(models.Model):
-    user=models.OneToOneField(User, on_delete=models.CASCADE,related_name="user_profile",)
-    OCCUPATION_CHOICES = [
-    ('Doctor', 'Doctor'),
-    ('Dentist', 'Dentist'),
-    ('Medical Student', 'Medical Student'),
-    ('Graduate Medical Student', 'Graduate Medical Student'),
-    ('Medical Student Studying Abroad', 'Medical Student Studying Abroad'),
-    ('Dental student', 'Dental student')]
-    INTREST_CHOICES = [
-    ('Outreach Programmes', 'Outreach Programmes'),
-    ('Speaking at events', 'Speaking at events'),
-    ('Support for events', 'Support for events'),
-    ('Provision of work experience/volunteering opportunities', 'Provision of work experience/volunteering opportunities'),
-    ('Additional guidance for mentors (one off)', 'Additional guidance for mentors (one off)')]
-
-    HEAR_ABOUT_US_CHOICES = [
-    ('Word of mouth', 'Outreach Programmes'),
-    ('Contact from ACMM team', 'Speaking at events'),
-    ('Social Media', 'Support for events'),
-    ('Provision of work experience/volunteering opportunities', 'Provision of work experience/volunteering opportunities'),
-    ('Additional guidance for mentors (one off)', 'Additional guidance for mentors (one off)')]
-
-    occupation= models.CharField(max_length=100, default='Doctor', choices=OCCUPATION_CHOICES)
-    intrests= ArrayField(
-        models.CharField(max_length=100, blank=True),
+    user=models.OneToOneField(User, on_delete=models.CASCADE,related_name="profile",)
+    occupation= models.CharField(max_length=255, default='Doctor')
+    interests= ArrayField(
+        models.CharField(max_length=255, blank=True),
         blank = True,
         null = True,
         )
-    specialty= models.CharField(max_length=100, default='N/A')
-    location  = CountryField(blank_label='(select country)',default='N/A')
-    year_of_study = models.PositiveIntegerField(default=1, validators=[MinValueValidator(1), MaxValueValidator(5)])
-    hear_about_us= models.CharField(max_length=100, default='Word of mouth', choices=INTREST_CHOICES)
-    hear_about_us_other= models.CharField(max_length=100, default='N/A')
-    
-    
+    specialty= models.CharField(max_length=255, blank = True,null = True)
+    location  = models.CharField(max_length=255, blank = True,null = True)
+    year_of_study = models.PositiveIntegerField(blank = True,null = True)
+    hear_about_us= models.CharField(max_length=255,blank = True,null = True)
     is_mentor = models.BooleanField(
         _('mentor status'),
         default=True,
@@ -220,3 +196,9 @@ class MenteeProfile(models.Model):
         _('date joined'), default=timezone.now
     )
     
+
+@receiver(post_save, sender=User)
+def update_user_profile(sender, instance, created, **kwargs):
+    if created:
+        MentorProfile.objects.create(user=instance)
+        instance.profile.save()
