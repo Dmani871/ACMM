@@ -51,7 +51,7 @@ COURSE_CHOICES =[
 
 
 class MentorCreationForm(forms.ModelForm):
-    current_occupation=forms.ChoiceField(choices = OCCUPATION_CHOICES,required=True) 
+    occupation=forms.ChoiceField(choices = OCCUPATION_CHOICES,required=True) 
     interests=forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple,
                                           choices=INTREST_CHOICES,label="Areas of Interests:")
     specialty = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple,
@@ -67,13 +67,16 @@ class MentorCreationForm(forms.ModelForm):
                                           choices=YEAR_APPLIED_CHOICES,label="Year Applied:")
     class Meta:
         model = MentorProfile
-        fields = ('first_name','last_name','email',)
+        fields = ('first_name','last_name','email',
+        'occupation','interests','specialty','hear_about_us',
+        'year_of_study','entrance_exam_experience',
+        'interview_experience','year_applied',)
 
     def save(self, commit=True):
         
         # Save the provided password in hashed format
         profile = super().save(commit=False)
-        print(profile)
+     
         if commit:
             profile.save()
         return profile
