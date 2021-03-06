@@ -3,8 +3,7 @@ from django.core.exceptions import ValidationError
 from django import forms
 from django.core.validators import MaxValueValidator, MinValueValidator
 from .models import User,MenteeProfile
-from django_countries import countries
-COUNTRY_CHOICES = tuple(countries)
+
 INTERVIEW_EXPERIENCE_CHOICES = [
     ('Panel', 'Panel'),
     ('MMI', 'MMI'),
@@ -43,11 +42,10 @@ COURSE_CHOICES =[
 ]
 class UserCreationForm(forms.ModelForm):
     current_occupation=forms.ChoiceField(choices = OCCUPATION_CHOICES,required=True) 
-    country = forms.ChoiceField(choices=COUNTRY_CHOICES, required=True ,label="Location:")
     interests=forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple,
                                           choices=INTREST_CHOICES,label="Areas of Interests:")
-    specialty=forms.CharField(max_length=30, required=True,label="Position/Speciality:")                             
-    hear_about_us= forms.ChoiceField(widget=forms.RadioSelect, choices=HEAR_ABOUT_US_CHOICES ,label="Hear about us?")                       
+    specialty = forms.CharField(max_length=30, required=True,label="Position/Speciality:")                             
+    hear_about_us = forms.ChoiceField(widget=forms.RadioSelect, choices=HEAR_ABOUT_US_CHOICES ,label="Hear about us?")                       
     year_of_study = forms.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)],required=False, help_text='For Students')
     entrance_exam_experience = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple,
                                           choices=ENTRANCE_EXAM_CHOICES,label="Entrance Exam Experience:")

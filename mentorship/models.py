@@ -131,7 +131,7 @@ class MentorProfile(models.Model):
         null = True,
         )
     specialty= models.CharField(max_length=255, blank = True,null = True)
-    location  = models.CharField(max_length=255, blank = True,null = True)
+    
     year_of_study = models.PositiveIntegerField(blank = True,null = True)
     hear_about_us= models.CharField(max_length=255,blank = True,null = True)
     is_mentor = models.BooleanField(
