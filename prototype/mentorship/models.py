@@ -10,6 +10,15 @@ from django.utils.translation import gettext_lazy as _
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
+class Qualification(models.Model):
+    name = models.CharField(max_length=50)
+    education_level= models.CharField(max_length=50)
+    grade=models.CharField(max_length=10)
+    predicted=models.BooleanField(default=False)
+    
+
+
+
 
 class UserManager(BaseUserManager):
     def create_user(
