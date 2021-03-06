@@ -19,6 +19,7 @@ def mentor_signup_view(request):
         user.profile.interests=form.cleaned_data.get('interests')
         user.profile.year_of_study=form.cleaned_data.get('year_of_study')
         user.profile.specialty= form.cleaned_data.get('specialty')
+        user.profile.application_strength=form.cleaned_data.get('application_strength')
         user.profile.occupation= form.cleaned_data.get('current_occupation')
         user.profile.hear_about_us=form.cleaned_data.get('hear_about_us')
         user.profile.entrance_exam_experience=form.cleaned_data.get('entrance_exam_experience')

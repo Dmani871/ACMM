@@ -123,13 +123,17 @@ class User(AbstractBaseUser, PermissionsMixin):
 class MentorProfile(models.Model):
     user=models.OneToOneField(User, on_delete=models.CASCADE,related_name="profile",)
     occupation= models.CharField(max_length=255,blank = True,null = True)
-    interests= ArrayField(
-        models.CharField(max_length=255, blank=True),
+    interests = ArrayField(
+        models.CharField(max_length=255),
         blank = True,
         null = True,
         )
-    specialty= models.CharField(max_length=255, blank = True,null = True)
-    
+    specialty= ArrayField(
+        models.CharField(max_length=255),
+        blank = True,
+        null = True,
+        )
+    application_strength= models.CharField(max_length=255,blank = True,null = True)
     year_of_study = models.PositiveIntegerField(blank = True,null = True)
     hear_about_us= models.CharField(max_length=255,blank = True,null = True)
     is_mentor = models.BooleanField(
