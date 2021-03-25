@@ -1,8 +1,9 @@
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
 
+
+
 class MentorProfile(models.Model):
-    # personal details
     email = models.EmailField(max_length=255, unique=True)
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=150)
@@ -38,3 +39,11 @@ class MentorProfile(models.Model):
     
     def __str__(self): 
         return self.email
+
+
+class Qualification(models.Model):
+    name = models.CharField(max_length=50)
+    education_level= models.CharField(max_length=50)
+    grade=models.CharField(max_length=10)
+    predicted=models.BooleanField(default=False)
+    profile=models.ForeignKey(MentorProfile, on_delete=models.CASCADE)

@@ -2,8 +2,8 @@ from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.core.exceptions import ValidationError
 from django import forms
 from django.core.validators import MaxValueValidator, MinValueValidator
-from .models import MentorProfile
-
+from .models import MentorProfile,Qualification
+from django.forms import modelformset_factory
 
 # options
 SPECIALTY_CHOICES= [
@@ -50,13 +50,15 @@ COURSE_CHOICES =[
 ]
 
 
-class MentorCreationForm(forms.ModelForm):
+
+
+class MentorForm(forms.ModelForm):
     occupation=forms.ChoiceField(choices = OCCUPATION_CHOICES,required=True) 
     interests=forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple,
                                           choices=INTREST_CHOICES,label="Areas of Interests:")
     specialty = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple,
                                           choices=SPECIALTY_CHOICES,label="Position/Specialty:")   
-    application_strength= forms.ChoiceField(choices=APPLICATION_STAGES,label="What was your strength in the application?")                            
+    application_strength= forms.ChoiceField(widget=forms.RadioSelect,choices=APPLICATION_STAGES,label="What was your strength in the application?")                            
     hear_about_us = forms.ChoiceField(widget=forms.RadioSelect, choices=HEAR_ABOUT_US_CHOICES ,label="Hear about us?")                       
     year_of_study = forms.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)],required=False, help_text='For Students')
     entrance_exam_experience = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple,
@@ -80,3 +82,14 @@ class MentorCreationForm(forms.ModelForm):
         if commit:
             profile.save()
         return profile
+
+class QualificationForm(forms.ModelForm):
+    class Meta:
+        model = Qualification
+        fields = '__all__'
+
+
+QualificationFormSet = modelformset_factory(
+    Qualification, fields=("name","education_level","grade","predicted"), extra=1
+)
+
