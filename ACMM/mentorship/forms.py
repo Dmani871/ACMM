@@ -3,7 +3,7 @@ from django.core.exceptions import ValidationError
 from django import forms
 from django.core.validators import MaxValueValidator, MinValueValidator
 from .models import MentorProfile,Qualification
-from django.forms import modelformset_factory
+from django.forms import inlineformset_factory
 
 # options
 SPECIALTY_CHOICES= [
@@ -48,10 +48,19 @@ COURSE_CHOICES =[
     ('Dentistry', 'Dentistry'),
     ('Graduate Medicine', 'Graduate Medicine'),
 ]
-TRUE_FALSE_CHOICES = (
+TRUE_FALSE_CHOICES = [
     (True, 'Yes'),
     (False, 'No')
-)
+]
+
+EDUCATION_LEVEL_CHOICES = [
+    ("GCSE", 'GCSE'),
+    ("A Level", 'A Level'),
+    ("A/S Level", 'A/S Level'),
+    ("Undergraduate", 'Undergraduate'),
+    ("Masters", 'Masters'),
+    ("Doctorate", 'Doctorate')
+]
 
 
 
@@ -59,7 +68,7 @@ TRUE_FALSE_CHOICES = (
 class MentorForm(forms.ModelForm):
     occupation=forms.ChoiceField(choices = OCCUPATION_CHOICES,required=True) 
     interests=forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple,
-                                          choices=INTREST_CHOICES,label="Areas of Interests:")
+                                          choices=INTREST_CHOICES,label="Areas of Interests:",required=True)
     specialty = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple,
                                           choices=SPECIALTY_CHOICES,label="Position/Specialty:")   
     application_strength= forms.ChoiceField(widget=forms.RadioSelect,choices=APPLICATION_STAGES,label="What was your strength in the application?")                            
@@ -73,26 +82,15 @@ class MentorForm(forms.ModelForm):
                                           choices=YEAR_APPLIED_CHOICES,label="Year Applied:")
     class Meta:
         model = MentorProfile
-        fields = ('first_name','last_name','email',
-        'occupation','interests','specialty','hear_about_us',
-        'year_of_study','entrance_exam_experience',
-        'interview_experience','year_applied',)
-
-    def save(self, commit=True):
-        
-        # Save the provided password in hashed format
-        profile = super().save(commit=False)
-     
-        if commit:
-            profile.save()
-        return profile
+        exclude=('is_active',)
+    
+  
 
 class QualificationForm(forms.ModelForm):
-    predicted=forms.ChoiceField(choices = TRUE_FALSE_CHOICES ,required=True) 
+    predicted=forms.ChoiceField(choices = TRUE_FALSE_CHOICES ,required=True ,label="Predicted?") 
+    education_level=forms.ChoiceField(choices = EDUCATION_LEVEL_CHOICES ,required=True) 
     class Meta:
         model = Qualification
         exclude = ('profile',)
-QualificationFormSet = modelformset_factory(
-    Qualification,form=QualificationForm, extra=1
-)
+QualificationFormSet = forms.inlineformset_factory(MentorProfile, Qualification, form=QualificationForm,extra=1)
 
