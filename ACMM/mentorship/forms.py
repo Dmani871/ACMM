@@ -67,12 +67,11 @@ EDUCATION_LEVEL_CHOICES = [
 
 class MentorForm(forms.ModelForm):
     occupation=forms.ChoiceField(choices = OCCUPATION_CHOICES,required=True) 
-    interests=forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple,
-                                          choices=INTREST_CHOICES,label="Areas of Interests:",required=True)
+    
     specialty = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple,
                                           choices=SPECIALTY_CHOICES,label="Position/Specialty:")   
     application_strength= forms.ChoiceField(widget=forms.RadioSelect,choices=APPLICATION_STAGES,label="What was your strength in the application?")                            
-    hear_about_us = forms.ChoiceField(widget=forms.RadioSelect, choices=HEAR_ABOUT_US_CHOICES ,label="Hear about us?")                       
+    
     year_of_study = forms.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)],required=False, help_text='For Students')
     entrance_exam_experience = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple,
                                           choices=ENTRANCE_EXAM_CHOICES,label="Entrance Exam Experience:")

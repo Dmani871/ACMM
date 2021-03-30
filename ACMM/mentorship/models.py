@@ -1,18 +1,11 @@
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
-
-
-
 class MentorProfile(models.Model):
     email = models.EmailField(max_length=255, unique=True)
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=150)
     occupation= models.CharField(max_length=255,blank = True,null = True)
-    interests = ArrayField(
-        models.CharField(max_length=255),
-        blank = True,
-        null = True,
-        )
+    
     specialty= ArrayField(
         models.CharField(max_length=255),
         blank = True,
@@ -20,7 +13,7 @@ class MentorProfile(models.Model):
         )
     application_strength= models.CharField(max_length=255,blank = True,null = True)
     year_of_study = models.PositiveIntegerField(blank = True,null = True)
-    hear_about_us= models.CharField(max_length=255,blank = True,null = True)
+    
     is_active = models.BooleanField(
         default=True,
     )
