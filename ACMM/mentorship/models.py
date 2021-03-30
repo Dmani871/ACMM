@@ -13,7 +13,6 @@ class CommonProfileInfo(models.Model):
     
     class Meta:
         abstract = True
-
 class MentorProfile(CommonProfileInfo):
     occupation = models.CharField(max_length=255,blank = True,null = True)
     application_strength = models.CharField(max_length=255,blank = True,null = True)
@@ -22,8 +21,6 @@ class MentorProfile(CommonProfileInfo):
  
     def __str__(self): 
         return self.email
-
-
 class MenteeProfile(CommonProfileInfo):
     mentor_need=models.TextField(null=True, blank=True)
     mentor_help=models.TextField(null=True, blank=True)
@@ -35,8 +32,6 @@ class MenteeProfile(CommonProfileInfo):
 
     def __str__(self): 
         return self.email
-
-
 class CommonQualificationInfo(models.Model):
     name = models.CharField(max_length=50)
     education_level= models.CharField(max_length=50)
@@ -46,6 +41,5 @@ class MenteeQualification(CommonQualificationInfo):
     grade=models.CharField(max_length=10)
     predicted=models.BooleanField(default=False)
     profile=models.ForeignKey(MenteeProfile, on_delete=models.CASCADE)
-
 class MentorQualification(CommonQualificationInfo):
     profile=models.ForeignKey(MentorProfile, on_delete=models.CASCADE)

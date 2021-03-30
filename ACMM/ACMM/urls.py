@@ -15,9 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from mentorship.views import mentor_signup_view
+from mentorship.views import mentor_signup_view,mentee_signup_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('mentor/signup', mentor_signup_view, name='mentor'),
+    path('mentee/signup', mentee_signup_view, name='mentee'),
 ]

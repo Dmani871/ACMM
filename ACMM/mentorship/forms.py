@@ -56,6 +56,29 @@ EDUCATION_LEVEL_CHOICES = [
     ("Doctorate", 'Doctorate')
 ]
 
+GRADE_CHOICES = [
+    ("A*", 'A*'),
+    ("A", 'A'),
+    ("B", 'B'),
+    ("C", 'C'),
+    ("D", 'D'),
+    ("E", 'E'),
+    ("F", 'F'),
+    ("1st", '1st'),
+    ("2:1", '2:1'),
+    ("2:2", '2:2'),
+    ("3rd", '3rd'),
+    ("1", '1'),
+    ("2", '2'),
+    ("3", '3'),
+    ("4", '4'),
+    ("5", '5'),
+    ("6", '6'),
+    ("7", '7')
+]
+
+#list(zip(x,y))
+
 COURSE_CHOICES = [
     ("Dentistry", 'Dentistry'),
     ("Medicine", 'Medicine')
@@ -79,6 +102,7 @@ class MentorForm(forms.ModelForm):
         exclude=('is_active',)
 
 class MentorQualificationForm(forms.ModelForm):
+    education_level=forms.ChoiceField(choices = EDUCATION_LEVEL_CHOICES ,required=True) 
     class Meta:
         model = MentorQualification
         exclude = ('profile',)
@@ -87,7 +111,7 @@ MentorQualificationFormSet = forms.inlineformset_factory(MentorProfile,model = M
 
 
 class MenteeForm(forms.ModelForm):
-    course=forms.ChoiceField(choices = COURSE_CHOICES,required=True,label="What course are you applying to?") 
+    course = forms.ChoiceField(choices = COURSE_CHOICES,required=True,label="What course are you applying to?") 
     
     area_of_support = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple,
                                           choices=SPECIALTY_CHOICES,label="What do you need help with?")   
@@ -99,35 +123,37 @@ class MenteeForm(forms.ModelForm):
                                           choices=YEAR_APPLIED_CHOICES,label="What level are you currently studying at?")
     current_application=forms.ChoiceField(choices = TRUE_FALSE_CHOICES ,required=True ,label="Are you applying this year?") 
     
-    mentor_need=forms.CharField(widget=forms.Textarea(attrs={
+    mentor_need = forms.CharField(widget=forms.Textarea(attrs={
                 'rows': '5',
                 'cols': '90',
                 'maxlength': '200',
             }),required=True ,label="Why do you want a mentor and what do you hope to gain ?")
   
-    mentor_help=forms.CharField(widget=forms.Textarea(attrs={
+    mentor_help = forms.CharField(widget=forms.Textarea(attrs={
                 'rows': '5',
                 'cols': '90',
                 'maxlength': '200',
             }),required=True ,label="How will a mentor help with your application?")
     
-    mentor_relationship=forms.CharField(widget=forms.Textarea(attrs={
+    mentor_relationship = forms.CharField(widget=forms.Textarea(attrs={
                 'rows': '5',
                 'cols': '90',
                 'maxlength': '200',
             }),required=True ,label="How will you go about fostering a good relationship your mentor?")
-    
     
     class Meta:
         model = MenteeProfile
         exclude=('date_joined','assigned_mentor')
         
 class MenteeQualificationForm(forms.ModelForm):
+    education_level=forms.ChoiceField(choices = EDUCATION_LEVEL_CHOICES ,required=True) 
+    grade=forms.ChoiceField(choices = GRADE_CHOICES ,required=True) 
+    predicted=forms.ChoiceField(choices = TRUE_FALSE_CHOICES ,required=True ,label="Predicted ?") 
     class Meta:
         model = MenteeQualification
         exclude = ('profile',)
 
-MentorQualificationFormSet = forms.inlineformset_factory(MenteeProfile,model = MenteeQualification, form=MenteeQualificationForm,extra=1)
+MenteeQualificationFormSet = forms.inlineformset_factory(MenteeProfile,model = MenteeQualification, form=MenteeQualificationForm,extra=1)
 
 
 
