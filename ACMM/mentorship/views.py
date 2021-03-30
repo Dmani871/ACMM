@@ -11,8 +11,11 @@ def mentor_signup_view(request):
     if request.method == 'POST':
         formset = QualificationFormSet(request.POST, request.FILES)
         if formset.is_valid():
-            # do something with the formset.cleaned_data
-            pass
+            print('Valid')
+        elif not formset.is_valid():
+            print(formset.non_form_errors())
+            for form in formset:
+               print(form.errors)
     else:
         formset = QualificationFormSet()
     if form.is_valid():

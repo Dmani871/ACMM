@@ -48,6 +48,10 @@ COURSE_CHOICES =[
     ('Dentistry', 'Dentistry'),
     ('Graduate Medicine', 'Graduate Medicine'),
 ]
+TRUE_FALSE_CHOICES = (
+    (True, 'Yes'),
+    (False, 'No')
+)
 
 
 
@@ -84,12 +88,11 @@ class MentorForm(forms.ModelForm):
         return profile
 
 class QualificationForm(forms.ModelForm):
+    predicted=forms.ChoiceField(choices = TRUE_FALSE_CHOICES ,required=True) 
     class Meta:
         model = Qualification
-        fields = '__all__'
-
-
+        exclude = ('profile',)
 QualificationFormSet = modelformset_factory(
-    Qualification, fields=("name","education_level","grade","predicted"), extra=1
+    Qualification,form=QualificationForm, extra=1
 )
 
