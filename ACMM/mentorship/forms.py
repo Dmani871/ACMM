@@ -2,7 +2,7 @@ from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.core.exceptions import ValidationError
 from django import forms
 from django.core.validators import MaxValueValidator, MinValueValidator
-from .models import MentorProfile,Qualification
+from .models import MentorProfile,MenteeProfile,MentorQualification,MenteeQualification
 from django.forms import inlineformset_factory
 
 # options
@@ -38,11 +38,6 @@ INTREST_CHOICES = [
     ('Support for events', 'Support for events'),
     ('Provision of work experience/volunteering opportunities', 'Provision of work experience/volunteering opportunities'),
     ('Additional guidance for mentors (one off)', 'Additional guidance for mentors (one off)')]
-HEAR_ABOUT_US_CHOICES = [
-    ('Word of mouth', 'Word of mouth'),
-    ('Contact from ACMM team', 'Contact from ACMM team'),
-    ('Social Media', 'Social Media'),
-    ('Other','Other')]
 COURSE_CHOICES =[
     ('Medicine', 'Medicine'),
     ('Dentistry', 'Dentistry'),
@@ -54,7 +49,6 @@ TRUE_FALSE_CHOICES = [
 ]
 
 EDUCATION_LEVEL_CHOICES = [
-    ("GCSE", 'GCSE'),
     ("A Level", 'A Level'),
     ("A/S Level", 'A/S Level'),
     ("Undergraduate", 'Undergraduate'),
@@ -62,6 +56,10 @@ EDUCATION_LEVEL_CHOICES = [
     ("Doctorate", 'Doctorate')
 ]
 
+COURSE_CHOICES = [
+    ("Dentistry", 'Dentistry'),
+    ("Medicine", 'Medicine')
+]
 class MentorForm(forms.ModelForm):
     occupation=forms.ChoiceField(choices = OCCUPATION_CHOICES,required=True) 
     
@@ -79,12 +77,58 @@ class MentorForm(forms.ModelForm):
     class Meta:
         model = MentorProfile
         exclude=('is_active',)
-class QualificationForm(forms.ModelForm):
-    predicted=forms.ChoiceField(choices = TRUE_FALSE_CHOICES ,required=True ,label="Predicted?") 
-    education_level=forms.ChoiceField(choices = EDUCATION_LEVEL_CHOICES ,required=True) 
+
+class MentorQualificationForm(forms.ModelForm):
     class Meta:
-        model = Qualification
+        model = MentorQualification
         exclude = ('profile',)
 
-QualificationFormSet = forms.inlineformset_factory(MentorProfile, Qualification, form=QualificationForm,extra=1)
+MentorQualificationFormSet = forms.inlineformset_factory(MentorProfile,model = MentorQualification, form=MentorQualificationForm,extra=1)
+
+
+class MenteeForm(forms.ModelForm):
+    course=forms.ChoiceField(choices = COURSE_CHOICES,required=True,label="What course are you applying to?") 
+    
+    area_of_support = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple,
+                                          choices=SPECIALTY_CHOICES,label="What do you need help with?")   
+    entrance_exam_experience = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple,
+                                          choices=ENTRANCE_EXAM_CHOICES,label="What entrance exam experience have you had?")
+    interview_experience = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple,
+                                          choices=INTERVIEW_EXPERIENCE_CHOICES,label="What interview exam experience have you had?")
+    year_applied = forms.ChoiceField(widget=forms.RadioSelect,
+                                          choices=YEAR_APPLIED_CHOICES,label="What level are you currently studying at?")
+    current_application=forms.ChoiceField(choices = TRUE_FALSE_CHOICES ,required=True ,label="Are you applying this year?") 
+    
+    mentor_need=forms.CharField(widget=forms.Textarea(attrs={
+                'rows': '5',
+                'cols': '90',
+                'maxlength': '200',
+            }),required=True ,label="Why do you want a mentor and what do you hope to gain ?")
+  
+    mentor_help=forms.CharField(widget=forms.Textarea(attrs={
+                'rows': '5',
+                'cols': '90',
+                'maxlength': '200',
+            }),required=True ,label="How will a mentor help with your application?")
+    
+    mentor_relationship=forms.CharField(widget=forms.Textarea(attrs={
+                'rows': '5',
+                'cols': '90',
+                'maxlength': '200',
+            }),required=True ,label="How will you go about fostering a good relationship your mentor?")
+    
+    
+    class Meta:
+        model = MenteeProfile
+        exclude=('date_joined','assigned_mentor')
+        
+class MenteeQualificationForm(forms.ModelForm):
+    class Meta:
+        model = MenteeQualification
+        exclude = ('profile',)
+
+MentorQualificationFormSet = forms.inlineformset_factory(MenteeProfile,model = MenteeQualification, form=MenteeQualificationForm,extra=1)
+
+
+
 

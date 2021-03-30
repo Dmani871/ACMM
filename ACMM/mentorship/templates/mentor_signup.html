@@ -48,19 +48,13 @@
     <div class="form-group col-md-12 mb-0">
       <h4>Qualification</h4>
     </div>
-      <div class="form-group col-md-6 mb-0">
+      <div class="form-group col-md-5 mb-0">
         {{ form.name|as_crispy_field }}
       </div>
-      <div class="form-group col-md-6 mb-0">
+      <div class="form-group col-md-5 mb-0">
         {{ form.education_level|as_crispy_field }}
       </div>
-      <div class="form-group col-md-6 mb-0">
-        {{ form.grade|as_crispy_field }}
-      </div>
-      <div class="form-group col-md-6 mb-0">
-        {{ form.predicted|as_crispy_field }}
-      </div>
-      <button class="align-self-center btn btn-danger delete-qualification-form" type="button">Delete</button>
+      <button class="align-self-center btn btn-danger delete-qualification-form" type="button">X</button>
     </div>
     {% endfor %}
   </div>
