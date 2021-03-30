@@ -62,13 +62,10 @@ EDUCATION_LEVEL_CHOICES = [
     ("Doctorate", 'Doctorate')
 ]
 
-
-
-
 class MentorForm(forms.ModelForm):
     occupation=forms.ChoiceField(choices = OCCUPATION_CHOICES,required=True) 
     
-    specialty = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple,
+    area_of_support = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple,
                                           choices=SPECIALTY_CHOICES,label="Position/Specialty:")   
     application_strength= forms.ChoiceField(widget=forms.RadioSelect,choices=APPLICATION_STAGES,label="What was your strength in the application?")                            
     
@@ -82,14 +79,12 @@ class MentorForm(forms.ModelForm):
     class Meta:
         model = MentorProfile
         exclude=('is_active',)
-    
-  
-
 class QualificationForm(forms.ModelForm):
     predicted=forms.ChoiceField(choices = TRUE_FALSE_CHOICES ,required=True ,label="Predicted?") 
     education_level=forms.ChoiceField(choices = EDUCATION_LEVEL_CHOICES ,required=True) 
     class Meta:
         model = Qualification
         exclude = ('profile',)
+
 QualificationFormSet = forms.inlineformset_factory(MentorProfile, Qualification, form=QualificationForm,extra=1)
 
