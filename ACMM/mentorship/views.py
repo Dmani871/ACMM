@@ -43,3 +43,9 @@ def mentee_signup_view(request):
 
 def thank_you_view(request):
     return render(request,  'thank_you.html')
+
+def next_year_view(request):
+    return render(request,  'next_year.html')
+
+def applications_view(request):
+    return render(request,  'applications.html')
