@@ -53,6 +53,7 @@ TRUE_FALSE_CHOICES = [
 EDUCATION_LEVEL_CHOICES = [
     ("A Level", 'A Level'),
     ("A/S Level", 'A/S Level'),
+    ('International Baccalaureate', 'International Baccalaureate'),
     ("Undergraduate", 'Undergraduate'),
     ("Masters", 'Masters'),
     ("Doctorate", 'Doctorate')
