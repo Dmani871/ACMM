@@ -27,7 +27,6 @@ def mentee_signup_view(request):
        
         if form.is_valid():
             if form.cleaned_data['current_application']=="False":
-
                 return redirect('/nextyear')
             profile=form.save(commit=False)
             formset = MenteeQualificationFormSet(request.POST, request.FILES,instance=profile)
@@ -42,3 +41,5 @@ def mentee_signup_view(request):
         formset = MenteeQualificationFormSet()
         return render(request,  'mentee_signup.html', {"form": form,"qualification_formset": formset})
 
+def thank_you_view(request):
+    return render(request,  'thank_you.html')
