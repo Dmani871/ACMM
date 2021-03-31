@@ -12,6 +12,7 @@ class CommonProfileInfo(models.Model):
     interview_experience=ArrayField(models.CharField(max_length=100, blank=True),blank = True,null = True)
     area_of_support = ArrayField(models.CharField(max_length=255),blank = True,null = True)
     year_applied=models.CharField(max_length=255,blank = True,null = True)
+    sex = models.CharField(max_length=1)
     
     class Meta:
         abstract = True

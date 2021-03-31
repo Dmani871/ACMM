@@ -29,9 +29,11 @@ OCCUPATION_CHOICES = [
     ('Doctor', 'Doctor'),
     ('Dentist', 'Dentist'),
     ('Medical Student', 'Medical Student'),
+    ('Dental student', 'Dental student'),
     ('Graduate Medical Student', 'Graduate Medical Student'),
+    ('Graduate Dentist Student', 'Graduate Dentist Student'),
     ('Medical Student Studying Abroad', 'Medical Student Studying Abroad'),
-    ('Dental student', 'Dental student')]
+    ('Dental Student Studying Abroad', 'Dental Student Studying Abroad')]
 INTREST_CHOICES = [
     ('Outreach Programmes', 'Outreach Programmes'),
     ('Speaking at events', 'Speaking at events'),
@@ -79,10 +81,11 @@ GRADE_CHOICES = [
 
 #list(zip(x,y))
 
-COURSE_CHOICES = [
-    ("Dentistry", 'Dentistry'),
-    ("Medicine", 'Medicine')
+SEX_CHOICES = [
+    ("M","M"),
+    ("F","F")
 ]
+
 class MentorForm(forms.ModelForm):
     occupation=forms.ChoiceField(choices = OCCUPATION_CHOICES,required=True) 
     
@@ -97,6 +100,8 @@ class MentorForm(forms.ModelForm):
                                           choices=INTERVIEW_EXPERIENCE_CHOICES,label="Interview Experience:")
     year_applied = forms.ChoiceField(widget=forms.RadioSelect,
                                           choices=YEAR_APPLIED_CHOICES,label="Year Applied:")
+   
+    sex = forms.ChoiceField(choices = SEX_CHOICES,required=True) 
     class Meta:
         model = MentorProfile
         exclude=('is_active',)
@@ -141,6 +146,7 @@ class MenteeForm(forms.ModelForm):
                 'maxlength': '200',
             }),required=True ,label="How will you go about fostering a good relationship your mentor?")
     
+    sex = forms.ChoiceField(choices = SEX_CHOICES,required=True) 
     class Meta:
         model = MenteeProfile
         exclude=('date_joined','assigned_mentor')
