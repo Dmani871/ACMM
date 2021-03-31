@@ -86,6 +86,13 @@ SEX_CHOICES = [
     ("F","F")
 ]
 
+YEAR_CHOICES =[tuple([x,x]) for x in range(1,6)]
+
+HEAR_ABOUT_US_CHOICES = [
+    ('Word of mouth', 'Word of mouth'),
+    ('Contact from ACMM team', 'Contact from ACMM team'),
+    ('Social Media', 'Social Media'),
+    ('Other','Other')]
 class MentorForm(forms.ModelForm):
     occupation=forms.ChoiceField(choices = OCCUPATION_CHOICES,required=True) 
     
@@ -93,7 +100,8 @@ class MentorForm(forms.ModelForm):
                                           choices=SPECIALTY_CHOICES,label="Position/Specialty:")   
     application_strength= forms.ChoiceField(widget=forms.RadioSelect,choices=APPLICATION_STAGES,label="What was your strength in the application?")                            
     
-    year_of_study = forms.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)],required=False, help_text='For Students')
+    year_of_study = forms.ChoiceField(choices = YEAR_CHOICES,required=False,help_text="For Students only",label="What year are you currently in?" )
+
     entrance_exam_experience = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple,
                                           choices=ENTRANCE_EXAM_CHOICES,label="Entrance Exam Experience:")
     interview_experience = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple,
@@ -102,6 +110,7 @@ class MentorForm(forms.ModelForm):
                                           choices=YEAR_APPLIED_CHOICES,label="Year Applied:")
    
     sex = forms.ChoiceField(choices = SEX_CHOICES,required=True) 
+    hear_about_us = forms.ChoiceField(widget=forms.RadioSelect, choices=HEAR_ABOUT_US_CHOICES ,label="Hear about us?")     
     class Meta:
         model = MentorProfile
         exclude=('is_active',)
