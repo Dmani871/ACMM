@@ -13,6 +13,7 @@ class CommonProfileInfo(models.Model):
     area_of_support = ArrayField(models.CharField(max_length=255),blank = True,null = True)
     year_applied=models.CharField(max_length=255,blank = True,null = True)
     sex = models.CharField(max_length=1)
+    date_joined = models.DateTimeField(default=timezone.now)
     
     class Meta:
         abstract = True
@@ -31,7 +32,7 @@ class MenteeProfile(CommonProfileInfo):
     course = models.CharField(max_length=255,blank = True,null = True)
     current_application=models.BooleanField(default=True)
     assigned_mentor=models.OneToOneField(MentorProfile, on_delete=models.SET_NULL,null=True,blank=True)
-    date_joined = models.DateTimeField(default=timezone.now)
+    
 
     def __str__(self): 
         return self.email

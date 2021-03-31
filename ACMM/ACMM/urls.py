@@ -22,3 +22,7 @@ urlpatterns = [
     path('mentor/signup', mentor_signup_view, name='mentor'),
     path('mentee/signup', mentee_signup_view, name='mentee'),
 ]
+
+admin.site.site_header = "ACMM Admin"
+admin.site.site_title = "ACMM Admin Portal"
+admin.site.index_title = "Welcome to ACMM Portal"

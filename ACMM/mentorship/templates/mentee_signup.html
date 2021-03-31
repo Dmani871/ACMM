@@ -1,4 +1,7 @@
 {% extends 'base.html' %} {% load crispy_forms_tags %} {% block content %}
+<div class="container p-5">
+
+
 <h1>Mentee SignUp</h1>
 <form id="profile-form" method="post">
   {% csrf_token %}
@@ -77,6 +80,7 @@
   </div>
   <button type="submit" class="btn btn-primary">Register</button>
 </form>
+</div>
 <script>
   let mainForm = document.querySelector("#profile-form");
   let qualificationForm = document.getElementsByClassName("qualification-form");

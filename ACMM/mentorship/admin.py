@@ -16,6 +16,9 @@ class MentorAdmin(admin.ModelAdmin):
     inlines = [
         MentorQualificationInline,
     ]
+    search_fields = ['first_name','last_name','email']
+    list_filter = ['occupation','date_joined']
+    exclude = [""]
     form = MentorForm
     list_display = ('first_name','last_name','email')
     def export_as_csv(self, request, queryset):
@@ -49,8 +52,10 @@ class MenteeAdmin(admin.ModelAdmin):
     inlines = [
         MenteeQualificationInline,
     ]
-    exclude = []
+    exclude = [""]
     form = MenteeForm
+    search_fields = ['first_name','last_name','email']
+    list_filter = ['course','date_joined']
     
     list_display = ('first_name','last_name','email','assigned_mentor')
     def export_as_csv(self, request, queryset):
@@ -88,20 +93,25 @@ class MenteeAdmin(admin.ModelAdmin):
                     ranking=ranking*100
                 if mentor.application_strength in mentee.area_of_support:
                     ranking=ranking*2
+                if mentor.sex!=mentee.sex:
+                    ranking=ranking*0.7
                 entrance_exam_experience_factor = len(set.intersection(set(mentor.entrance_exam_experience), set(mentee.entrance_exam_experience)))+1
                 interview_experience_factor = len(set.intersection(set(mentor.interview_experience), set(mentee.interview_experience)))+1
                 support_factor = len(set.intersection(set(mentor.area_of_support), set(mentee.area_of_support)))+1
-                ranking=ranking*entrance_exam_experience_factor*interview_experience_factor*support_factor
+                mentee_qualifications=[q.name for q in MenteeQualification.objects.filter(profile=mentee)]
+                mentor_qualifications=[q.name for q in MentorQualification.objects.filter(profile=mentor)]
+                subject_factor = len(set.intersection(set(mentor_qualifications), set(mentee_qualifications)))+1
+                ranking=ranking*entrance_exam_experience_factor*interview_experience_factor*support_factor*subject_factor
                 
-                if mentor.sex!=mentee.sex:
-                    ranking=ranking*0.7
+                
                 if ranking > match[1]:
                     match[0]=mentor
                     match[1]=ranking
 
-            available_mentors.remove(match[0])
-            mentee.assigned_mentor=match[0]
-            mentee.save()
+            if match[0] != None:
+                available_mentors.remove(match[0])
+                mentee.assigned_mentor=match[0]
+                mentee.save()
         #for x in queryset:print(x);
     assign_mentor.short_description = "Assign a mentor to each mentee"
     actions = ["export_as_csv","assign_mentor"]
