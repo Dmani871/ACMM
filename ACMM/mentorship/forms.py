@@ -26,14 +26,10 @@ ENTRANCE_EXAM_CHOICES = [
     ('UKCAT', 'UKCAT'),
     ('GAMSAT', 'GAMSAT')]
 OCCUPATION_CHOICES = [
-    ('Doctor', 'Doctor'),
-    ('Dentist', 'Dentist'),
-    ('Medical Student', 'Medical Student'),
-    ('Dental student', 'Dental student'),
-    ('Graduate Medical Student', 'Graduate Medical Student'),
-    ('Graduate Dentist Student', 'Graduate Dentist Student'),
-    ('Medical Student Studying Abroad', 'Medical Student Studying Abroad'),
-    ('Dental Student Studying Abroad', 'Dental Student Studying Abroad')]
+    ('MD', 'Doctor'),
+    ('D', 'Dentist'),
+    ('MS', 'Medical Student'),
+    ('DS', 'Dental Student')]
 INTREST_CHOICES = [
     ('Outreach Programmes', 'Outreach Programmes'),
     ('Speaking at events', 'Speaking at events'),
@@ -50,14 +46,16 @@ TRUE_FALSE_CHOICES = [
     (False, 'No')
 ]
 
+
 EDUCATION_LEVEL_CHOICES = [
-    ("A Level", 'A Level'),
-    ("A/S Level", 'A/S Level'),
-    ('International Baccalaureate', 'International Baccalaureate'),
-    ("Undergraduate", 'Undergraduate'),
-    ("Masters", 'Masters'),
-    ("Doctorate", 'Doctorate')
+    ("A2", 'A Level'),
+    ("AS", 'A/S Level'),
+    ('IB', 'International Baccalaureate'),
+    ("UG", 'Undergraduate'),
+    ("M", 'Masters'),
+    ("D", 'Doctorate')
 ]
+
 
 GRADE_CHOICES = [
     ("A*", 'A*'),
@@ -87,7 +85,7 @@ SEX_CHOICES = [
     ("F","F")
 ]
 
-YEAR_CHOICES =[tuple([x,x]) for x in range(1,6)]
+
 
 HEAR_ABOUT_US_CHOICES = [
     ('Word of mouth', 'Word of mouth'),
@@ -95,14 +93,12 @@ HEAR_ABOUT_US_CHOICES = [
     ('Social Media', 'Social Media'),
     ('Other','Other')]
 class MentorForm(forms.ModelForm):
-    occupation=forms.ChoiceField(choices = OCCUPATION_CHOICES,required=True) 
+    occupation=forms.ChoiceField(choices = OCCUPATION_CHOICES) 
     
     area_of_support = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple,
-                                          choices=SPECIALTY_CHOICES,label="Position/Specialty:")   
-    application_strength= forms.ChoiceField(widget=forms.RadioSelect,choices=APPLICATION_STAGES,label="What was your strength in the application?")                            
-    
-    year_of_study = forms.ChoiceField(choices = YEAR_CHOICES,required=False,help_text="For Students only",label="What year are you currently in?" )
-
+                                          choices=SPECIALTY_CHOICES,label="What area can you provide support in?")   
+    application_strength= forms.ChoiceField(widget=forms.RadioSelect,choices=APPLICATION_STAGES,label="What was your strength in the application?")                             
+   
     entrance_exam_experience = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple,
                                           choices=ENTRANCE_EXAM_CHOICES,label="Entrance Exam Experience:")
     interview_experience = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple,
@@ -110,11 +106,11 @@ class MentorForm(forms.ModelForm):
     year_applied = forms.ChoiceField(widget=forms.RadioSelect,
                                           choices=YEAR_APPLIED_CHOICES,label="Year Applied:")
    
-    sex = forms.ChoiceField(choices = SEX_CHOICES,required=True) 
+    
     hear_about_us = forms.ChoiceField(widget=forms.RadioSelect, choices=HEAR_ABOUT_US_CHOICES ,label="Hear about us?")     
     class Meta:
         model = MentorProfile
-        exclude=('is_active',)
+        exclude=('is_active','date_joined','sex')
 
 class MentorQualificationForm(forms.ModelForm):
     education_level=forms.ChoiceField(choices = EDUCATION_LEVEL_CHOICES ,required=True) 
@@ -141,20 +137,20 @@ class MenteeForm(forms.ModelForm):
     mentor_need = forms.CharField(widget=forms.Textarea(attrs={
                 'rows': '5',
                 'cols': '90',
-                'maxlength': '200',
-            }),required=True ,label="Why do you want a mentor and what do you hope to gain ?")
+                'maxlength': '500',
+            }),required=True ,label="Why do you want a mentor and what do you hope to gain ?",help_text="Max 500 Charecters")
   
     mentor_help = forms.CharField(widget=forms.Textarea(attrs={
                 'rows': '5',
                 'cols': '90',
-                'maxlength': '200',
-            }),required=True ,label="How will a mentor help with your application?")
+                'maxlength': '500',
+            }),required=True ,label="How will a mentor help with your application?",help_text="Max 500 Charecters")
     
     mentor_relationship = forms.CharField(widget=forms.Textarea(attrs={
                 'rows': '5',
                 'cols': '90',
-                'maxlength': '200',
-            }),required=True ,label="How will you go about fostering a good relationship your mentor?")
+                'maxlength': '500',
+            }),required=True ,label="How will you go about fostering a good relationship your mentor?",help_text="Max 500 Charecters")
     
     sex = forms.ChoiceField(choices = SEX_CHOICES,required=True) 
     class Meta:

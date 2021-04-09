@@ -1,19 +1,17 @@
 {% extends 'base.html' %} {% load crispy_forms_tags %} {% block content %}
 <div class ="mb-2 bg-white text-dark rounded">
-   <div class="p-3 bg-secondary text-white rounded">
+   <div class="p-3 bg-secondary text-white rounded-top">
       <h1>Mentor Sign-Up </h1>
       <p>
          Thank you for your willingness to sign up as a mentor and support a student through their medical school application! 
-         <br/>
          You will receive training and resources to equip you in your role, an opportunity to become the 'mentor of the year' and a certificate for your portfolio.
-         <br/>
          As well as this, you will have the opportunity to guide a prospective medical student through their application process which is highly rewarding. 
          <br/>
          Applications are open from 1st April - 30th April 2021. 
          <br/>
          This commitment is for one year.
          <br/>
-         If you require more information, please see our <a href="www.acmedicalmentors.co.uk/mentoring"> website</a>:
+         If you require more information, please see our <strong><a href="www.acmedicalmentors.co.uk/mentoring" class="text-white"> website</a>:</strong>
       </p>
    </div>
    <form id="profile-form" method="post">
@@ -39,11 +37,8 @@
          <hr class="my-4">
          <h4>Background Information</h4>
          <div class="form-row">
-            <div class="form-group col-md-6 mb-0">
+            <div class="form-group col-md-12 mb-0">
                {{ form.occupation|as_crispy_field }}
-            </div>
-            <div class="form-group col-md-6 mb-0">
-               {{ form.year_of_study|as_crispy_field }}
             </div>
          </div>
          <div class="form-row">
@@ -94,24 +89,28 @@
     </form>
 </div>
 <script>
-   let mainForm = document.querySelector("#profile-form");
-   let qualificationForm = document.getElementsByClassName("qualification-form");
-   let addButton = document.querySelector("#add-qualification-form");
-   let qualificationContainer = document.querySelector("#qualification-container");
+   const mainForm = document.querySelector("#profile-form");
+   const qualificationForm = document.getElementsByClassName("qualification-form");
+   const addButton = document.querySelector("#add-qualification-form");
+   const qualificationContainer = document.querySelector("#qualification-container");
    let qualificationFormCount = qualificationForm.length - 1;
-   let totalForms = document.querySelector("#id_form-TOTAL_FORMS");
+   const totalForms = document.querySelector("#id_mentorqualification_set-TOTAL_FORMS");
    function updateForms() {
      let count = 0;
-     for (let form of imageForm) {
+     for (let form of qualificationForm) {
          const formRegex = RegExp(`form-(\\d){1}-`, 'g');
          form.innerHTML = form.innerHTML.replace(formRegex, `form-${count++}-`)
      }
    }
    addButton.addEventListener('click', function(e){
            e.preventDefault();
+           console.log('Hey')
            let newQualificationForm = qualificationForm[0].cloneNode(true);
+           console.log(qualificationFormCount)
+           console.log('Hey')
            let formRegex = RegExp(`form-(\\d){1}-`,'g')
            qualificationFormCount++
+           console.log(qualificationFormCount)
            newQualificationForm.innerHTML = newQualificationForm.innerHTML.replace(formRegex, `form-${qualificationFormCount}-`);
            qualificationContainer.append(newQualificationForm);
            totalForms.setAttribute('value', `${qualificationFormCount+1}`)
@@ -122,7 +121,7 @@
            event.target.parentElement.remove();
            qualificationFormCount--;
            updateForms();
-           totalForms.setAttribute('value', `${qualificationFormCount-1}`);
+           totalForms.setAttribute('value', `${qualificationFormCount+1}`);
    }
        
    });

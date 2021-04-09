@@ -7,9 +7,12 @@ from django.views.generic import TemplateView
 def mentor_signup_view(request):
     if request.method == "POST":
         form = MentorForm(request.POST)
+ 
         if form.is_valid():
             profile=form.save(commit=False)
             formset = MentorQualificationFormSet(request.POST, request.FILES,instance=profile)
+            for f in formset:
+                print(f)
             if formset.is_valid():
                 form.save()
                 formset.save()
@@ -30,6 +33,7 @@ def mentee_signup_view(request):
                 return redirect('/nextyear')
             profile=form.save(commit=False)
             formset = MenteeQualificationFormSet(request.POST, request.FILES,instance=profile)
+            
             if formset.is_valid():
                 form.save()
                 formset.save()

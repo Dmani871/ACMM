@@ -2,7 +2,10 @@ from django.db import models
 from django.contrib.postgres.fields import ArrayField
 from django.utils import timezone
 
-
+SEX_CHOICES = [
+    ("M","M"),
+    ("F","F")
+]
 
 class CommonProfileInfo(models.Model):
     first_name = models.CharField(max_length=30)

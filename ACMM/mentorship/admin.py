@@ -17,7 +17,7 @@ class MentorAdmin(admin.ModelAdmin):
         MentorQualificationInline,
     ]
     search_fields = ['first_name','last_name','email']
-    list_filter = ['occupation','date_joined']
+    list_filter = ['occupation','date_joined','is_active']
     exclude = [""]
     form = MentorForm
     list_display = ('first_name','last_name','email')
@@ -48,6 +48,8 @@ class MenteeQualificationInline(admin.TabularInline):
     model = MenteeQualification
     extra=0
     can_delete=True
+
+
 class MenteeAdmin(admin.ModelAdmin):
     inlines = [
         MenteeQualificationInline,

@@ -23,7 +23,7 @@ urlpatterns = [
     path('mentee/signup', mentee_signup_view, name='mentee'),
     path('thanks', thank_you_view, name='thanks'),
     path('next_year', next_year_view, name='next_year'),
-    path('applications', applications_view, name='applications'),
+    path('', applications_view, name='applications'),
 ]
 
 admin.site.site_header = "ACMM Admin"
