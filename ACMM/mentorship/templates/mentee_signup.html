@@ -1,133 +1,143 @@
 {% extends 'base.html' %} {% load crispy_forms_tags %} {% block content %}
-<div class ="mb-2 bg-white text-dark rounded">
+<div class="mb-2 bg-white text-dark rounded">
   <div class="p-3 bg-secondary text-white rounded">
     <h1>Mentee SignUp</h1>
   </div>
 
-<form id="profile-form" method="post">
-  {% csrf_token %}
-  <div class=" p-3">
-    <h4>Personal Information</h4>
-    <div class="form-row">
-      <div class="form-group col-md-6 mb-0">
-        {{ form.first_name|as_crispy_field }}
+  <form id="profile-form" method="post">
+    {% csrf_token %}
+    {{ form|as_crispy_errors }}
+    <div class="p-3">
+      <h4>Personal Information</h4>
+      <div class="form-row">
+        <div class="form-group col-md-6 mb-0">
+          {{ form.first_name|as_crispy_field }}
+        </div>
+        <div class="form-group col-md-6 mb-0">
+          {{ form.last_name|as_crispy_field }}
+        </div>
       </div>
-      <div class="form-group col-md-6 mb-0">
-        {{ form.last_name|as_crispy_field }}
+      <div class="form-row">
+        <div class="form-group col-md-10 mb-0">
+          {{ form.email|as_crispy_field }}
+        </div>
+        <div class="form-group col-md-2 mb-0">
+          {{ form.sex|as_crispy_field }}
+        </div>
       </div>
-    </div>
-    <div class="form-row">
-      <div class="form-group col-md-10 mb-0">
-        {{ form.email|as_crispy_field }}
-      </div>
-      <div class="form-group col-md-2 mb-0">
-        {{ form.sex|as_crispy_field }}
-      </div>
-    </div>
-    <hr class="my-4">
-  <h4>Background Information</h4>
-  <div class="form-row">
-    <div class="form-group col-md-4 mb-0">
-      {{ form.course|as_crispy_field }}
-    </div>
-    <div class="form-group col-md-4 mb-0">
-      {{ form.current_application|as_crispy_field }}
-    </div>
-    <div class="form-group col-md-4 mb-0">
-      {{ form.year_applied|as_crispy_field }}
-    </div>
-  </div>
-  
-  <div class="form-row">
-    
-    <div class="form-group col-md-4 mb-0">
-      {{ form.entrance_exam_experience|as_crispy_field }}
-    </div>
-    <div class="form-group col-md-4 mb-0">
-      {{ form.interview_experience|as_crispy_field }}
-    </div>
-    <div class="form-group col-md-4 mb-0">
-      {{ form.area_of_support|as_crispy_field }}
-    </div>
-  </div>
-
-
-  {{ form.mentor_need|as_crispy_field }}
-  {{ form.mentor_help|as_crispy_field }}
-  {{ form.mentor_relationship|as_crispy_field }}
-  </div>
-  
-  
-  <div id="qualification-container">
-    <h5 class="p-3">Qualification(s)</h5>
-    {{qualification_formset.management_form |crispy}}
-  {% for form in qualification_formset %}
-  <div class="form-row qualification-form p-3">
-
-      <div class="form-group col-md-3 mb-0">
-        {{ form.name|as_crispy_field }}
-      </div>
-      <div class="form-group col-md-3 mb-0">
-        {{ form.education_level|as_crispy_field }}
+      <hr class="my-4" />
+      <h4>Background Information</h4>
+      <div class="form-row">
+        <div class="form-group col-md-4 mb-0">
+          {{ form.course|as_crispy_field }}
+        </div>
+        <div class="form-group col-md-4 mb-0">
+          {{ form.current_application|as_crispy_field }}
+        </div>
+        <div class="form-group col-md-4 mb-0">
+          {{ form.year_applied|as_crispy_field }}
+        </div>
       </div>
 
-      <div class="form-group col-md-3 mb-0">
-        {{ form.grade|as_crispy_field }}
+      <div class="form-row">
+        <div class="form-group col-md-4 mb-0">
+          {{ form.entrance_exam_experience|as_crispy_field }}
+        </div>
+        <div class="form-group col-md-4 mb-0">
+          {{ form.interview_experience|as_crispy_field }}
+        </div>
+        <div class="form-group col-md-4 mb-0">
+          {{ form.area_of_support|as_crispy_field }}
+        </div>
       </div>
 
-      <div class="form-group col-md-3 mb-0">
-        {{ form.predicted|as_crispy_field }}
-      </div>
-      
-      <button class="align-self-center btn btn-outline-danger btn-xs delete-qualification-form" type="button">Delete</button>
+      {{ form.mentor_need|as_crispy_field }} 
+      {{ form.mentor_help|as_crispy_field}} 
+      {{ form.mentor_relationship|as_crispy_field }}
     </div>
-    {% endfor %}
-  </div>
-  <div class="form-row p-3">
-    <button id="add-qualification-form"  class="align-middle btn btn-outline-secondary" type="button">Add Another Qualification</button>
- </div>
- <div class="form-row p-3">
-  {{ form.hear_about_us|as_crispy_field }}
-</div>
- 
-  <div class="form-row p-3">
-    <button type="submit" class="btn btn-secondary btn-lg">Join Us !</button>
-  </div>
-</form>
+
+    <div id="qualification-container">
+      <h5 class="p-3">Qualification(s)</h5>
+      {{qualification_formset.management_form |crispy}} 
+      {% for form in qualification_formset %}
+      <div class="form-row qualification-form p-3">
+        <div class="form-group col-md-3 mb-0">
+          {{ form.name|as_crispy_field }}
+        </div>
+        <div class="form-group col-md-3 mb-0">
+          {{ form.education_level|as_crispy_field }}
+        </div>
+
+        <div class="form-group col-md-3 mb-0">
+          {{ form.grade|as_crispy_field }}
+        </div>
+
+        <div class="form-group col-md-3 mb-0">
+          {{ form.predicted|as_crispy_field }}
+        </div>
+
+        <button
+          class="align-self-center btn btn-outline-danger btn-xs delete-qualification-form"
+          type="button"
+        >
+          Delete
+        </button>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="form-row p-3">
+      <button
+        id="add-qualification-form"
+        class="align-middle btn btn-outline-secondary"
+        type="button"
+      >
+        Add Another Qualification
+      </button>
+    </div>
+    <div class="form-row p-3">{{ form.hear_about_us|as_crispy_field }}</div>
+
+    <div class="form-row p-3">
+      <button type="submit" class="btn btn-secondary btn-lg">Sign Up!</button>
+    </div>
+  </form>
 </div>
 <script>
   let mainForm = document.querySelector("#profile-form");
   let qualificationForm = document.getElementsByClassName("qualification-form");
   let addButton = document.querySelector("#add-qualification-form");
-  let qualificationContainer = document.querySelector("#qualification-container");
+  let qualificationContainer = document.querySelector(
+    "#qualification-container"
+  );
   let qualificationFormCount = qualificationForm.length - 1;
-  let totalForms = document.querySelector("#id_form-TOTAL_FORMS");
+  let totalForms = document.querySelector("#id_menteequalification_set-TOTAL_FORMS");
+  const formRegex = RegExp(`menteequalification_set-(\\d){1}-`, "g");
   function updateForms() {
     let count = 0;
-    for (let form of imageForm) {
-        const formRegex = RegExp(`form-(\\d){1}-`, 'g');
-        form.innerHTML = form.innerHTML.replace(formRegex, `form-${count++}-`)
+    for (let form of qualificationForm) {
+      form.innerHTML = form.innerHTML.replace(formRegex, `menteequalification_set-${count++}-`);
     }
   }
-  addButton.addEventListener('click', function(e){
-          e.preventDefault();
-          let newQualificationForm = qualificationForm[0].cloneNode(true);
-          let formRegex = RegExp(`form-(\\d){1}-`,'g')
-          qualificationFormCount++
-          newQualificationForm.innerHTML = newQualificationForm.innerHTML.replace(formRegex, `form-${qualificationFormCount}-`);
-          qualificationContainer.append(newQualificationForm);
-          totalForms.setAttribute('value', `${qualificationFormCount+1}`)
-      });
-  mainForm.addEventListener('click',function(event){
-      if (event.target.classList.contains("delete-qualification-form")) {
-          event.preventDefault();
-          event.target.parentElement.remove();
-          qualificationFormCount--;
-          updateForms();
-          totalForms.setAttribute('value', `${qualificationFormCount-1}`);
-  }
-      
+  addButton.addEventListener("click", function (e) {
+    e.preventDefault();
+    const newQualificationForm = qualificationForm[0].cloneNode(true);
+    qualificationFormCount++;
+    newQualificationForm.innerHTML = newQualificationForm.innerHTML.replace(
+      formRegex,
+      `menteequalification_set-${qualificationFormCount}-`
+    );
+    qualificationContainer.append(newQualificationForm);
+    totalForms.setAttribute("value", `${qualificationFormCount + 1}`);
+  });
+
+  
+  mainForm.addEventListener("click", function (event) {
+    if (event.target.classList.contains("delete-qualification-form")) {
+      event.preventDefault();
+      event.target.parentElement.remove();
+      qualificationFormCount--;
+      updateForms();
+      totalForms.setAttribute("value", `${qualificationFormCount - 1}`);
+    }
   });
 </script>
 {% endblock %}
-

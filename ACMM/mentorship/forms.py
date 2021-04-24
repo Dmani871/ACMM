@@ -54,7 +54,7 @@ class MenteeForm(forms.ModelForm):
     current_application=forms.ChoiceField(
         choices = TRUE_FALSE_CHOICES,
         label="Are you applying this year?",
-        help_text="Our mentor scheme is for students applying to Medicine in 2021 only"
+        help_text="Our mentor scheme is for students applying to Medicine/Dentistry this year only"
         ) 
     
     mentor_need = forms.CharField(widget=forms.Textarea(attrs={

@@ -5,13 +5,25 @@ SEX_TYPES=("M","F")
 SEX_CHOICES = list(zip(SEX_TYPES,SEX_TYPES))
 ENTRANCE_EXAMS_TYPES=('BMAT','UKCAT','GAMSAT')
 ENTRANCE_EXAM_CHOICES = list(zip(ENTRANCE_EXAMS_TYPES,ENTRANCE_EXAMS_TYPES))
-INTERVIEW_TYPES=('Panel','MMI','Group')
-INTERVIEW_EXPERIENCE_CHOICES = list(zip(INTERVIEW_TYPES,INTERVIEW_TYPES))
-SPECIALTIES=('Personal Statement','Interview','Entrance Exam','Work Experience')
-SPECIALTY_CHOICES=list(zip(SPECIALTIES,SPECIALTIES))
-APPLICATION_STAGES=SPECIALTY_CHOICES[:-2] 
-HEAR_ABOUT_US_TYPES=('Word of mouth','Contact from ACMM team','Social Media','Other')
-HEAR_ABOUT_US_CHOICES=list(zip(HEAR_ABOUT_US_TYPES,HEAR_ABOUT_US_TYPES))
+INTERVIEW_EXPERIENCE_CHOICES = [
+    ("P", 'Panel'),
+    ("M", 'MMI'),
+    ('G', 'Group')
+]
+SPECIALTY_CHOICES = [
+    ("PS", 'Personal Statement'),
+    ("I", 'Interview'),
+    ('EE', 'Entrance Exam'),
+    ("WE", 'Work Experience')
+]
+HEAR_ABOUT_US_CHOICES = [
+    ("WM", 'Word of mouth'),
+    ("C", 'Contact from ACMM team'),
+    ('SM', 'Social Media'),
+    ('SU', 'School/University'),
+    ("O", 'Other')
+]
+
 YEAR_APPLIED_CHOICES = [
     ('A2', 'A level/IB'),
     ('GRAD', 'Graduate')
@@ -36,8 +48,11 @@ TRUE_FALSE_CHOICES = [
     (True, 'Yes'),
     (False, 'No')
 ]
-COURSES=('Medicine','Dentistry','Graduate Medicine')
-COURSE_CHOICES =list(zip(COURSES,COURSES))
+COURSE_CHOICES = [
+    ('M', 'Medicine'),
+    ('D', 'Dentistry'),
+]
+
 
 
 class CommonProfileInfo(models.Model):
@@ -47,7 +62,7 @@ class CommonProfileInfo(models.Model):
     sex = models.CharField(max_length=1,choices = SEX_CHOICES)
     year_applied=models.CharField(max_length=10,choices=YEAR_APPLIED_CHOICES)
     date_joined = models.DateTimeField(default=timezone.now)
-    hear_about_us = models.CharField(max_length=50,choices=HEAR_ABOUT_US_CHOICES,default=None)
+    hear_about_us = models.CharField(max_length=10,choices=HEAR_ABOUT_US_CHOICES,default=None)
     entrance_exam_experience = ArrayField(models.CharField(max_length=10,choices = ENTRANCE_EXAM_CHOICES))
     interview_experience = ArrayField(models.CharField(max_length=10,choices = INTERVIEW_EXPERIENCE_CHOICES))
     area_of_support = ArrayField(models.CharField(max_length=10,choices = SPECIALTY_CHOICES),default=list)
@@ -77,7 +92,7 @@ class CommonQualificationInfo(models.Model):
         abstract = True
 class MenteeQualification(CommonQualificationInfo):
     grade=models.CharField(max_length=10 ,choices=GRADE_CHOICES)
-    predicted=models.BooleanField(default=False)
+    predicted=models.BooleanField(default=False,choices=TRUE_FALSE_CHOICES)
     profile=models.ForeignKey(MenteeProfile, on_delete=models.CASCADE)
 class MentorQualification(CommonQualificationInfo):
     profile=models.ForeignKey(MentorProfile, on_delete=models.CASCADE)
