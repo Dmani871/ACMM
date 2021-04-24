@@ -86,7 +86,7 @@ class MenteeForm(forms.ModelForm):
     
     class Meta:
         model = MenteeProfile
-        exclude=('date_joined','assigned_mentor')
+        exclude=['date_joined','assigned_mentor','accepted']
         labels = {
             'year_applied':'What is your current education level?',
             'hear_about_us':'How did you hear about us?'

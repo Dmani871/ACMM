@@ -66,6 +66,7 @@ class CommonProfileInfo(models.Model):
     entrance_exam_experience = ArrayField(models.CharField(max_length=10,choices = ENTRANCE_EXAM_CHOICES))
     interview_experience = ArrayField(models.CharField(max_length=10,choices = INTERVIEW_EXPERIENCE_CHOICES))
     area_of_support = ArrayField(models.CharField(max_length=10,choices = SPECIALTY_CHOICES),default=list)
+    
     class Meta:
         abstract = True
 class MentorProfile(CommonProfileInfo):
@@ -81,6 +82,7 @@ class MenteeProfile(CommonProfileInfo):
     course = models.CharField(max_length=10,choices=COURSE_CHOICES)
     current_application=models.BooleanField(default=True,choices=TRUE_FALSE_CHOICES)
     assigned_mentor=models.OneToOneField(MentorProfile, on_delete=models.SET_NULL,null=True,blank=True)
+    accepted=models.BooleanField(default=False,choices=TRUE_FALSE_CHOICES)
     
 
     def __str__(self): 
