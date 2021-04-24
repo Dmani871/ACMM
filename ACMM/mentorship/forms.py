@@ -1,119 +1,33 @@
-from django.contrib.auth.forms import ReadOnlyPasswordHashField
-from django.core.exceptions import ValidationError
 from django import forms
-from django.core.validators import MaxValueValidator, MinValueValidator
-from .models import MentorProfile,MenteeProfile,MentorQualification,MenteeQualification
+from .models import MentorProfile,MenteeProfile,MentorQualification,MenteeQualification,SPECIALTY_CHOICES,INTERVIEW_EXPERIENCE_CHOICES,ENTRANCE_EXAM_CHOICES
 from django.forms import inlineformset_factory
 
-# options
-SPECIALTY_CHOICES= [
-    ('Personal Statement', 'Personal Statement'),
-    ('Interview', 'Interview'),
-    ('Entrance Exam', 'Entrance Exam'),
-    ('Work Experience', 'Work Experience'),
-    ('Choosing a University', 'Choosing a University ')]
-APPLICATION_STAGES=SPECIALTY_CHOICES[:-2]   
-INTERVIEW_EXPERIENCE_CHOICES = [
-    ('Panel', 'Panel'),
-    ('MMI', 'MMI'),
-    ('Group', 'Group')]
-YEAR_APPLIED_CHOICES = [
-    ('A level', 'A level'),
-    ('International Baccalaureate', 'International Baccalaureate'),
-    ('Graduate', 'Graduate')]
-ENTRANCE_EXAM_CHOICES = [
-    ('BMAT', 'BMAT'),
-    ('UKCAT', 'UKCAT'),
-    ('GAMSAT', 'GAMSAT')]
-OCCUPATION_CHOICES = [
-    ('MD', 'Doctor'),
-    ('D', 'Dentist'),
-    ('MS', 'Medical Student'),
-    ('DS', 'Dental Student')]
-INTREST_CHOICES = [
-    ('Outreach Programmes', 'Outreach Programmes'),
-    ('Speaking at events', 'Speaking at events'),
-    ('Support for events', 'Support for events'),
-    ('Provision of work experience/volunteering opportunities', 'Provision of work experience/volunteering opportunities'),
-    ('Additional guidance for mentors (one off)', 'Additional guidance for mentors (one off)')]
-COURSE_CHOICES =[
-    ('Medicine', 'Medicine'),
-    ('Dentistry', 'Dentistry'),
-    ('Graduate Medicine', 'Graduate Medicine'),
-]
 TRUE_FALSE_CHOICES = [
     (True, 'Yes'),
     (False, 'No')
 ]
-
-
-EDUCATION_LEVEL_CHOICES = [
-    ("A2", 'A Level'),
-    ("AS", 'A/S Level'),
-    ('IB', 'International Baccalaureate'),
-    ("UG", 'Undergraduate'),
-    ("M", 'Masters'),
-    ("D", 'Doctorate')
-]
-
-
-GRADE_CHOICES = [
-    ("A*", 'A*'),
-    ("A", 'A'),
-    ("B", 'B'),
-    ("C", 'C'),
-    ("D", 'D'),
-    ("E", 'E'),
-    ("F", 'F'),
-    ("1st", '1st'),
-    ("2:1", '2:1'),
-    ("2:2", '2:2'),
-    ("3rd", '3rd'),
-    ("1", '1'),
-    ("2", '2'),
-    ("3", '3'),
-    ("4", '4'),
-    ("5", '5'),
-    ("6", '6'),
-    ("7", '7')
-]
-
-#list(zip(x,y))
-
-SEX_CHOICES = [
-    ("M","M"),
-    ("F","F")
-]
-
-
-
-HEAR_ABOUT_US_CHOICES = [
-    ('Word of mouth', 'Word of mouth'),
-    ('Contact from ACMM team', 'Contact from ACMM team'),
-    ('Social Media', 'Social Media'),
-    ('Other','Other')]
 class MentorForm(forms.ModelForm):
-    occupation=forms.ChoiceField(choices = OCCUPATION_CHOICES) 
-    
-    area_of_support = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple,
-                                          choices=SPECIALTY_CHOICES,label="What area can you provide support in?")   
-    application_strength= forms.ChoiceField(widget=forms.RadioSelect,choices=APPLICATION_STAGES,label="What was your strength in the application?")                             
-   
-    entrance_exam_experience = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple,
-                                          choices=ENTRANCE_EXAM_CHOICES,label="Entrance Exam Experience:")
-    interview_experience = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple,
-                                          choices=INTERVIEW_EXPERIENCE_CHOICES,label="Interview Experience:")
-    year_applied = forms.ChoiceField(widget=forms.RadioSelect,
-                                          choices=YEAR_APPLIED_CHOICES,label="Year Applied:")
-   
-    
-    hear_about_us = forms.ChoiceField(widget=forms.RadioSelect, choices=HEAR_ABOUT_US_CHOICES ,label="Hear about us?")     
+    area_of_support = forms.MultipleChoiceField(
+        widget=forms.CheckboxSelectMultiple,
+        choices=SPECIALTY_CHOICES,
+        label="What area can you provide support in?")   
+    interview_experience = forms.MultipleChoiceField(
+        widget=forms.CheckboxSelectMultiple,
+        choices=INTERVIEW_EXPERIENCE_CHOICES,
+        label="What interview experience do you have?")
+    entrance_exam_experience = forms.MultipleChoiceField(
+        widget=forms.CheckboxSelectMultiple(),
+        choices=ENTRANCE_EXAM_CHOICES,
+        label="What exam experience do you have?")
     class Meta:
         model = MentorProfile
-        exclude=('is_active','date_joined','sex')
-
+        exclude=('is_active','date_joined')
+        labels = {
+            'year_applied':'Qualification level prior to studying Medicine/Dentistry',
+            'hear_about_us':'How did you hear about us?'
+        }
+           
 class MentorQualificationForm(forms.ModelForm):
-    education_level=forms.ChoiceField(choices = EDUCATION_LEVEL_CHOICES ,required=True) 
     class Meta:
         model = MentorQualification
         exclude = ('profile',)
@@ -121,45 +35,65 @@ class MentorQualificationForm(forms.ModelForm):
 MentorQualificationFormSet = forms.inlineformset_factory(MentorProfile,model = MentorQualification, form=MentorQualificationForm,extra=1)
 
 
-class MenteeForm(forms.ModelForm):
-    course = forms.ChoiceField(choices = COURSE_CHOICES,required=True,label="What course are you applying to?") 
+class MenteeForm(forms.ModelForm):    
+    area_of_support = forms.MultipleChoiceField(
+        widget=forms.CheckboxSelectMultiple,
+        choices=SPECIALTY_CHOICES,
+        label="What do you need help with?")   
     
-    area_of_support = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple,
-                                          choices=SPECIALTY_CHOICES,label="What do you need help with?")   
-    entrance_exam_experience = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple,
-                                          choices=ENTRANCE_EXAM_CHOICES,label="What entrance exam experience have you had?")
-    interview_experience = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple,
-                                          choices=INTERVIEW_EXPERIENCE_CHOICES,label="What interview exam experience have you had?")
-    year_applied = forms.ChoiceField(widget=forms.RadioSelect,
-                                          choices=YEAR_APPLIED_CHOICES,label="What level are you currently studying at?")
-    current_application=forms.ChoiceField(choices = TRUE_FALSE_CHOICES ,required=True ,label="Are you applying this year?") 
+    entrance_exam_experience = forms.MultipleChoiceField(
+        widget=forms.CheckboxSelectMultiple,
+        choices=ENTRANCE_EXAM_CHOICES,
+        label="What entrance exam experience have you had?")
+    
+    interview_experience = forms.MultipleChoiceField(
+        widget=forms.CheckboxSelectMultiple,
+        choices=INTERVIEW_EXPERIENCE_CHOICES,
+        label="What interview exam experience have you had?")
+    
+    current_application=forms.ChoiceField(
+        choices = TRUE_FALSE_CHOICES,
+        label="Are you applying this year?",
+        help_text="Our mentor scheme is for students applying to Medicine in 2021 only"
+        ) 
     
     mentor_need = forms.CharField(widget=forms.Textarea(attrs={
                 'rows': '5',
                 'cols': '90',
                 'maxlength': '500',
-            }),required=True ,label="Why do you want a mentor and what do you hope to gain ?",help_text="Max 500 Charecters")
+            }),
+            required=True ,
+            label="Why do you want a mentor and what do you hope to gain ?",
+            help_text="Max 500 Charecters")
   
     mentor_help = forms.CharField(widget=forms.Textarea(attrs={
                 'rows': '5',
                 'cols': '90',
                 'maxlength': '500',
-            }),required=True ,label="How will a mentor help with your application?",help_text="Max 500 Charecters")
+            }),
+            required=True ,
+            label="How will a mentor help with your application?",
+            help_text="Max 500 Charecters")
     
     mentor_relationship = forms.CharField(widget=forms.Textarea(attrs={
                 'rows': '5',
                 'cols': '90',
                 'maxlength': '500',
-            }),required=True ,label="How will you go about fostering a good relationship your mentor?",help_text="Max 500 Charecters")
+            }),
+            required=True ,
+            label="How will you go about fostering a good relationship your mentor?",
+            help_text="Max 500 Charecters")
     
-    sex = forms.ChoiceField(choices = SEX_CHOICES,required=True) 
     class Meta:
         model = MenteeProfile
         exclude=('date_joined','assigned_mentor')
+        labels = {
+            'year_applied':'What is your current education level?',
+            'hear_about_us':'How did you hear about us?'
+        }
+
         
 class MenteeQualificationForm(forms.ModelForm):
-    education_level=forms.ChoiceField(choices = EDUCATION_LEVEL_CHOICES ,required=True) 
-    grade=forms.ChoiceField(choices = GRADE_CHOICES ,required=True) 
     predicted=forms.ChoiceField(choices = TRUE_FALSE_CHOICES ,required=True ,label="Predicted ?") 
     class Meta:
         model = MenteeQualification

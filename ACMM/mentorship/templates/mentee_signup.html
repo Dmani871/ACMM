@@ -27,27 +27,31 @@
     <hr class="my-4">
   <h4>Background Information</h4>
   <div class="form-row">
-    <div class="form-group col-md-6 mb-0">
+    <div class="form-group col-md-4 mb-0">
       {{ form.course|as_crispy_field }}
     </div>
-    <div class="form-group col-md-6 mb-0">
+    <div class="form-group col-md-4 mb-0">
       {{ form.current_application|as_crispy_field }}
+    </div>
+    <div class="form-group col-md-4 mb-0">
+      {{ form.year_applied|as_crispy_field }}
     </div>
   </div>
   
   <div class="form-row">
-    <div class="form-group col-md-4 mb-0">
-      {{ form.year_applied|as_crispy_field }}
-    </div>
+    
     <div class="form-group col-md-4 mb-0">
       {{ form.entrance_exam_experience|as_crispy_field }}
     </div>
     <div class="form-group col-md-4 mb-0">
       {{ form.interview_experience|as_crispy_field }}
     </div>
+    <div class="form-group col-md-4 mb-0">
+      {{ form.area_of_support|as_crispy_field }}
+    </div>
   </div>
 
-  {{ form.area_of_support|as_crispy_field }}
+
   {{ form.mentor_need|as_crispy_field }}
   {{ form.mentor_help|as_crispy_field }}
   {{ form.mentor_relationship|as_crispy_field }}
@@ -82,6 +86,9 @@
   <div class="form-row p-3">
     <button id="add-qualification-form"  class="align-middle btn btn-outline-secondary" type="button">Add Another Qualification</button>
  </div>
+ <div class="form-row p-3">
+  {{ form.hear_about_us|as_crispy_field }}
+</div>
  
   <div class="form-row p-3">
     <button type="submit" class="btn btn-secondary btn-lg">Join Us !</button>

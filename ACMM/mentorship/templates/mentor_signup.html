@@ -26,6 +26,7 @@
                {{ form.last_name|as_crispy_field }}
             </div>
          </div>
+         
          <div class="form-row">
             <div class="form-group col-md-10 mb-0">
                {{ form.email|as_crispy_field }}
@@ -34,24 +35,21 @@
                {{ form.sex|as_crispy_field }}
             </div>
          </div>
+        
          <hr class="my-4">
+         
          <h4>Background Information</h4>
          <div class="form-row">
-            <div class="form-group col-md-12 mb-0">
+            <div class="form-group col-md-6 mb-0">
                {{ form.occupation|as_crispy_field }}
             </div>
-         </div>
-         <div class="form-row">
             <div class="form-group col-md-6 mb-0">
-               {{ form.area_of_support|as_crispy_field }}
-            </div>
-            <div class="form-group col-md-6 mb-0">
-               {{ form.application_strength|as_crispy_field }}
+               {{ form.year_applied|as_crispy_field }}
             </div>
          </div>
          <div class="form-row">
             <div class="form-group col-md-4 mb-0">
-               {{ form.year_applied|as_crispy_field }}
+               {{ form.area_of_support|as_crispy_field }}
             </div>
             <div class="form-group col-md-4 mb-0">
                {{ form.entrance_exam_experience|as_crispy_field }}
@@ -61,6 +59,7 @@
             </div>
          </div>
       </div>
+      
       <div id="qualification-container">
          <h5 class="p-3">Qualification(s)</h5>
          {{qualification_formset.management_form |crispy}}
@@ -80,12 +79,12 @@
          <button id="add-qualification-form"  class="align-middle btn btn-outline-secondary" type="button">Add Another Qualification</button>
       </div>
       <div class="form-row p-3">
-        {{ form.hear_about_us|as_crispy_field }}
+         {{ form.hear_about_us|as_crispy_field }}
      </div>
-     
-      <div class="form-row p-3">
-        <button type="submit" class="btn btn-secondary btn-lg">Join Us !</button>
+     <div class="form-row p-3">
+         <button type="submit" class="btn btn-secondary btn-lg">Join Us !</button>    
       </div>
+
     </form>
 </div>
 <script>

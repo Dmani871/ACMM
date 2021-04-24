@@ -7,8 +7,11 @@ from django.views.generic import TemplateView
 def mentor_signup_view(request):
     if request.method == "POST":
         form = MentorForm(request.POST)
+    
  
         if form.is_valid():
+            temp = form.cleaned_data.get("application_strength")
+            print(temp)
             profile=form.save(commit=False)
             formset = MentorQualificationFormSet(request.POST, request.FILES,instance=profile)
             for f in formset:
