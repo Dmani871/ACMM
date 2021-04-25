@@ -25,14 +25,11 @@ def mentor_signup_view(request):
 def mentee_signup_view(request):
     if request.method == "POST":
         form = MenteeForm(request.POST)
-        print(form.is_valid())
-        print(form.errors)
         if form.is_valid():
             if form.cleaned_data['current_application']=="False":
                 return redirect('/nextyear')
             profile=form.save(commit=False)
             formset = MenteeQualificationFormSet(request.POST, request.FILES,instance=profile)
-            print(formset)
             if formset.is_valid():
                 form.save()
                 formset.save()
