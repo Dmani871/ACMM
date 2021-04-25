@@ -1,5 +1,6 @@
 import factory
 import factory.fuzzy
+import random
 from .models import MentorProfile,MenteeProfile,MentorQualification,MenteeQualification
 
 class UserFactory(factory.Factory):
@@ -11,11 +12,59 @@ class UserFactory(factory.Factory):
     sex = factory.fuzzy.FuzzyChoice(['M','F'])
     year_applied = factory.fuzzy.FuzzyChoice(['A2','GRAD'])
     hear_about_us = factory.fuzzy.FuzzyChoice(['WM','C','SM','SU','O'])
-    entrance_exam_experience= factory.fuzzy.FuzzyChoice([['BMAT','GAMSAT','UKCAT'],['BMAT','UKCAT'],['GAMSAT','UKCAT'],['UKCAT'],['GAMSAT'],['BMAT']])
-    interview_experience=factory.fuzzy.FuzzyChoice([['P'],['M'],['G'],['M','P'],['G','M'],['G','M','P']])
-    area_of_support=factory.fuzzy.FuzzyChoice([['PS'],['I'],['EE'],['WE'],['I','PS'],['EE','I'],['PS','EE','WE']])
+    entrance_exam_experience= factory.fuzzy.FuzzyChoice([
+        ['UKCAT'],
+        ['GAMSAT'],
+        ['BMAT'],
+        ['BMAT','UKCAT'],
+        ['BMAT','GAMSAT'],
+        ['GAMSAT','UKCAT'],
+        ['BMAT','GAMSAT','UKCAT']
+        ])
+    interview_experience=factory.fuzzy.FuzzyChoice([
+        ['P'],
+        ['M'],
+        ['G'],
+        ['G','P'],
+        ['G','M'],
+        ['M','P'],
+        ['G','M','P']])
+    area_of_support=factory.fuzzy.FuzzyChoice([
+        ['PS'],
+        ['I'],
+        ['EE'],
+        ['WE'],
+        ['I','PS'],
+        ['EE','I'],
+        ['PS','EE','WE']])
     course=factory.fuzzy.FuzzyChoice(['M','D'])
     mentor_need=factory.fuzzy.FuzzyText(length=200)
     mentor_help=factory.fuzzy.FuzzyText(length=200)
     mentor_relationship=factory.fuzzy.FuzzyText(length=200)
 
+    @factory.post_generation
+    def qualifications(obj, create, extracted, **kwargs):
+        if not create:
+            return
+        obj.save()
+        number_of_qualifications = random.randint(1, 3)
+        for n in range(number_of_qualifications):
+            q=MenteeQualificationFactory(profile=obj)
+            q.save()
+
+class MenteeQualificationFactory(factory.Factory):
+    class Meta:
+        model = MenteeQualification
+    name = factory.fuzzy.FuzzyChoice([
+        'Biology',
+        'Chemisty',
+        'Mathematics',
+        'Further Mathematics',
+        'Physics',
+        'Critical Thinking',
+        'French',
+        'Biomedical Science',
+        'Psychology'])
+    education_level= factory.fuzzy.FuzzyChoice(['AS','A2','IB','UG','M','D'])
+    grade=factory.fuzzy.FuzzyChoice(["A*","A","B","C","D","E","F","1","2","3","4","5","6","7","1st","2:1","2:2","3rd"])
+    profile = factory.SubFactory(UserFactory)
