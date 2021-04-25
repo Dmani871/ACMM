@@ -48,8 +48,6 @@ class MenteeQualificationInline(admin.TabularInline):
     model = MenteeQualification
     extra=0
     can_delete=True
-
-
 class MenteeAdmin(admin.ModelAdmin):
     inlines = [
         MenteeQualificationInline,
@@ -57,9 +55,8 @@ class MenteeAdmin(admin.ModelAdmin):
     exclude = [""]
     form = MenteeForm
     search_fields = ['first_name','last_name','email']
-    list_filter = ['course','date_joined']
-    
-    list_display = ('first_name','last_name','email','assigned_mentor')
+    list_filter = ['course','date_joined','accepted','sex','year_applied']
+    list_display = ['first_name','last_name','email','assigned_mentor']
     def export_as_csv(self, request, queryset):
         
         meta = self.model._meta
