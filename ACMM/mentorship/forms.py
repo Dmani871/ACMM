@@ -99,7 +99,7 @@ class MenteeQualificationForm(forms.ModelForm):
         model = MenteeQualification
         exclude = ('profile',)
 
-MenteeQualificationFormSet = forms.inlineformset_factory(MenteeProfile,model = MenteeQualification, form=MenteeQualificationForm,extra=1)
+MenteeQualificationFormSet = forms.inlineformset_factory(MenteeProfile,model = MenteeQualification, form=MenteeQualificationForm,extra=3)
 
 
 
