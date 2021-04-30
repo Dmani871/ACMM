@@ -33,10 +33,17 @@ class MentorAdmin(admin.ModelAdmin):
     form = MentorForm
     list_display = ['first_name','last_name','email']
 
+    fieldsets = [
+        ('Personal Information',{'fields': ['first_name','last_name','email','sex']}),
+        ('Background Information', {'fields': ['occupation','year_applied','entrance_exam_experience','interview_experience','area_of_support']}),
+        ('Meta', {'fields': ['date_joined','hear_about_us','is_active']})
+    ]
+
 class MenteeQualificationInline(admin.TabularInline):
     model = MenteeQualification
     extra=0
     can_delete=True
+
 class MenteeAdmin(admin.ModelAdmin):
     inlines = [
         MenteeQualificationInline,
@@ -46,6 +53,13 @@ class MenteeAdmin(admin.ModelAdmin):
     search_fields = ['first_name','last_name','email']
     list_filter = ['course','date_joined','accepted','sex','year_applied']
     list_display = ['first_name','last_name','email','mentor']
+    fieldsets = [
+        ('Personal Information',{'fields': ['first_name','last_name','email','sex']}),
+        ('Background Information', {'fields': ['year_applied','entrance_exam_experience','interview_experience','area_of_support']}),
+        ('Application Information', {'fields': ['course','mentor_need','mentor_help','mentor_relationship','current_application','accepted']}),
+        ('Mentor', {'fields': ['mentor']}),
+        ('Meta', {'fields': ['date_joined','hear_about_us']})
+    ]
 
 
     def generate_matches_messages(self,mentees):
