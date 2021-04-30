@@ -6,16 +6,26 @@ from .forms import MentorForm,MenteeForm
 from django.forms import formset_factory
 from django.forms import inlineformset_factory
 from collections import defaultdict
+from django.urls import reverse
 import numpy as np
 import pandas as pd
+
+from django.conf import settings
+from django.core import mail
 
 class MentorQualificationInline(admin.TabularInline):
     model = MentorQualification
     extra=0
     can_delete=True
+class MenteeInline(admin.TabularInline):
+    model = MenteeProfile
+    extra=0
+    can_delete=True
+
+
 class MentorAdmin(admin.ModelAdmin):
     inlines = [
-        MentorQualificationInline,
+        MentorQualificationInline,MenteeInline
     ]
     search_fields = ['first_name','last_name','email']
     list_filter = ['occupation','date_joined','is_active','sex','year_applied']
@@ -36,8 +46,26 @@ class MenteeAdmin(admin.ModelAdmin):
     search_fields = ['first_name','last_name','email']
     list_filter = ['course','date_joined','accepted','sex','year_applied']
     list_display = ['first_name','last_name','email','mentor']
-    
-    
+
+
+    def generate_matches_messages(self,mentees):
+        emails=[]
+        subject='Congratulations! You have been matched!'
+        body='We have found the perfect match.'
+        for mentee in mentees:
+            if mentee.mentor !=None:
+                mentor=mentee.mentor
+                mentee_email = mail.EmailMessage(subject=subject,body=body,to=[mentee.email])
+                mentor_email = mail.EmailMessage(subject=subject,body=body,to=[mentor.email])
+                emails.append(mentor_email)
+                emails.append(mentee_email)
+        return emails
+   
+    def email_matches(self, request, queryset):
+        with mail.get_connection() as connection:
+            messages=self.generate_matches_messages(queryset)
+            connection.send_messages(messages)
+  
     def assign_mentor(self, request, queryset):
         available_mentors = MentorProfile.objects.filter(is_active=True,menteeprofile__isnull=True)
         mentee_preferences=defaultdict(dict)
@@ -81,7 +109,8 @@ class MenteeAdmin(admin.ModelAdmin):
 
 
     assign_mentor.short_description = "Assign a mentor to each mentee"
-    actions = ["assign_mentor"]
+    email_matches.short_description = "Email matches"
+    actions = ["assign_mentor","email_matches"]
 
 
 admin.site.register(MentorProfile,MentorAdmin)

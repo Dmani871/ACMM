@@ -81,9 +81,8 @@ class MenteeProfile(CommonProfileInfo):
     mentor_relationship=models.TextField(null=True, blank=True)
     course = models.CharField(max_length=10,choices=COURSE_CHOICES)
     current_application=models.BooleanField(default=True,choices=TRUE_FALSE_CHOICES)
-    assigned_mentor=models.OneToOneField(MentorProfile, on_delete=models.SET_NULL,null=True,blank=True)
     accepted=models.BooleanField(default=False,choices=TRUE_FALSE_CHOICES)
-    
+    mentor=models.ForeignKey(MentorProfile, on_delete=models.SET_NULL,null=True,blank=True)
 
     def __str__(self): 
         return self.email
