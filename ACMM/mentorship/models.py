@@ -69,12 +69,17 @@ class CommonProfileInfo(models.Model):
     
     class Meta:
         abstract = True
+
+    def __str__(self): 
+        return self.email
+
+
 class MentorProfile(CommonProfileInfo):
     occupation = models.CharField(max_length=10,choices=OCCUPATION_CHOICES)
     is_active = models.BooleanField(default=True)
  
-    def __str__(self): 
-        return self.email
+    
+
 class MenteeProfile(CommonProfileInfo):
     mentor_need=models.TextField(null=True, blank=True)
     mentor_help=models.TextField(null=True, blank=True)
@@ -84,16 +89,21 @@ class MenteeProfile(CommonProfileInfo):
     accepted=models.BooleanField(default=False,choices=TRUE_FALSE_CHOICES)
     mentor=models.ForeignKey(MentorProfile, on_delete=models.SET_NULL,null=True,blank=True)
 
-    def __str__(self): 
-        return self.email
+
 class CommonQualificationInfo(models.Model):
     name = models.CharField(max_length=50)
     education_level= models.CharField(max_length=10,choices=EDUCATION_LEVEL_CHOICES)
     class Meta:
         abstract = True
+
+    def __str__(self): 
+        return self.name+"-"+self.education_level
+
 class MenteeQualification(CommonQualificationInfo):
     grade=models.CharField(max_length=10 ,choices=GRADE_CHOICES)
     predicted=models.BooleanField(default=False,choices=TRUE_FALSE_CHOICES)
     profile=models.ForeignKey(MenteeProfile, on_delete=models.CASCADE)
+
+
 class MentorQualification(CommonQualificationInfo):
     profile=models.ForeignKey(MentorProfile, on_delete=models.CASCADE)
