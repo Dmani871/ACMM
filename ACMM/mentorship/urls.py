@@ -2,6 +2,8 @@ from django.urls import path
 
 from . import views
 
+
+app_name = 'mentorship'
 urlpatterns = [
     path('', views.applications_view, name='index'),
     path('mentor/signup',views.mentor_signup_view, name='mentor'),
