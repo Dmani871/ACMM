@@ -31,7 +31,7 @@ class MentorAdmin(admin.ModelAdmin):
     list_filter = ['occupation','date_joined','is_active','sex','year_applied']
     exclude = [""]
     form = MentorForm
-    list_display = ['first_name','last_name','email']
+    list_display = ['email','first_name','last_name']
 
     fieldsets = [
         ('Personal Information',{'fields': ['first_name','last_name','email','sex']}),
@@ -52,7 +52,7 @@ class MenteeAdmin(admin.ModelAdmin):
     form = MenteeForm
     search_fields = ['first_name','last_name','email']
     list_filter = ['course','date_joined','accepted','sex','year_applied']
-    list_display = ['first_name','last_name','email','mentor']
+    list_display = ['email','first_name','last_name','mentor']
     fieldsets = [
         ('Personal Information',{'fields': ['first_name','last_name','email','sex']}),
         ('Background Information', {'fields': ['year_applied','entrance_exam_experience','interview_experience','area_of_support']}),
