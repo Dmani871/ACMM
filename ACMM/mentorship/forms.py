@@ -32,8 +32,11 @@ MentorQualificationFormSet = forms.inlineformset_factory(
     models.MentorProfile,
     model = models.MentorQualification, 
     form=MentorQualificationForm,
-    extra=1,
-    max_num=10)
+    extra=2,
+    min_num=1,
+    max_num=10,
+    validate_min=True,
+    validate_max=True)
 
 
 class MenteeForm(forms.ModelForm):    
@@ -104,9 +107,11 @@ MenteeQualificationFormSet = forms.inlineformset_factory(
     models.MenteeProfile,
     model=models.MenteeQualification, 
     form=MenteeQualificationForm,
-    extra=3,
-    max_num=10)
-
+    extra=2,
+    min_num=1,
+    max_num=10,
+    validate_min=True,
+    validate_max=True)
 
 
 
