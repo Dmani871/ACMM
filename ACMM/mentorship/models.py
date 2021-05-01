@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
 from django.utils import timezone
+
+
 SEX_TYPES=("M","F")
 SEX_CHOICES = list(zip(SEX_TYPES,SEX_TYPES))
 ENTRANCE_EXAMS_TYPES=('BMAT','UKCAT','GAMSAT')
@@ -56,9 +58,9 @@ COURSE_CHOICES = [
 
 
 class CommonProfileInfo(models.Model):
+    email = models.EmailField(max_length=255, unique=True)
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=150)
-    email = models.EmailField(max_length=255, unique=True)
     sex = models.CharField(max_length=1,choices = SEX_CHOICES)
     year_applied=models.CharField(max_length=10,choices=YEAR_APPLIED_CHOICES)
     date_joined = models.DateTimeField(default=timezone.now)
