@@ -1,26 +1,22 @@
 from django import forms
-from .models import MentorProfile,MenteeProfile,MentorQualification,MenteeQualification,SPECIALTY_CHOICES,INTERVIEW_EXPERIENCE_CHOICES,ENTRANCE_EXAM_CHOICES
+from . import models
 from django.forms import inlineformset_factory
 
-TRUE_FALSE_CHOICES = [
-    (True, 'Yes'),
-    (False, 'No')
-]
 class MentorForm(forms.ModelForm):
     area_of_support = forms.MultipleChoiceField(
         widget=forms.CheckboxSelectMultiple,
-        choices=SPECIALTY_CHOICES,
+        choices=models.SPECIALTY_CHOICES,
         label="What area can you provide support in?")   
     interview_experience = forms.MultipleChoiceField(
         widget=forms.CheckboxSelectMultiple,
-        choices=INTERVIEW_EXPERIENCE_CHOICES,
+        choices=models.INTERVIEW_EXPERIENCE_CHOICES,
         label="What interview experience do you have?")
     entrance_exam_experience = forms.MultipleChoiceField(
         widget=forms.CheckboxSelectMultiple(),
-        choices=ENTRANCE_EXAM_CHOICES,
+        choices=models.ENTRANCE_EXAM_CHOICES,
         label="What exam experience do you have?")
     class Meta:
-        model = MentorProfile
+        model = models.MentorProfile
         exclude=('is_active','date_joined')
         labels = {
             'year_applied':'Qualification level prior to studying Medicine/Dentistry',
@@ -29,30 +25,35 @@ class MentorForm(forms.ModelForm):
            
 class MentorQualificationForm(forms.ModelForm):
     class Meta:
-        model = MentorQualification
+        model = models.MentorQualification
         exclude = ('profile',)
 
-MentorQualificationFormSet = forms.inlineformset_factory(MentorProfile,model = MentorQualification, form=MentorQualificationForm,extra=1)
+MentorQualificationFormSet = forms.inlineformset_factory(
+    models.MentorProfile,
+    model = models.MentorQualification, 
+    form=MentorQualificationForm,
+    extra=1,
+    max_num=10)
 
 
 class MenteeForm(forms.ModelForm):    
     area_of_support = forms.MultipleChoiceField(
         widget=forms.CheckboxSelectMultiple,
-        choices=SPECIALTY_CHOICES,
+        choices=models.SPECIALTY_CHOICES,
         label="What do you need help with?")   
     
     entrance_exam_experience = forms.MultipleChoiceField(
         widget=forms.CheckboxSelectMultiple,
-        choices=ENTRANCE_EXAM_CHOICES,
+        choices=models.ENTRANCE_EXAM_CHOICES,
         label="What entrance exam experience have you had?")
     
     interview_experience = forms.MultipleChoiceField(
         widget=forms.CheckboxSelectMultiple,
-        choices=INTERVIEW_EXPERIENCE_CHOICES,
+        choices=models.INTERVIEW_EXPERIENCE_CHOICES,
         label="What interview exam experience have you had?")
     
     current_application=forms.ChoiceField(
-        choices = TRUE_FALSE_CHOICES,
+        choices = models.TRUE_FALSE_CHOICES,
         label="Are you applying this year?",
         help_text="Our mentor scheme is for students applying to Medicine/Dentistry this year only"
         ) 
@@ -85,7 +86,7 @@ class MenteeForm(forms.ModelForm):
             help_text="Max 500 Charecters")
     
     class Meta:
-        model = MenteeProfile
+        model = models.MenteeProfile
         exclude=['date_joined','assigned_mentor','accepted']
         labels = {
             'year_applied':'What is your current education level?',
@@ -94,12 +95,17 @@ class MenteeForm(forms.ModelForm):
 
         
 class MenteeQualificationForm(forms.ModelForm):
-    predicted=forms.ChoiceField(choices = TRUE_FALSE_CHOICES ,required=True ,label="Predicted ?") 
+    predicted=forms.ChoiceField(choices =models.TRUE_FALSE_CHOICES ,required=True ,label="Predicted ?") 
     class Meta:
-        model = MenteeQualification
+        model = models.MenteeQualification
         exclude = ('profile',)
 
-MenteeQualificationFormSet = forms.inlineformset_factory(MenteeProfile,model = MenteeQualification, form=MenteeQualificationForm,extra=3)
+MenteeQualificationFormSet = forms.inlineformset_factory(
+    models.MenteeProfile,
+    model=models.MenteeQualification, 
+    form=MenteeQualificationForm,
+    extra=3,
+    max_num=10)
 
 
 
