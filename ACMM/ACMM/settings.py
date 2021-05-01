@@ -56,7 +56,7 @@ ROOT_URLCONF = 'ACMM.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [ os.path.join(BASE_DIR, 'mentorship/templates')],
+        'DIRS': [ os.path.join(BASE_DIR, '/templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -136,3 +136,7 @@ EMAIL_HOST_PASSWORD = 'neqmcuzpljfxaqxy'
 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
+ADMINS=[('Dmani', 'dbsoftwaresoultions@gmail.com')]
+
+STATIC_URL = '/static/'
