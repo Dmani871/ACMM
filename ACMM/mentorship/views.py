@@ -2,7 +2,6 @@ from django.shortcuts import render
 from django.shortcuts import redirect
 from . import forms 
 from django.forms import formset_factory
-from django.template import loader
 
 def mentor_signup_view(request):
     if request.method == "POST":
