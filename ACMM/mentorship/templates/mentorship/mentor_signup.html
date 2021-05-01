@@ -85,6 +85,11 @@
     <div id="qualification-container">
       <h5 class="p-3">Qualification(s)</h5>
       {{qualification_formset.management_form |crispy}} 
+      <p class="text-danger">
+        {% for error in qualification_formset.errors %}
+                <small>{{ error }}</small>
+        {% endfor %}
+        </p>
       {% for form in qualification_formset %}
       <div class="form-row qualification-form p-3">
         <div class="form-group col-md-6 mb-0">
@@ -117,43 +122,6 @@
     </div>
   </form>
 </div>
-<script>
-  let mainForm = document.querySelector("#profile-form");
-  let qualificationForm = document.getElementsByClassName("qualification-form");
-  let addButton = document.querySelector("#add-qualification-form");
-  let qualificationContainer = document.querySelector(
-    "#qualification-container"
-  );
-  let qualificationFormCount = qualificationForm.length - 1;
-  let totalForms = document.querySelector("#id_mentorqualification_set-TOTAL_FORMS");
-  const formRegex = RegExp(`mentorqualification_set-(\\d){1}-`, "g");
-  function updateForms() {
-    let count = 0;
-    for (let form of qualificationForm) {
-      form.innerHTML = form.innerHTML.replace(formRegex, `menteequalification_set-${count++}-`);
-    }
-  }
-  addButton.addEventListener("click", function (e) {
-    e.preventDefault();
-    const newQualificationForm = qualificationForm[0].cloneNode(true);
-    qualificationFormCount++;
-    newQualificationForm.innerHTML = newQualificationForm.innerHTML.replace(
-      formRegex,
-      `mentorqualification_set-${qualificationFormCount}-`
-    );
-    qualificationContainer.append(newQualificationForm);
-    totalForms.setAttribute("value", `${qualificationFormCount + 1}`);
-  });
-
-  
-  mainForm.addEventListener("click", function (event) {
-    if (event.target.classList.contains("delete-qualification-form")) {
-      event.preventDefault();
-      event.target.parentElement.remove();
-      qualificationFormCount--;
-      updateForms();
-      totalForms.setAttribute("value", `${qualificationFormCount - 1}`);
-    }
-  });
-</script>
+{% load static %}
+<script src="{% static 'mentorship/qualificationFormset.js' %}"></script>
 {% endblock %}
