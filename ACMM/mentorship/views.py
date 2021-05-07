@@ -13,6 +13,8 @@ def mentor_signup_view(request):
                 form.save()
                 formset.save()
                 return redirect('mentorship:thank_you')
+        else:
+            formset = forms.MentorQualificationFormSet(request.POST, request.FILES)
     else:
         form = forms.MentorForm()
         formset = forms.MentorQualificationFormSet()
@@ -30,6 +32,8 @@ def mentee_signup_view(request):
                 form.save()
                 formset.save()
                 return redirect('mentorship:thank_you')
+        else:
+            formset = forms.MenteeQualificationFormSet(request.POST, request.FILES)
     else:
         form = forms.MenteeForm()
         formset = forms.MenteeQualificationFormSet()
