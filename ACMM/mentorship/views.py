@@ -7,6 +7,8 @@ def mentor_signup_view(request):
     if request.method == "POST":
         form = forms.MentorForm(request.POST)
         if form.is_valid():
+            if form.cleaned_data['honeypot']:
+                return redirect('mentorship:thank_you')
             profile=form.save(commit=False)
             formset = forms.MentorQualificationFormSet(request.POST, request.FILES,instance=profile)
             if formset.is_valid():
@@ -23,7 +25,10 @@ def mentor_signup_view(request):
 def mentee_signup_view(request):
     if request.method == "POST":
         form = forms.MenteeForm(request.POST)
+
         if form.is_valid():
+            if form.cleaned_data['honeypot']:
+                return redirect('mentorship:thank_you')
             if form.cleaned_data['current_application']=="False":
                 return redirect('mentorship:next_year')
             profile=form.save(commit=False)

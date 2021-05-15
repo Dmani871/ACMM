@@ -112,6 +112,7 @@
     <div class="form-row p-3">
       <button type="submit" class="btn btn-secondary btn-lg">Sign Up!</button>
     </div>
+    {{ form.honeypot|as_crispy_field }}
   </form>
 </div>
 {% load static %}
