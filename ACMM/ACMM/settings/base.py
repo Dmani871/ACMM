@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'mentorship',
     'crispy_forms',
+    'admin_honeypot',
     'coverage'
 ]
 
@@ -115,6 +116,6 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
-ADMINS=[('Dmani', 'dbsoftwaresoultions@gmail.com')]
+ADMINS=[('Dmani', 'dbsoftwaresoultions@gmail.com'),('Dmani', 'dmani.barnett@gmail.com')]
 
 STATIC_URL = '/static/'

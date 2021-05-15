@@ -5,7 +5,8 @@ import os
 
 urlpatterns = [
     path('mentorship/', include('mentorship.urls')),
-    path(os.getenv('SECRET_ADMIN_URL') + 'admin/', admin.site.urls),
+    path('admin/',include('admin_honeypot.urls', namespace='admin_honeypot')),
+    path(os.getenv('SECRET_ADMIN_URL') + '/admin/', admin.site.urls),
 ]
 
 admin.site.site_header = "ACMM Admin"

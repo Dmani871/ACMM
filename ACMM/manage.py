@@ -2,8 +2,12 @@
 import os
 import sys
 import dotenv
+dotenv.load_dotenv(
+    os.path.join(os.path.dirname(__file__), '.env')
+)
 def main():
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ACMM.settings.development')
+    
     if os.getenv('DJANGO_SETTINGS_MODULE'):
         os.environ['DJANGO_SETTINGS_MODULE'] = os.getenv('DJANGO_SETTINGS_MODULE')
 
@@ -21,6 +25,3 @@ def main():
 if __name__ == '__main__':
     main()
 
-dotenv.load_dotenv(
-    os.path.join(os.path.dirname(__file__), '.env')
-)
