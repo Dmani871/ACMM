@@ -72,13 +72,14 @@ class CommonProfileInfo(models.Model):
     class Meta:
         abstract = True
 
-    def __str__(self): 
-        return self.email
 
 
 class MentorProfile(CommonProfileInfo):
     occupation = models.CharField(max_length=10,choices=OCCUPATION_CHOICES)
     is_active = models.BooleanField(default=True)
+
+    def __str__(self): 
+        return self.occupation+"-"+self.email
  
     
 
@@ -90,6 +91,9 @@ class MenteeProfile(CommonProfileInfo):
     current_application=models.BooleanField(default=True,choices=TRUE_FALSE_CHOICES)
     accepted=models.BooleanField(default=False,choices=TRUE_FALSE_CHOICES)
     mentor=models.ForeignKey(MentorProfile, on_delete=models.SET_NULL,null=True,blank=True)
+
+    def __str__(self): 
+        return self.course+"-"+self.email
 
 
 class CommonQualificationInfo(models.Model):

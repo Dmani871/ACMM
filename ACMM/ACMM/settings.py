@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'mentorship',
     'crispy_forms',
+    'coverage'
 ]
 
 MIDDLEWARE = [

@@ -1,13 +1,12 @@
 import factory
 import factory.fuzzy
 import random
-from .models import MentorProfile,MenteeProfile,MentorQualification,MenteeQualification
-
+from mentorship import models
 
 
 class MenteeFactory(factory.Factory):
     class Meta:
-        model = MenteeProfile
+        model = models.MenteeProfile
     first_name = factory.Faker('first_name')
     last_name = factory.Faker('last_name')
     email = factory.LazyAttribute(lambda user: '{}.{}@example.com'.format(user.first_name, user.last_name).lower())
@@ -56,7 +55,7 @@ class MenteeFactory(factory.Factory):
 
 class MenteeQualificationFactory(factory.Factory):
     class Meta:
-        model = MenteeQualification
+        model = models.MenteeQualification
     name = factory.fuzzy.FuzzyChoice([
         'Biology',
         'Chemisty',
@@ -72,7 +71,7 @@ class MenteeQualificationFactory(factory.Factory):
 
 class MentorFactory(factory.Factory):
     class Meta:
-        model = MentorProfile
+        model = models.MentorProfile
     first_name = factory.Faker('first_name')
     last_name = factory.Faker('last_name')
     email = factory.LazyAttribute(lambda user: '{}.{}@example.com'.format(user.first_name, user.last_name).lower())
@@ -119,7 +118,7 @@ class MentorFactory(factory.Factory):
 
 class MentorQualificationFactory(factory.Factory):
     class Meta:
-        model = MentorQualification
+        model = models.MentorQualification
     name = factory.fuzzy.FuzzyChoice([
         'Biology',
         'Chemisty',
