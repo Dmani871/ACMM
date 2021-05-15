@@ -1,9 +1,12 @@
 #!/usr/bin/env python
 import os
 import sys
+import dotenv
+def main():
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ACMM.settings.development')
+    if os.getenv('DJANGO_SETTINGS_MODULE'):
+        os.environ['DJANGO_SETTINGS_MODULE'] = os.getenv('DJANGO_SETTINGS_MODULE')
 
-if __name__ == '__main__':
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ACMM.settings')
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:
@@ -13,3 +16,11 @@ if __name__ == '__main__':
             "forget to activate a virtual environment?"
         ) from exc
     execute_from_command_line(sys.argv)
+
+
+if __name__ == '__main__':
+    main()
+
+dotenv.load_dotenv(
+    os.path.join(os.path.dirname(__file__), '.env')
+)

@@ -11,6 +11,10 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
+import dotenv
+dotenv.load_dotenv(
+    os.path.abspath(os.path.join(os.path.dirname(__file__),'../..', '.env'))
+)
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -73,22 +77,6 @@ TEMPLATES = [
 WSGI_APPLICATION = 'ACMM.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/2.1/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'ACMM',
-        'USER': 'ACMM',
-        'PASSWORD': 'admin',
-        'HOST': 'localhost',
-        'PORT': '',
-    }
-}
-
-
-
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
 
@@ -134,7 +122,6 @@ EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'dbsoftwaresoultions@gmail.com'
 EMAIL_HOST_PASSWORD = 'neqmcuzpljfxaqxy'
-
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
