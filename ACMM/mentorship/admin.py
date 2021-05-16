@@ -12,6 +12,7 @@ import pandas as pd
 
 from django.conf import settings
 from django.core import mail
+from django.contrib.admin.models import LogEntry
 
 class MentorQualificationInline(admin.TabularInline):
     model = MentorQualification
@@ -126,6 +127,58 @@ class MenteeAdmin(admin.ModelAdmin):
     email_matches.short_description = "Email matches"
     actions = ["assign_mentor","email_matches"]
 
+class LogEntryAdmin(admin.ModelAdmin):
+    date_hierarchy = 'action_time'
+    fields = (
+        'action_time', 'user', 'content_type', 'object_id',
+        'object_repr', 'action_flag', 'change_message',
+    )
+    readonly_fields = fields
+   
+    list_display = (
+        'action_time', 'user','action_message', 'content_type'
+    )
+    list_filter = (
+        'action_flag', 'content_type',
+    )
+    search_fields = (
+        'object_repr', 'change_message','user',
+    )
+    def action_message(self, obj):
+        change_message = obj.get_change_message()
+        # If there is no change message then use the action flag label
+        if not change_message:
+            change_message = '{}.'.format(obj.get_action_flag_display())
+        return change_message
+    action_message.short_description = 'action'
+    def has_change_permission(self, request, obj=None):
+        return False
+    def has_add_permission(self, request):
+        return False
+    def has_delete_permission(self, request, obj=None):
+        return False
 
+    """
+    
+    list_filter = (
+        ('user', admin.RelatedOnlyFieldListFilter),
+        'action_flag', 'content_type',
+    )
+    search_fields = (
+        'object_repr', 'change_message',
+    )
+    """
+    """
+    def object_link(self, obj):
+        
+        admin_url = None if obj.is_deletion() else obj.get_admin_url()
+        if admin_url:
+            return format_html('<a href="{}">{}</a>', admin_url, obj.object_repr)
+        else:
+            return obj.object_repr
+    object_link.short_description = 'object'
+
+    """
 admin.site.register(MentorProfile,MentorAdmin)
 admin.site.register(MenteeProfile,MenteeAdmin)
+admin.site.register(LogEntry,LogEntryAdmin)
