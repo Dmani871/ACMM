@@ -10,11 +10,35 @@ from collections import defaultdict
 from django.urls import reverse
 import numpy as np
 import pandas as pd
+from django.core import serializers
+from django.http import HttpResponseRedirect
 
 from django.conf import settings
 from django.core import mail
 from django.contrib.admin.models import LogEntry, CHANGE
 from django.contrib.contenttypes.models import ContentType
+
+@admin.action(description='Export Selected Profiles')
+def export_as_csv(self, request, queryset):
+    meta = self.model._meta
+    field_names = [field.name for field in meta.fields]
+    column_names= field_names+["qualifications"]
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename={}.csv'.format(meta)
+    writer = csv.writer(response)
+    writer.writerow(column_names)
+    for obj in queryset:
+        row_contents=[getattr(obj, field) for field in field_names]
+        if isinstance(obj, MenteeProfile):
+            qualifications=[(q.name,q.education_level,q.grade,q.predicted) for q in MenteeQualification.objects.filter(profile=obj)]
+        else:
+            qualifications=[(q.name,q.education_level) for q in MentorQualification.objects.filter(profile=obj)]
+        row_contents.append(qualifications)
+        row = writer.writerow(row_contents)
+    return response
+
+
+
 
 class MentorQualificationInline(admin.TabularInline):
     model = MentorQualification
@@ -25,9 +49,8 @@ class MenteeInline(admin.StackedInline):
     extra=0
     can_delete=False
     show_change_link=True
-    def get_formsets_with_inlines(self, request, obj=None):
-        for inline in self.get_inline_instances(request, obj):
-            yield inline.get_formset(request, obj), inline
+
+
 
 
 class MentorAdmin(admin.ModelAdmin):
@@ -46,6 +69,8 @@ class MentorAdmin(admin.ModelAdmin):
         ('Meta', {'fields': ['date_joined','hear_about_us','is_active']})
     ]
 
+    actions = [export_as_csv]
+
 class MenteeQualificationInline(admin.TabularInline):
     model = MenteeQualification
     extra=0
@@ -59,7 +84,7 @@ class MenteeAdmin(admin.ModelAdmin):
     exclude = [""]
     form = MenteeForm
     search_fields = ['first_name','last_name','email']
-    list_filter = ['course','date_joined','accepted','sex','year_applied','entrance_exam_experience','interview_experience','area_of_support']
+    list_filter = ['course','date_joined','accepted','sex','year_applied','entrance_exam_experience']
     list_display = ['email','first_name','last_name','mentor_link','entrance_exam_experience','interview_experience','area_of_support']
     fieldsets = [
         ('Personal Information',{'fields': ['first_name','last_name','email','sex']}),
@@ -77,7 +102,11 @@ class MenteeAdmin(admin.ModelAdmin):
             return None
     mentor_link.short_description = 'Mentor'
 
-
+    def export_as_json(modeladmin, request, queryset):
+        response = HttpResponse(content_type="application/json")
+        serializers.serialize("json", queryset, stream=response)
+        return response
+    
     def generate_matches_messages(self,mentees):
         emails=[]
         subject='Congratulations! You have been matched!'
@@ -152,7 +181,7 @@ class MenteeAdmin(admin.ModelAdmin):
 
     assign_mentor.short_description = "Assign a mentor to each mentee"
     email_matches.short_description = "Email matches"
-    actions = ["assign_mentor","email_matches"]
+    actions = [export_as_csv,"assign_mentor","email_matches"]
 
 class LogEntryAdmin(admin.ModelAdmin):
     date_hierarchy = 'action_time'
@@ -173,7 +202,6 @@ class LogEntryAdmin(admin.ModelAdmin):
     )
     def action_message(self, obj):
         change_message = obj.get_change_message()
-        # If there is no change message then use the action flag label
         if not change_message:
             change_message = '{}.'.format(obj.get_action_flag_display())
         return change_message
