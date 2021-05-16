@@ -12,7 +12,8 @@ import pandas as pd
 
 from django.conf import settings
 from django.core import mail
-from django.contrib.admin.models import LogEntry
+from django.contrib.admin.models import LogEntry, CHANGE
+from django.contrib.contenttypes.models import ContentType
 
 class MentorQualificationInline(admin.TabularInline):
     model = MentorQualification
@@ -80,8 +81,10 @@ class MenteeAdmin(admin.ModelAdmin):
         with mail.get_connection() as connection:
             messages=self.generate_matches_messages(queryset)
             connection.send_messages(messages)
+
   
     def assign_mentor(self, request, queryset):
+        ct = ContentType.objects.get_for_model(queryset.model)
         available_mentors = MentorProfile.objects.filter(is_active=True,menteeprofile__isnull=True)
         mentee_preferences=defaultdict(dict)
         mentor_preferences=defaultdict(list)
@@ -116,11 +119,21 @@ class MenteeAdmin(admin.ModelAdmin):
         
         matches_df=pd.DataFrame(mentee_preferences)  
         matches=matches_df.idxmax(axis=1)
+
         for mentor_id,mentee_id in matches.items():
             mentee=MenteeProfile.objects.get(id=mentee_id)
             mentor=MentorProfile.objects.get(id=mentor_id)
             mentee.mentor=mentor
+            LogEntry.objects.log_action(
+                user_id=request.user.id, 
+                content_type_id=ct.pk,
+                object_id=mentee.pk,
+                object_repr=mentee.__str__(),
+                action_flag=CHANGE,
+                change_message="Added mentor match") 
             mentee.save()
+        l = LogEntry(user_id=request.user.id, action_flag=CHANGE,content_type_id=ct.pk, change_message="Mentee-Mentor matches ran")
+        l.save()
 
 
     assign_mentor.short_description = "Assign a mentor to each mentee"
@@ -158,16 +171,6 @@ class LogEntryAdmin(admin.ModelAdmin):
     def has_delete_permission(self, request, obj=None):
         return False
 
-    """
-    
-    list_filter = (
-        ('user', admin.RelatedOnlyFieldListFilter),
-        'action_flag', 'content_type',
-    )
-    search_fields = (
-        'object_repr', 'change_message',
-    )
-    """
     """
     def object_link(self, obj):
         
