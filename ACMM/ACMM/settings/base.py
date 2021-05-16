@@ -48,6 +48,8 @@ INSTALLED_APPS = [
     'django_otp.plugins.otp_static',
     'django_otp.plugins.otp_totp',
     'two_factor',
+    'gdpr_assist'
+    
 ]
 
 AUTHENTICATION_BACKENDS = [
@@ -69,6 +71,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'axes.middleware.AxesMiddleware',
     'django_otp.middleware.OTPMiddleware',
+
 ]
 
 ROOT_URLCONF = 'ACMM.urls'
