@@ -102,10 +102,9 @@ class MenteeAdmin(admin.ModelAdmin):
             return None
     mentor_link.short_description = 'Mentor'
 
-    def export_as_json(modeladmin, request, queryset):
-        response = HttpResponse(content_type="application/json")
-        serializers.serialize("json", queryset, stream=response)
-        return response
+   
+
+
     
     def generate_matches_messages(self,mentees):
         emails=[]
@@ -120,12 +119,12 @@ class MenteeAdmin(admin.ModelAdmin):
                 emails.append(mentee_email)
         return emails
    
+    @admin.action(description='Email matche(s)')
     def email_matches(self, request, queryset):
         with mail.get_connection() as connection:
             messages=self.generate_matches_messages(queryset)
             connection.send_messages(messages)
-
-  
+    @admin.action(description='Assign a mentor to each mentee')
     def assign_mentor(self, request, queryset):
         ct = ContentType.objects.get_for_model(queryset.model)
         available_mentors = MentorProfile.objects.filter(is_active=True,menteeprofile__isnull=True)
@@ -179,9 +178,30 @@ class MenteeAdmin(admin.ModelAdmin):
         l.save()
 
 
-    assign_mentor.short_description = "Assign a mentor to each mentee"
-    email_matches.short_description = "Email matches"
-    actions = [export_as_csv,"assign_mentor","email_matches"]
+    @admin.action(description='Export matches')
+    def export_matches(self, request, queryset):
+        ct = ContentType.objects.get_for_model(queryset.model)
+        meta = self.model._meta
+        column_names= ["mentee(s)","mentor(s)"]
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename={}.csv'.format(meta)
+        writer = csv.writer(response)
+        writer.writerow(column_names)
+        for mentee in queryset:
+            if mentee.mentor !=None:
+                mentor=mentee.mentor
+                row_contents=[mentee.email,mentor.email]
+                row = writer.writerow(row_contents)
+                LogEntry.objects.log_action(
+                    user_id=request.user.id, 
+                    content_type_id=ct.pk,
+                    object_id=mentee.pk,
+                    object_repr=mentee.__str__(),
+                    action_flag=CHANGE,
+                    change_message="Exported Profile") 
+        return response
+
+    actions = [export_as_csv,"export_matches","assign_mentor","email_matches"]
 
 class LogEntryAdmin(admin.ModelAdmin):
     date_hierarchy = 'action_time'
