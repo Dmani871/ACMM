@@ -1,5 +1,6 @@
 from django.contrib import admin
 import csv
+from django.utils.html import format_html
 from django.http import HttpResponse
 from .models import MentorProfile,MenteeProfile,MentorQualification,MenteeQualification
 from .forms import MentorForm,MenteeForm
@@ -54,7 +55,7 @@ class MenteeAdmin(admin.ModelAdmin):
     form = MenteeForm
     search_fields = ['first_name','last_name','email']
     list_filter = ['course','date_joined','accepted','sex','year_applied']
-    list_display = ['email','first_name','last_name','mentor']
+    list_display = ['email','first_name','last_name','mentor_link']
     fieldsets = [
         ('Personal Information',{'fields': ['first_name','last_name','email','sex']}),
         ('Background Information', {'fields': ['year_applied','entrance_exam_experience','interview_experience','area_of_support']}),
@@ -62,6 +63,13 @@ class MenteeAdmin(admin.ModelAdmin):
         ('Mentor', {'fields': ['mentor']}),
         ('Meta', {'fields': ['date_joined','hear_about_us']})
     ]
+    def mentor_link(self, obj):
+        mentor=obj.mentor
+        if mentor:
+            admin_url = mentor.get_admin_url()
+            return format_html('<a href="{}">{}</a>', admin_url,mentor)
+        else:
+            return None
 
 
     def generate_matches_messages(self,mentees):

@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.postgres.fields import ArrayField
 from django.utils import timezone
 import gdpr_assist
-
+from django.urls import reverse
 SEX_TYPES=("M","F")
 SEX_CHOICES = list(zip(SEX_TYPES,SEX_TYPES))
 ENTRANCE_EXAMS_TYPES=('BMAT','UKCAT','GAMSAT')
@@ -71,6 +71,9 @@ class CommonProfileInfo(models.Model):
     
     class Meta:
         abstract = True
+
+    def get_admin_url(self):
+        return reverse("admin:%s_%s_change" % (self._meta.app_label, self._meta.model_name), args=(self.id,))
 
 
 
