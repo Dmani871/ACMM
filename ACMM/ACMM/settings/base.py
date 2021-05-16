@@ -50,7 +50,7 @@ INSTALLED_APPS = [
     'two_factor',
     'gdpr_assist',
     'whitenoise.runserver_nostatic',
-    'whitenoise.middleware.WhiteNoiseMiddleware'
+    
     
 ]
 
@@ -73,6 +73,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'axes.middleware.AxesMiddleware',
     'django_otp.middleware.OTPMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 
 ]
 
@@ -140,7 +141,7 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 ADMINS=[('Dmani', 'dbsoftwaresoultions@gmail.com'),('Dmani', 'dmani.barnett@gmail.com')]
-
+STATIC_URL = '/static/'
 #location where django collect all static files
 STATIC_ROOT = os.path.join(BASE_DIR,'static')
 # location where you will store your static files
