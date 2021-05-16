@@ -43,6 +43,10 @@ INSTALLED_APPS = [
     'admin_honeypot',
     'coverage',
     'axes',
+    'django_otp',
+    'django_otp.plugins.otp_static',
+    'django_otp.plugins.otp_totp',
+    'two_factor',
 ]
 
 AUTHENTICATION_BACKENDS = [
@@ -63,6 +67,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'axes.middleware.AxesMiddleware',
+    'django_otp.middleware.OTPMiddleware',
 ]
 
 ROOT_URLCONF = 'ACMM.urls'
@@ -133,3 +138,5 @@ ADMINS=[('Dmani', 'dbsoftwaresoultions@gmail.com'),('Dmani', 'dmani.barnett@gmai
 STATIC_URL = '/static/'
 
 STATIC_ROOT = os.path.join(BASE_DIR,"static/")
+LOGIN_URL = 'two_factor:login'
+LOGIN_REDIRECT_URL = '/admin'
