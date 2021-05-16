@@ -17,7 +17,7 @@ from django.conf import settings
 from django.core import mail
 from django.contrib.admin.models import LogEntry, CHANGE
 from django.contrib.contenttypes.models import ContentType
-
+from django.contrib.sessions.models import Session
 @admin.action(description='Export Selected Profiles')
 def export_as_csv(self, request, queryset):
     meta = self.model._meta
@@ -176,8 +176,6 @@ class MenteeAdmin(admin.ModelAdmin):
             mentee.save()
         l = LogEntry(user_id=request.user.id, action_flag=CHANGE,content_type_id=ct.pk, change_message="Mentee-Mentor matches ran")
         l.save()
-
-
     @admin.action(description='Export matches')
     def export_matches(self, request, queryset):
         ct = ContentType.objects.get_for_model(queryset.model)
@@ -233,7 +231,17 @@ class LogEntryAdmin(admin.ModelAdmin):
     def has_delete_permission(self, request, obj=None):
         return False
 
-
+class SessionAdmin(admin.ModelAdmin):
+    def _session_data(self, obj):
+        return obj.get_decoded()
+    list_display = ['session_key', '_session_data', 'expire_date']
+    list_filter = ['expire_date']
+    def has_change_permission(self, request, obj=None):
+        return False
+    def has_add_permission(self, request):
+        return False
+        
+admin.site.register(Session, SessionAdmin)
 admin.site.register(MentorProfile,MentorAdmin)
 admin.site.register(MenteeProfile,MenteeAdmin)
 admin.site.register(LogEntry,LogEntryAdmin)
