@@ -48,7 +48,9 @@ INSTALLED_APPS = [
     'django_otp.plugins.otp_static',
     'django_otp.plugins.otp_totp',
     'two_factor',
-    'gdpr_assist'
+    'gdpr_assist',
+    'whitenoise.runserver_nostatic',
+    'whitenoise.middleware.WhiteNoiseMiddleware'
     
 ]
 
@@ -139,9 +141,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 ADMINS=[('Dmani', 'dbsoftwaresoultions@gmail.com'),('Dmani', 'dmani.barnett@gmail.com')]
 
-STATIC_URL = '/static/'
+#location where django collect all static files
+STATIC_ROOT = os.path.join(BASE_DIR,'static')
+# location where you will store your static files
+STATICFILES_DIRS = [os.path.join(BASE_DIR,'acmm/static')]
 
-STATIC_ROOT = os.path.join(BASE_DIR,"static/")
+MEDIA_ROOT = os.path.join(BASE_DIR,'media')
+MEDIA_URL = '/media/'
 LOGIN_URL = 'two_factor:login'
 LOGIN_REDIRECT_URL = '/admin'
 
@@ -152,3 +158,5 @@ AXES_COOLOFF_TIME = timedelta(minutes=10)
 AXES_LOCK_OUT_BY_COMBINATION_USER_AND_IP = True
 AXES_LOCK_OUT_BY_USER_OR_IP=True
 AXES_VERBOSE=True
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
