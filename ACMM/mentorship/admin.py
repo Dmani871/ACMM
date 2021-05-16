@@ -20,10 +20,14 @@ class MentorQualificationInline(admin.TabularInline):
     model = MentorQualification
     extra=0
     can_delete=True
-class MenteeInline(admin.TabularInline):
+class MenteeInline(admin.StackedInline):
     model = MenteeProfile
     extra=0
-    can_delete=True
+    can_delete=False
+    show_change_link=True
+    def get_formsets_with_inlines(self, request, obj=None):
+        for inline in self.get_inline_instances(request, obj):
+            yield inline.get_formset(request, obj), inline
 
 
 class MentorAdmin(admin.ModelAdmin):
@@ -47,6 +51,7 @@ class MenteeQualificationInline(admin.TabularInline):
     extra=0
     can_delete=True
 
+
 class MenteeAdmin(admin.ModelAdmin):
     inlines = [
         MenteeQualificationInline,
@@ -54,8 +59,8 @@ class MenteeAdmin(admin.ModelAdmin):
     exclude = [""]
     form = MenteeForm
     search_fields = ['first_name','last_name','email']
-    list_filter = ['course','date_joined','accepted','sex','year_applied']
-    list_display = ['email','first_name','last_name','mentor_link']
+    list_filter = ['course','date_joined','accepted','sex','year_applied','entrance_exam_experience','interview_experience','area_of_support']
+    list_display = ['email','first_name','last_name','mentor_link','entrance_exam_experience','interview_experience','area_of_support']
     fieldsets = [
         ('Personal Information',{'fields': ['first_name','last_name','email','sex']}),
         ('Background Information', {'fields': ['year_applied','entrance_exam_experience','interview_experience','area_of_support']}),
@@ -70,6 +75,7 @@ class MenteeAdmin(admin.ModelAdmin):
             return format_html('<a href="{}">{}</a>', admin_url,mentor)
         else:
             return None
+    mentor_link.short_description = 'Mentor'
 
 
     def generate_matches_messages(self,mentees):
@@ -179,17 +185,7 @@ class LogEntryAdmin(admin.ModelAdmin):
     def has_delete_permission(self, request, obj=None):
         return False
 
-    """
-    def object_link(self, obj):
-        
-        admin_url = None if obj.is_deletion() else obj.get_admin_url()
-        if admin_url:
-            return format_html('<a href="{}">{}</a>', admin_url, obj.object_repr)
-        else:
-            return obj.object_repr
-    object_link.short_description = 'object'
 
-    """
 admin.site.register(MentorProfile,MentorAdmin)
 admin.site.register(MenteeProfile,MenteeAdmin)
 admin.site.register(LogEntry,LogEntryAdmin)
