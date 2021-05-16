@@ -3,6 +3,7 @@ from django.contrib.postgres.fields import ArrayField
 from django.utils import timezone
 import gdpr_assist
 from django.urls import reverse
+from django_cryptography.fields import encrypt
 SEX_TYPES=("M","F")
 SEX_CHOICES = list(zip(SEX_TYPES,SEX_TYPES))
 ENTRANCE_EXAMS_TYPES=('BMAT','UKCAT','GAMSAT')
