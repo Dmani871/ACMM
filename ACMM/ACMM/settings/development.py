@@ -26,3 +26,4 @@ EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER','dbsoftwaresoultions@gmail.co
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD','dbsoftwaresoultions@gmail.com')
 
 GDPR_CAN_ANONYMISE_DATABASE = False
+SECURE_SSL_REDIRECT = False

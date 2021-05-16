@@ -145,7 +145,7 @@ STATIC_URL = '/static/'
 #location where django collect all static files
 STATIC_ROOT = os.path.join(BASE_DIR,'static')
 # location where you will store your static files
-STATICFILES_DIRS = [os.path.join(BASE_DIR,'acmm/static')]
+STATICFILES_DIRS = [os.path.join(BASE_DIR,'ACMM/static')]
 
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 MEDIA_URL = '/media/'
@@ -161,3 +161,17 @@ AXES_LOCK_OUT_BY_USER_OR_IP=True
 AXES_VERBOSE=True
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+
+# CSP settings
+CSP_DEFAULT_SRC = ("'none'", )
+CSP_STYLE_SRC = ("'self'", "https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css", "'sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO'")
+CSP_SCRIPT_SRC = ("'self'", )
+CSP_IMG_SRC = ("'self'", )
+CSP_FONT_SRC = ("'self'", )
+CSP_CONNECT_SRC = ("'self'", )
+CSP_OBJECT_SRC = ("'none'", )
+CSP_BASE_URI = ("'none'", )
+CSP_FRAME_ANCESTORS = ("'none'", )
+CSP_FORM_ACTION = ("'self'", )
+CSP_INCLUDE_NONCE_IN = ('script-src',)
