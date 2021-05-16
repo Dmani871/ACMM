@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 
 import os
 import dotenv
+from datetime import timedelta
 dotenv.load_dotenv(
     os.path.abspath(os.path.join(os.path.dirname(__file__),'../..', '.env'))
 )
@@ -140,3 +141,11 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR,"static/")
 LOGIN_URL = 'two_factor:login'
 LOGIN_REDIRECT_URL = '/admin'
+
+#AXES
+AXES_ENABLED=True
+AXES_FAILURE_LIMIT=3
+AXES_COOLOFF_TIME = timedelta(minutes=10)
+AXES_LOCK_OUT_BY_COMBINATION_USER_AND_IP = True
+AXES_LOCK_OUT_BY_USER_OR_IP=True
+AXES_VERBOSE=True
