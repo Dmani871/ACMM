@@ -5,7 +5,7 @@ from django.urls import reverse
 
 SEX_TYPES=("M","F")
 SEX_CHOICES = list(zip(SEX_TYPES,SEX_TYPES))
-ENTRANCE_EXAMS_TYPES=('BMAT','UKCAT','GAMSAT')
+ENTRANCE_EXAMS_TYPES=('BMAT','UCAT','GAMSAT')
 ENTRANCE_EXAM_CHOICES = list(zip(ENTRANCE_EXAMS_TYPES,ENTRANCE_EXAMS_TYPES))
 INTERVIEW_EXPERIENCE_CHOICES = [
     ("P", 'Panel'),
@@ -65,7 +65,7 @@ class CommonProfileInfo(models.Model):
     year_applied=models.CharField(max_length=10,choices=YEAR_APPLIED_CHOICES)
     date_joined = models.DateTimeField(default=timezone.now)
     hear_about_us = models.CharField(max_length=10,choices=HEAR_ABOUT_US_CHOICES,default=None)
-    entrance_exam_experience = ArrayField(models.CharField(max_length=10,choices = ENTRANCE_EXAM_CHOICES))
+    entrance_exam_experience = ArrayField(models.CharField(max_length=10,choices = ENTRANCE_EXAM_CHOICES),default=list)
     interview_experience = ArrayField(models.CharField(max_length=10,choices = INTERVIEW_EXPERIENCE_CHOICES))
     area_of_support = ArrayField(models.CharField(max_length=10,choices = SPECIALTY_CHOICES),default=list)
     

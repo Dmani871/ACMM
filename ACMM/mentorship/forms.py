@@ -14,7 +14,8 @@ class MentorForm(forms.ModelForm):
     entrance_exam_experience = forms.MultipleChoiceField(
         widget=forms.CheckboxSelectMultiple(),
         choices=models.ENTRANCE_EXAM_CHOICES,
-        label="What exam experience do you have?")
+        label="What exam experience do you have?",
+        required=False)
     honeypot = forms.CharField(widget=forms.HiddenInput(), required=False)
     class Meta:
         model = models.MentorProfile
@@ -50,7 +51,8 @@ class MenteeForm(forms.ModelForm):
     entrance_exam_experience = forms.MultipleChoiceField(
         widget=forms.CheckboxSelectMultiple,
         choices=models.ENTRANCE_EXAM_CHOICES,
-        label="What entrance exam experience have you had?")
+        label="What entrance exam experience have you had?",
+        required=False)
     
     interview_experience = forms.MultipleChoiceField(
         widget=forms.CheckboxSelectMultiple,

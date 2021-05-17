@@ -40,27 +40,12 @@
       <div class="form-row">
         <div class="form-group col-md-4 mb-0">
           {{ form.entrance_exam_experience|as_crispy_field }}
-          <p class="text-danger">
-          {% for error in form.entrance_exam_experience.errors %}
-                  <small>{{ error }}</small>
-          {% endfor %}
-          </p>
         </div>
         <div class="form-group col-md-4 mb-0">
           {{ form.interview_experience|as_crispy_field }}
-          <p class="text-danger">
-            {% for error in form.interview_experience.errors %}
-                    <small>{{ error }}</small>
-            {% endfor %}
-            </p>
         </div>
         <div class="form-group col-md-4 mb-0">
           {{ form.area_of_support|as_crispy_field }}
-          <p class="text-danger">
-            {% for error in form.area_of_support.errors %}
-                    <small>{{ error }}</small>
-            {% endfor %}
-            </p>
         </div>
       </div>
 
