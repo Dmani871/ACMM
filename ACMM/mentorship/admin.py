@@ -84,8 +84,8 @@ class MenteeAdmin(admin.ModelAdmin):
     exclude = [""]
     form = MenteeForm
     search_fields = ['first_name','last_name','email','entrance_exam_experience','interview_experience','area_of_support']
-    list_filter = ['course','date_joined','accepted','sex','year_applied','hear_about_us']
-    list_display = ['email','first_name','last_name','mentor_link','entrance_exam_experience','interview_experience','area_of_support']
+    list_filter = ['course','date_joined','accepted','sex','year_applied','hear_about_us','mentor']
+    list_display = ['email','first_name','last_name','mentor','mentor_link','entrance_exam_experience','interview_experience','area_of_support']
     fieldsets = [
         ('Personal Information',{'fields': ['first_name','last_name','email','sex']}),
         ('Background Information', {'fields': ['year_applied','entrance_exam_experience','interview_experience','area_of_support']}),
@@ -161,6 +161,11 @@ class MenteeAdmin(admin.ModelAdmin):
         
         matches_df=pd.DataFrame(mentee_preferences)  
         matches=matches_df.idxmax(axis=1)
+        print(matches)
+        matches_df.to_csv('matches.csv',index=False)
+        matches_df.to_csv('matches_index.csv',index=True)
+        matches.to_csv('result.csv',index=False)
+
 
         for mentor_id,mentee_id in matches.items():
             mentee=MenteeProfile.objects.get(id=mentee_id)

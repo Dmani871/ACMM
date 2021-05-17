@@ -9,14 +9,8 @@ DATABASES = {
         'PASSWORD': os.environ.get('SQL_PASSWORD'),
         'HOST': os.environ.get('SQL_HOST', 'localhost'),
         'PORT': os.environ.get('SQL_PORT', ''),
-    },
-    'gdpr_log': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'gdpr-log.sqlite3'),
-    },
+    }
 }
-DATABASE_ROUTERS = ['gdpr_assist.routers.EventLogRouter']
-
 
 EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND')
 EMAIL_HOST = os.environ.get('EMAIL_HOST')

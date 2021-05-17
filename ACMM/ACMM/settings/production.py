@@ -2,13 +2,7 @@ from .base import *
 import dj_database_url
 DEBUG = False
 ALLOWED_HOSTS = ['acmm.herokuapp.com','localhost','127.0.0.1']
-DATABASES = {
-    'gdpr_log': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'gdpr-log.sqlite3'),
-    },
-}
-DATABASE_ROUTERS = ['gdpr_assist.routers.EventLogRouter']
+DATABASES = {}
 db_from_env = dj_database_url.config(conn_max_age=600)
 DATABASES['default']=db_from_env
 

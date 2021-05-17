@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'mentorship',
+    'mentorship.apps.MentorshipConfig',
     'crispy_forms',
     'admin_honeypot',
     'coverage',
@@ -48,7 +48,6 @@ INSTALLED_APPS = [
     'django_otp.plugins.otp_static',
     'django_otp.plugins.otp_totp',
     'two_factor',
-    'gdpr_assist',
     'whitenoise.runserver_nostatic',
     
     
@@ -152,8 +151,8 @@ STATICFILES_DIRS = (
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 MEDIA_URL = '/media/'
 LOGIN_URL = 'two_factor:login'
-LOGIN_REDIRECT_URL = os.getenv('SECRET_ADMIN_URL') + 'admin/'
-
+#LOGIN_REDIRECT_URL = os.getenv('SECRET_ADMIN_URL') + 'admin/'
+LOGIN_REDIRECT_URL = '/hello'
 #AXES
 AXES_ENABLED=True
 AXES_FAILURE_LIMIT=3

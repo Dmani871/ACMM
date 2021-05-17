@@ -1,9 +1,8 @@
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
 from django.utils import timezone
-import gdpr_assist
 from django.urls import reverse
-from django_cryptography.fields import encrypt
+
 SEX_TYPES=("M","F")
 SEX_CHOICES = list(zip(SEX_TYPES,SEX_TYPES))
 ENTRANCE_EXAMS_TYPES=('BMAT','UKCAT','GAMSAT')
@@ -96,8 +95,6 @@ class MenteeProfile(CommonProfileInfo):
     accepted=models.BooleanField(default=False,choices=TRUE_FALSE_CHOICES)
     mentor=models.ForeignKey(MentorProfile, on_delete=models.SET_NULL,null=True,blank=True)
 
-    
-
     def __str__(self): 
         return self.course+"-"+self.email
 
@@ -120,10 +117,3 @@ class MenteeQualification(CommonQualificationInfo):
 class MentorQualification(CommonQualificationInfo):
     profile=models.ForeignKey(MentorProfile, on_delete=models.CASCADE)
 
-class UserPrivacyMeta:
-    fields = ['first_name', 'last_name', 'email','sex']
-    search_fields = ['first_name__icontains','last_name__icontains','email__icontains']
-
-gdpr_assist.register(MenteeProfile, UserPrivacyMeta)
-
-gdpr_assist.register(MentorProfile, UserPrivacyMeta)
