@@ -34,9 +34,11 @@ EDUCATION_LEVEL_CHOICES = [
     ("A2", 'A Level'),
     ("AS", 'A/S Level'),
     ('IB', 'International Baccalaureate'),
+    ('SH','Scottish Highers and Advanced Highers'),
     ("UG", 'Undergraduate'),
     ("M", 'Masters'),
     ("D", 'Doctorate')
+
 ]
 OCCUPATION_CHOICES = [
     ('MD', 'Doctor'),
