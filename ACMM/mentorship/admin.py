@@ -1,23 +1,25 @@
-from django.contrib import admin
 import csv
-from django.utils.html import format_html
-from django.http import HttpResponse
-from .models import MentorProfile,MenteeProfile,MentorQualification,MenteeQualification
-from .forms import MentorForm,MenteeForm
-from django.forms import formset_factory
-from django.forms import inlineformset_factory
-from collections import defaultdict
-from django.urls import reverse
-import numpy as np
-import pandas as pd
 from django.core import serializers
-from django.http import HttpResponseRedirect
-
-from django.conf import settings
 from django.core import mail
+from django.http import HttpResponseRedirect
+from django.http import HttpResponse
+from django.conf import settings
+from django.contrib import admin
 from django.contrib.admin.models import LogEntry, CHANGE
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.sessions.models import Session
+from django.forms import formset_factory
+from django.forms import inlineformset_factory
+from django.urls import reverse
+from django.utils.html import format_html
+from .models import MentorProfile,MenteeProfile,MentorQualification,MenteeQualification
+from .forms import MentorForm,MenteeForm
+from collections import defaultdict
+import pandas as pd
+import numpy as np
+from collections import Counter
+
+
 @admin.action(description='Export Selected Profiles')
 def export_as_csv(self, request, queryset):
     meta = self.model._meta
@@ -37,21 +39,16 @@ def export_as_csv(self, request, queryset):
         row = writer.writerow(row_contents)
     return response
 
-
-
-
 class MentorQualificationInline(admin.TabularInline):
     model = MentorQualification
     extra=0
     can_delete=True
+
 class MenteeInline(admin.StackedInline):
     model = MenteeProfile
     extra=0
     can_delete=False
     show_change_link=True
-
-
-
 
 class MentorAdmin(admin.ModelAdmin):
     inlines = [
@@ -68,14 +65,12 @@ class MentorAdmin(admin.ModelAdmin):
         ('Background Information', {'fields': ['occupation','year_applied','entrance_exam_experience','interview_experience','area_of_support']}),
         ('Meta', {'fields': ['date_joined','hear_about_us','is_active']})
     ]
-
     actions = [export_as_csv]
 
 class MenteeQualificationInline(admin.TabularInline):
     model = MenteeQualification
     extra=0
     can_delete=True
-
 
 class MenteeAdmin(admin.ModelAdmin):
     inlines = [
@@ -84,8 +79,8 @@ class MenteeAdmin(admin.ModelAdmin):
     exclude = [""]
     form = MenteeForm
     search_fields = ['first_name','last_name','email','entrance_exam_experience','interview_experience','area_of_support']
-    list_filter = ['course','date_joined','accepted','sex','year_applied','hear_about_us','mentor']
-    list_display = ['email','first_name','last_name','mentor','mentor_link','entrance_exam_experience','interview_experience','area_of_support']
+    list_filter = ['course','date_joined','accepted','sex','year_applied','hear_about_us']
+    list_display = ['email','first_name','last_name','mentor_link','entrance_exam_experience','interview_experience','area_of_support']
     fieldsets = [
         ('Personal Information',{'fields': ['first_name','last_name','email','sex']}),
         ('Background Information', {'fields': ['year_applied','entrance_exam_experience','interview_experience','area_of_support']}),
@@ -102,10 +97,6 @@ class MenteeAdmin(admin.ModelAdmin):
             return None
     mentor_link.short_description = 'Mentor'
 
-   
-
-
-    
     def generate_matches_messages(self,mentees):
         emails=[]
         subject='Congratulations! You have been matched!'
@@ -119,7 +110,7 @@ class MenteeAdmin(admin.ModelAdmin):
                 emails.append(mentee_email)
         return emails
    
-    @admin.action(description='Email matche(s)')
+    @admin.action(description='Email Matche(s)')
     def email_matches(self, request, queryset):
         with mail.get_connection() as connection:
             messages=self.generate_matches_messages(queryset)
@@ -129,47 +120,65 @@ class MenteeAdmin(admin.ModelAdmin):
         ct = ContentType.objects.get_for_model(queryset.model)
         available_mentors = MentorProfile.objects.filter(is_active=True,menteeprofile__isnull=True)
         mentee_preferences=defaultdict(dict)
-        mentor_preferences=defaultdict(list)
         for mentee in queryset:
             matches=defaultdict(dict)
             for mentor in available_mentors:
                 ranking=0
                 if mentee.course == mentor.occupation[0]:
                     ranking=10
-                if mentor.year_applied==mentee.year_applied:
-                    ranking *=2
-                if mentor.sex!=mentee.sex:
-                    ranking*=0.8
-                
-                support_factor = len(np.intersect1d(mentor.area_of_support,mentee.area_of_support))+1
-                interview_factor = len(np.intersect1d(mentor.interview_experience,mentee.interview_experience))
-                exam_factor = len(np.intersect1d(mentor.entrance_exam_experience,mentee.entrance_exam_experience))
-                if 'EE' in mentee.area_of_support:
-                    exam_factor *=2
-                if 'I' in mentee.area_of_support:
-                    interview_factor *=2
-                mentee_qualifications=[q.name for q in MenteeQualification.objects.filter(profile=mentee)]
-                mentor_qualifications=[q.name for q in MentorQualification.objects.filter(profile=mentor)]
-                subject_factor = len(np.intersect1d(mentor_qualifications,mentee_qualifications))
-                mentor_factor =1+((exam_factor+interview_factor+subject_factor)*0.1)
-                ranking=(ranking*support_factor)*mentor_factor
-                
-
-                if ranking >0:
-                    matches[mentor.id]=ranking
+                    if mentor.year_applied==mentee.year_applied:
+                        ranking *=2
+                    if mentor.sex!=mentee.sex:
+                        ranking*=0.8
+                    
+                    support_factor = len(np.intersect1d(mentor.area_of_support,mentee.area_of_support))
+                    interview_factor = len(np.intersect1d(mentor.interview_experience,mentee.interview_experience))
+                    exam_factor = len(np.intersect1d(mentor.entrance_exam_experience,mentee.entrance_exam_experience))
+                    
+                    if ('EE' in mentee.area_of_support and exam_factor==0) or ('I' in mentee.area_of_support and interview_factor==0):
+                        support_factor=0
+                    if 'EE' in mentee.area_of_support:
+                        exam_factor *=5
+                    if 'I' in mentee.area_of_support:
+                        interview_factor *=5
+                    mentor_factor =1+((exam_factor+interview_factor)*0.1)
+                    ranking=(ranking*support_factor)*mentor_factor
+                    if ranking >0:
+                        matches[mentor.id]=ranking
             mentee_preferences[mentee.id]=matches
         
         matches_df=pd.DataFrame(mentee_preferences)  
-        matches=matches_df.idxmax(axis=1)
-        print(matches)
-        matches_df.to_csv('matches.csv',index=False)
-        matches_df.to_csv('matches_index.csv',index=True)
-        matches.to_csv('result.csv',index=False)
+        mentor_list=matches_df.index.tolist()
+        waiting_list = []
+        no_matches=[]
+        proposals = {}
 
+        counter=0
+        while len(waiting_list)<len(mentor_list) and counter<1000:
+            for mentor in mentor_list:
+                if mentor not in waiting_list:
+                    best_choice = matches_df.loc[mentor].idxmax()
+                    rank=matches_df.loc[mentor][best_choice]
+                    if rank>0:
+                        proposals[(mentor, best_choice)]=matches_df.loc[mentor][best_choice]   
+                    else:
+                        no_matches.append(mentor)
+            overlays = Counter([key[1] for key in proposals.keys()])
+            for mentee in overlays.keys():
+                if overlays[mentee]>1:
+                    pairs={pair: proposals[pair] for pair in proposals.keys() 
+                            if mentee in pair}.items()
+                    pairs_to_drop=sorted(pairs,key=lambda x: x[1])[:-1]
+                    for p_to_drop in pairs_to_drop:
+                        del proposals[p_to_drop[0]]
+                        matches_df.at[p_to_drop[0][0],p_to_drop[0][1]]=0
+            waiting_list = [pair[0] for pair in proposals.keys()]+no_matches
+            counter+=1
+       
 
-        for mentor_id,mentee_id in matches.items():
-            mentee=MenteeProfile.objects.get(id=mentee_id)
-            mentor=MentorProfile.objects.get(id=mentor_id)
+        for pair in proposals.keys():
+            mentor=MentorProfile.objects.get(id=pair[0])
+            mentee=MenteeProfile.objects.get(id=pair[1])
             mentee.mentor=mentor
             LogEntry.objects.log_action(
                 user_id=request.user.id, 
@@ -181,7 +190,8 @@ class MenteeAdmin(admin.ModelAdmin):
             mentee.save()
         l = LogEntry(user_id=request.user.id, action_flag=CHANGE,content_type_id=ct.pk, change_message="Mentee-Mentor matches ran")
         l.save()
-    @admin.action(description='Export matches')
+        
+    @admin.action(description='Export Matches Email')
     def export_matches(self, request, queryset):
         ct = ContentType.objects.get_for_model(queryset.model)
         meta = self.model._meta
@@ -204,7 +214,43 @@ class MenteeAdmin(admin.ModelAdmin):
                     change_message="Exported Profile") 
         return response
 
-    actions = [export_as_csv,"export_matches","assign_mentor","email_matches"]
+    @admin.action(description='Export Matches Info')
+    def export_matches_info(self, request, queryset):
+        ct = ContentType.objects.get_for_model(queryset.model)
+        meta = self.model._meta
+        column_names= ["mentee.id","mentor.id",
+                    "mentee.course","mentor.occupation",
+                    "mentee.year_applied","mentor.year_applied",
+                    "mentee.sex","mentor.sex",
+                    "mentee.area_of_support","mentor.area_of_support",
+                    "mentee.interview_experience","mentor.interview_experience",
+                    "mentee.entrance_exam_experience","mentor.entrance_exam_experience"]
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename=mentorships-matches.csv'
+        writer = csv.writer(response)
+        writer.writerow(column_names)
+        for mentee in queryset:
+            if mentee.mentor !=None:
+                mentor=mentee.mentor
+                row_contents=[
+                    mentee.id,mentor.id,
+                    mentee.course,mentor.occupation[0],
+                    mentee.year_applied,mentor.year_applied,
+                    mentee.sex,mentor.sex,
+                    mentee.area_of_support,mentor.area_of_support,
+                    mentee.interview_experience,mentor.interview_experience,
+                    mentee.entrance_exam_experience,mentor.entrance_exam_experience
+                    ]
+                row = writer.writerow(row_contents)
+                LogEntry.objects.log_action(
+                    user_id=request.user.id, 
+                    content_type_id=ct.pk,
+                    object_id=mentee.pk,
+                    object_repr=mentee.__str__(),
+                    action_flag=CHANGE,
+                    change_message="Exported Matches Info") 
+        return response
+    actions = [export_as_csv,"export_matches","assign_mentor","email_matches","export_matches_info"]
 
 class LogEntryAdmin(admin.ModelAdmin):
     date_hierarchy = 'action_time'
