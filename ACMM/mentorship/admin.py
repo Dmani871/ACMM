@@ -54,8 +54,8 @@ class MentorAdmin(admin.ModelAdmin):
     inlines = [
         MentorQualificationInline,MenteeInline
     ]
-    search_fields = ['first_name','last_name','email']
-    list_filter = ['occupation','date_joined','is_active','sex','year_applied']
+    #search_fields = ['first_name','last_name','email']
+    list_filter = ['occupation','date_joined','is_active','year_applied']
     exclude = [""]
     form = MentorForm
     list_display = ['email','first_name','last_name']
@@ -78,8 +78,8 @@ class MenteeAdmin(admin.ModelAdmin):
     ]
     exclude = [""]
     form = MenteeForm
-    search_fields = ['first_name','last_name','email','entrance_exam_experience','interview_experience','area_of_support']
-    list_filter = ['course','date_joined','accepted','sex','year_applied','hear_about_us']
+    #search_fields = ['first_name','last_name','email','entrance_exam_experience','interview_experience','area_of_support']
+    list_filter = ['course','date_joined','accepted','year_applied','hear_about_us']
     list_display = ['email','first_name','last_name','mentor_link','entrance_exam_experience','interview_experience','area_of_support']
     fieldsets = [
         ('Personal Information',{'fields': ['first_name','last_name','email','sex']}),
