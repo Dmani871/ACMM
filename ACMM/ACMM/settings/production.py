@@ -1,17 +1,9 @@
 from .base import *
-import dj_database_url
 DEBUG = False
-ALLOWED_HOSTS = ['acmm.herokuapp.com','localhost','127.0.0.1']
-DATABASES = {}
-db_from_env = dj_database_url.config(conn_max_age=600)
-DATABASES['default']=db_from_env
-#PMD5uytHB0wzduoL
-EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND')
-EMAIL_HOST = os.environ.get('EMAIL_HOST')
-EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS',True)
-EMAIL_PORT = os.environ.get('EMAIL_PORT',587)
-EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER','dbsoftwaresoultions@gmail.com') 
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD','dbsoftwaresoultions@gmail.com')
+ALLOWED_HOSTS = ['*']
+DATABASES = {'default': env.db()}
+EMAIL_CONFIG = env.email_url('EMAIL_URL')
+
 # SSL settings
 SECURE_SSL_REDIRECT = True
 # CSRF settings
@@ -24,11 +16,12 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 SECURE_HSTS_SECONDS = 31536000
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_PRELOAD = True
-#GDPR
-GDPR_CAN_ANONYMISE_DATABASE = True
 #Session
 SESSION_EXPIRE_AT_BROWSER_CLOSE=True
 SESSION_COOKIE_AGE=3600
 
-DEBUG_PROPAGATE_EXCEPTIONS = True
-COMPRESS_ENABLED = os.environ.get('COMPRESS_ENABLED', False)
+# Define static storage via django-storages[google]
+GS_BUCKET_NAME = env("GS_BUCKET_NAME")
+DEFAULT_FILE_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
+STATICFILES_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
+GS_DEFAULT_ACL = "publicRead"

@@ -1,15 +1,11 @@
 #!/usr/bin/env python
 import os
 import sys
-import dotenv
-dotenv.load_dotenv(
-    os.path.join(os.path.dirname(__file__), '.env')
-)
+from ACMM.settings.env_config import env
 def main():
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ACMM.settings.development')
-    
-    if os.getenv('DJANGO_SETTINGS_MODULE'):
-        os.environ['DJANGO_SETTINGS_MODULE'] = os.getenv('DJANGO_SETTINGS_MODULE')
+    if env('DJANGO_SETTINGS_MODULE'):
+        os.environ['DJANGO_SETTINGS_MODULE'] = env('DJANGO_SETTINGS_MODULE')
 
     try:
         from django.core.management import execute_from_command_line
