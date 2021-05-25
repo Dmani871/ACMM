@@ -1,5 +1,6 @@
 from .base import *
-DEBUG = False
+DEBUG = True
+INSTALLED_APPS += ["storages"]
 ALLOWED_HOSTS = ['*']
 DATABASES = {'default': env.db()}
 EMAIL_CONFIG = env.email_url('EMAIL_URL')
