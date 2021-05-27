@@ -2,9 +2,16 @@ from .base import *
 DEBUG = True
 INSTALLED_APPS += ["storages"]
 ALLOWED_HOSTS = ['*']
-DATABASES = {'default': env.db()}
+DATABASES = { 
+    'default':{
+        'ENGINE': 'django.db.backends.postgresql',
+        'HOST': env.str('PROD_DB_HOST'),
+        'USER': env.str('DB_USER'),
+        'PASSWORD': env.str('DB_PASSWORD'),
+        'NAME': env.str('PROD_DB_NAME'),
+    }
+}
 EMAIL_CONFIG = env.email_url('EMAIL_URL')
-
 # SSL settings
 SECURE_SSL_REDIRECT = True
 # CSRF settings
@@ -21,8 +28,4 @@ SECURE_HSTS_PRELOAD = True
 SESSION_EXPIRE_AT_BROWSER_CLOSE=True
 SESSION_COOKIE_AGE=3600
 
-# Define static storage via django-storages[google]
-GS_BUCKET_NAME = env("GS_BUCKET_NAME")
-DEFAULT_FILE_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
-STATICFILES_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
-GS_DEFAULT_ACL = "publicRead"
+
