@@ -1,7 +1,7 @@
 from .base import *
-DEBUG = True
-INSTALLED_APPS += ["storages"]
-ALLOWED_HOSTS = ['*']
+DEBUG = False
+
+ALLOWED_HOSTS = ['acmm-mentorship.ew.r.appspot.com']
 DATABASES = { 
     'default':{
         'ENGINE': 'django.db.backends.postgresql',
