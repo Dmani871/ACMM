@@ -109,7 +109,7 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 ADMINS = [x.split(':') for x in env.list('DJANGO_ADMINS')]
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = 'static'
 STATIC_URL = '/static/'
 
 # Extra places for collectstatic to find static files.
