@@ -2,7 +2,8 @@ from django.db import models
 from django.contrib.postgres.fields import ArrayField
 from django.utils import timezone
 from django.urls import reverse
-from django_cryptography.fields import encrypt
+from encrypted_fields import fields
+from ACMM.settings.base import HASH_KEY
 
 SEX_TYPES=("M","F")
 SEX_CHOICES = list(zip(SEX_TYPES,SEX_TYPES))
@@ -61,10 +62,20 @@ COURSE_CHOICES = [
 
 
 class CommonProfileInfo(models.Model):
-    email = encrypt(models.EmailField(max_length=255, unique=True))
-    first_name = encrypt(models.CharField(max_length=30))
-    last_name = encrypt(models.CharField(max_length=150))
-    sex = encrypt(models.CharField(max_length=1,choices = SEX_CHOICES))
+    _email_data = fields.EncryptedEmailField()
+    email = fields.SearchField(hash_key=HASH_KEY, encrypted_field_name="_email_data",unique=True)
+    _default_first_name= fields.EncryptedCharField(max_length=30)
+    first_name = fields.SearchField(
+        hash_key=HASH_KEY, encrypted_field_name="_default_first_name"
+    )
+    _default_last_name= fields.EncryptedCharField(max_length=130)
+    last_name = fields.SearchField(
+        hash_key=HASH_KEY, encrypted_field_name="_default_last_name"
+    )
+    _default_sex= fields.EncryptedCharField(max_length=1,choices = SEX_CHOICES)
+    sex = fields.SearchField(
+        hash_key=HASH_KEY, encrypted_field_name="_default_sex"
+    )
     year_applied=models.CharField(max_length=10,choices=YEAR_APPLIED_CHOICES)
     date_joined = models.DateTimeField(default=timezone.now)
     hear_about_us = models.CharField(max_length=10,choices=HEAR_ABOUT_US_CHOICES,default=None)
