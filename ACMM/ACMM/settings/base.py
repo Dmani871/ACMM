@@ -29,7 +29,8 @@ INSTALLED_APPS = [
     'django_otp',
     'django_otp.plugins.otp_static',
     'django_otp.plugins.otp_totp',
-    'two_factor' 
+    'two_factor',
+    'encrypted_fields'
 ]
 
 AUTHENTICATION_BACKENDS = [
@@ -142,3 +143,9 @@ CSP_BASE_URI = ("'none'", )
 CSP_FRAME_ANCESTORS = ("'none'", )
 CSP_FORM_ACTION = ("'self'", )
 CSP_INCLUDE_NONCE_IN = ('script-src',)
+
+EMAIL_CONFIG = env.email_url('EMAIL_URL')
+
+FIELD_ENCRYPTION_KEYS = [x for x in env.list('FIELD_ENCRYPTION_KEYS')]
+
+HASH_KEY = env("HASH_KEY")
