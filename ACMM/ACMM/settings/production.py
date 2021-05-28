@@ -1,6 +1,5 @@
 from .base import *
 DEBUG = False
-
 ALLOWED_HOSTS = ['acmm-mentorship.ew.r.appspot.com']
 DATABASES = { 
     'default':{
@@ -11,7 +10,7 @@ DATABASES = {
         'NAME': env.str('PROD_DB_NAME'),
     }
 }
-EMAIL_CONFIG = env.email_url('EMAIL_URL')
+
 # SSL settings
 SECURE_SSL_REDIRECT = True
 # CSRF settings
