@@ -26,4 +26,3 @@ ENV/
 env.bak/
 venv.bak/
 
-#!include:.gitignore
