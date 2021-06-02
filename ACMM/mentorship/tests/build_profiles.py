@@ -1,5 +1,5 @@
 from .factories import MenteeFactory,MentorFactory
-def build():
-    for x in range(100):
+def build(num=10):
+    for x in range(num):
         MenteeFactory()
         MentorFactory()
