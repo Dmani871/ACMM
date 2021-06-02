@@ -145,6 +145,7 @@ CSP_FORM_ACTION = ("'self'", )
 CSP_INCLUDE_NONCE_IN = ('script-src',)
 
 EMAIL_CONFIG = env.email_url('EMAIL_URL')
+vars().update(EMAIL_CONFIG)
 
 FIELD_ENCRYPTION_KEYS = [x for x in env.list('FIELD_ENCRYPTION_KEYS')]
 
