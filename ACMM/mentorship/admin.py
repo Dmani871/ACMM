@@ -53,7 +53,7 @@ class MenteeInline(admin.StackedInline):
     fieldsets = [
         ('Mentee Personal Information',{'fields': ['first_name','last_name','email','sex']}),
         ('Mentee Background Information', {'fields': ['year_applied','entrance_exam_experience','interview_experience','area_of_support']}),
-        ('Mentee Application Information', {'fields': ['course','mentor_need','mentor_help','mentor_relationship','current_application','accepted']}),
+        ('Mentee Application Information', {'fields': ['course','mentor_need','mentor_help','mentor_relationship']}),
     ]
 
 class MentorAdmin(admin.ModelAdmin):
