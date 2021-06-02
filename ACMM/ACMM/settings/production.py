@@ -5,8 +5,8 @@ DATABASES = {
     'default':{
         'ENGINE': 'django.db.backends.postgresql',
         'HOST': env.str('PROD_DB_HOST'),
-        'USER': env.str('DB_USER'),
-        'PASSWORD': env.str('DB_PASSWORD'),
+        'USER': env.str('PROD_DB_USER'),
+        'PASSWORD': env.str('PROD_DB_PASSWORD'),
         'NAME': env.str('PROD_DB_NAME'),
     }
 }
