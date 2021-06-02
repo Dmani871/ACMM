@@ -65,7 +65,25 @@ class MentorAdmin(admin.ModelAdmin):
         ('Background Information', {'fields': ['occupation','year_applied','entrance_exam_experience','interview_experience','area_of_support']}),
         ('Meta', {'fields': ['date_joined','hear_about_us','is_active']})
     ]
-    actions = [export_as_csv]
+
+    @admin.action(description='Email Info Pack')
+    def email_info_pack(self, request, queryset):
+        with mail.get_connection() as connection:
+            messages=[]
+            for mentor in queryset:
+                body=f"Hi {mentor.first_name},\nWe are so excited to welcome you to our coummnity of mentors.Please find the information pack attached below detailing our guidelines.\nKind regards\nACMM Team"
+                email = mail.EmailMessage(
+                    subject="Mentor Welcome Information",
+                    body=body,
+                    to=[mentor.email],
+                    reply_to=["mentoring@acmedicalmentors.co.uk"]
+                )
+                email.attach_file('./static/mentorship/resources/Mentor_Sign_Up.pdf')
+                messages.append(email)
+            connection.send_messages(messages)
+
+            
+    actions = [export_as_csv,email_info_pack]
 
 class MenteeQualificationInline(admin.TabularInline):
     model = MenteeQualification
