@@ -49,6 +49,12 @@ class MenteeInline(admin.StackedInline):
     extra=0
     can_delete=False
     show_change_link=True
+    form = MenteeForm
+    fieldsets = [
+        ('Mentee Personal Information',{'fields': ['first_name','last_name','email','sex']}),
+        ('Mentee Background Information', {'fields': ['year_applied','entrance_exam_experience','interview_experience','area_of_support']}),
+        ('Mentee Application Information', {'fields': ['course','mentor_need','mentor_help','mentor_relationship','current_application','accepted']}),
+    ]
 
 class MentorAdmin(admin.ModelAdmin):
     inlines = [
