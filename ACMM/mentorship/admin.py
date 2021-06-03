@@ -156,7 +156,7 @@ class MenteeAdmin(admin.ModelAdmin):
                         ranking*=0.8
                     
                     support_factor = len(np.intersect1d(mentor.area_of_support,mentee.area_of_support))
-                    interview_factor = len(np.intersect1d(mentor.interview_experience,mentee.interview_experience))
+                    interview_factor = len(mentor.interview_experience)
                     exam_factor = len(np.intersect1d(mentor.entrance_exam_experience,mentee.entrance_exam_experience))
                     
                     if ('EE' in mentee.area_of_support and exam_factor==0) or ('I' in mentee.area_of_support and interview_factor==0):
