@@ -1,0 +1,104 @@
+{% extends 'mentorship/base.html' %} {% load crispy_forms_tags %} {% block content %}{% load static %}
+<div class="mb-2 bg-white text-dark rounded">
+  <div class="p-3 bg-secondary text-white rounded">
+    <h1>Mentee SignUp</h1>
+  </div>
+  <form id="profile-form" method="post">
+    {% csrf_token %}
+    <div class="p-3">
+      <h4>Personal Information</h4>
+      <div class="form-row">
+        <div class="form-group col-md-6 mb-0">
+          {{ form.first_name|as_crispy_field }}
+        </div>
+        <div class="form-group col-md-6 mb-0">
+          {{ form.last_name|as_crispy_field }}
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-10 mb-0">
+          {{ form.email|as_crispy_field }}
+        </div>
+        <div class="form-group col-md-2 mb-0">
+          {{ form.sex|as_crispy_field }}
+        </div>
+      </div>
+      <hr class="my-4" />
+      <h4>Background Information</h4>
+      <div class="form-row">
+        <div class="form-group col-md-4 mb-0">
+          {{ form.course|as_crispy_field }}
+        </div>
+        <div class="form-group col-md-4 mb-0">
+          {{ form.current_application|as_crispy_field }}
+        </div>
+        <div class="form-group col-md-4 mb-0">
+          {{ form.year_applied|as_crispy_field }}
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-4 mb-0">
+          {{ form.entrance_exam_experience|as_crispy_field }}
+        </div>
+        <div class="form-group col-md-4 mb-0">
+          {{ form.interview_experience|as_crispy_field }}
+        </div>
+        <div class="form-group col-md-4 mb-0">
+          {{ form.area_of_support|as_crispy_field }}
+        </div>
+      </div>
+
+      {{ form.mentor_need|as_crispy_field }} 
+      {{ form.mentor_help|as_crispy_field}} 
+      {{ form.mentor_relationship|as_crispy_field }}
+    </div>
+
+    <div id="qualification-container">
+      <h5 class="p-3">Qualification(s)</h5>
+      {{qualification_formset.management_form |crispy}} 
+      {% for form in qualification_formset %}
+      <div class="form-row qualification-form p-3">
+        <div class="form-group col-md-3 mb-0">
+          {{ form.name|as_crispy_field }}
+        </div>
+        <div class="form-group col-md-3 mb-0">
+          {{ form.education_level|as_crispy_field }}
+        </div>
+
+        <div class="form-group col-md-3 mb-0">
+          {{ form.grade|as_crispy_field }}
+        </div>
+
+        <div class="form-group col-md-3 mb-0">
+          {{ form.predicted|as_crispy_field }}
+        </div>
+
+        <button
+          class="align-self-center btn btn-outline-danger btn-xs delete-qualification-form"
+          type="button"
+        >
+          Delete
+        </button>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="form-row p-3">
+      <button
+        id="add-qualification-form"
+        class="align-middle btn btn-outline-secondary"
+        type="button"
+      >
+        Add Another Qualification
+      </button>
+    </div>
+    <div class="form-row p-3">{{ form.hear_about_us|as_crispy_field }}</div>
+
+    <div class="form-row p-3">
+      <button id="signup" type="submit" class="btn btn-secondary btn-lg">Sign Up!</button>
+    </div>
+    {{ form.honeypot|as_crispy_field }}
+  </form>
+</div>
+<script src="{% static 'mentorship/js/QualificationFormset.js' %}"></script>
+{% endblock %}

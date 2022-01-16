@@ -1,0 +1,16 @@
+{% extends 'mentorship/base.html' %} {% block content %}
+<div class="jumbotron">
+    <h1 class="display-4">Welcome to the ACMM Application Portal!</h1>
+    <p class="lead">Thank you for your interest in ACMM.Please complete select which application you would like to complete.</p>
+    <hr class="my-4">
+    <p>Please note that we will only accept one application per an applicant. </p>
+    <p>ACMM applications are very competitive so prior to submission please ensure questions are answered and all details are accurate. </p>
+    <p>If you are interested our schemes or just want to find out more please go to our website. </p>
+    <p class="lead">
+      <a class="btn btn-secondary btn-lg" href="{% url 'mentorship:mentor' %}" role="button">Mentor Sign-Up</a>
+      <a class="btn btn-secondary btn-lg" href="{% url 'mentorship:mentee' %}" role="button">Mentee Sign-Up</a>
+    </p>
+  </div>
+
+{% endblock %}
+
