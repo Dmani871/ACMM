@@ -1,6 +1,14 @@
 from .base import *
+"""
+Settings configuration for development purposes.
+"""
+# ensures that errors are shown with debug data
 DEBUG = True
+
+# no allowed hosts
 ALLOWED_HOSTS = []
+
+# the database configuration for development
 DATABASES = {
     'default':{
         'ENGINE': 'django.db.backends.postgresql',
