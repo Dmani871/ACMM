@@ -1,6 +1,4 @@
 import os
-import io
-import environ
 from datetime import timedelta
 from .env_config import env
 
@@ -10,10 +8,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env("SECRET_KEY")
 
+# A list of strings representing the host/domain names that this Django site can serve.
 ALLOWED_HOSTS = []
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -36,7 +34,6 @@ INSTALLED_APPS = [
 AUTHENTICATION_BACKENDS = [
     # AxesBackend should be the first backend in the AUTHENTICATION_BACKENDS list.
     'axes.backends.AxesBackend',
-
     # Django ModelBackend is the default authentication backend.
     'django.contrib.auth.backends.ModelBackend',
 ]
@@ -90,7 +87,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'en-uk'
 
 TIME_ZONE = 'UTC'
 
@@ -117,13 +114,16 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR,'static'),
 )
+
 # MEDIA
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 MEDIA_URL = '/media/'
-#LOGIN
+
+# LOGIN
 LOGIN_URL = 'two_factor:login'
 LOGIN_REDIRECT_URL = env('SECRET_ADMIN_URL') + 'admin/'
-#AXES
+
+# AXES
 AXES_ENABLED=True
 AXES_FAILURE_LIMIT=3
 AXES_COOLOFF_TIME = timedelta(minutes=10)

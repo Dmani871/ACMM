@@ -2,7 +2,7 @@ from .base import *
 """
 Settings configuration for production purposes.
 """
-
+print('production')
 # ensures that no debug data is shown upon an error
 DEBUG = False
 
