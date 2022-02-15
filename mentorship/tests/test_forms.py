@@ -461,3 +461,9 @@ class AddMenteeQualificationFormTests(TestCase):
             'education_level': 'A2','predicted': True})
         self.assertFalse(form.is_valid())
 
+    def test_education_level_required(self):
+        form = forms.MentorQualificationForm(data={
+            'name': 'Biology','predicted': True})
+        self.assertFalse(form.is_valid())
+
+
