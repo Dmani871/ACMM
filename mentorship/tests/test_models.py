@@ -42,3 +42,6 @@ class MenteeTest(TestCase):
 
     def test_mentee(self):
         self.assertTrue(isinstance(self.mentee, models.MenteeProfile))
+
+    def test_mentee_str_representation(self):
+        self.assertEqual(str(self.mentee),"M-jane.doe@mail.com")

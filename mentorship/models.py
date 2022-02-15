@@ -57,6 +57,7 @@ COURSE_CHOICES = [
 
 
 class CommonProfileInfo(models.Model):
+    """ Common profile info for all applicants."""
     email = models.EmailField(max_length=150)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=150)
@@ -90,3 +91,6 @@ class MenteeProfile(CommonProfileInfo):
     current_application = models.BooleanField(default=True, choices=TRUE_FALSE_CHOICES)
     accepted = models.BooleanField(default=False, choices=TRUE_FALSE_CHOICES)
     mentor = models.ForeignKey(MentorProfile, on_delete=models.SET_NULL, null=True, blank=True)
+
+    def __str__(self):
+        return self.course + "-" + self.email
