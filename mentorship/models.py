@@ -94,3 +94,10 @@ class MenteeProfile(CommonProfileInfo):
 
     def __str__(self):
         return self.course + "-" + self.email
+
+
+class MentorQualification(models.Model):
+    """Mentor type Qualifications model"""
+    name = models.CharField(max_length=50)
+    education_level = models.CharField(max_length=10, choices=EDUCATION_LEVEL_CHOICES)
+    profile = models.ForeignKey(MentorProfile, on_delete=models.CASCADE)
