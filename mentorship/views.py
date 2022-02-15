@@ -1,3 +1,4 @@
 from django.shortcuts import render
 
-# Create your views here.
+def thank_you_view(request):
+    return render(request,  'mentorship/thank_you.html',{'page_title':'Thank You'})
