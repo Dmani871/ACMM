@@ -24,3 +24,9 @@ class MentorForm(forms.ModelForm):
             'year_applied': 'Qualification level prior to studying Medicine/Dentistry',
             'hear_about_us': 'How did you hear about us?'
         }
+
+
+class MentorQualificationForm(forms.ModelForm):
+    class Meta:
+        model = models.MentorQualification
+        exclude = ['profile']
