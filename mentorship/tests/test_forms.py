@@ -98,6 +98,20 @@ class AddMentorFormTests(TestCase):
             'occupation': 'MD'})
         self.assertFalse(form.is_valid())
 
+    def test_invalid_year_applied(self):
+        form = forms.MentorForm(data={
+            'email': 'john.doe@mail.com',
+            'first_name': 'John',
+            'last_name': 'Doe',
+            'sex': 'F',
+            'year_applied': 'Y13',
+            'hear_about_us': 'WM',
+            'entrance_exam_experience': ['UCAT'],
+            'interview_experience': ['P'],
+            'area_of_support': ['PS'],
+            'occupation': 'MD'})
+        self.assertFalse(form.is_valid())
+
     def test_labels(self):
         form = forms.MentorForm(data={
             'email': 'john.doe@mail.com',
