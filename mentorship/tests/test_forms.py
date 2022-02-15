@@ -231,9 +231,9 @@ class AddMenteeFormTests(TestCase):
             'area_of_support': ['PS'],
             'course': 'M',
             'current_application':True,
-            'mentor_need': "",
-            'mentor_help': "",
-            'mentor_relationship': ""})
+            'mentor_need': "I want a mentor because ...",
+            'mentor_help': "Help me with ...",
+            'mentor_relationship': "I will build a relationship by ..."})
         self.assertTrue(form.is_valid())
 
     def test_missing_fields(self):
@@ -249,9 +249,9 @@ class AddMenteeFormTests(TestCase):
             'area_of_support': ['PS'],
             'course': 'M',
             'current_application':True,
-            'mentor_need': "I want a mentor because ...",
-            'mentor_help': "Help me with ...",
-            'mentor_relationship': "I will build a relationship by ..."})
+            'mentor_need': "",
+            'mentor_help': "",
+            'mentor_relationship': ""})
         self.assertFalse(form.is_valid())
 
     def test_invalid_sex(self):
@@ -356,6 +356,24 @@ class AddMenteeFormTests(TestCase):
             'interview_experience': ['P'],
             'area_of_support': ['Personal Statement'],
             'course': 'M',
+            'current_application': True,
+            'mentor_need': "I want a mentor because ...",
+            'mentor_help': "Help me with ...",
+            'mentor_relationship': "I will build a relationship by ..."})
+        self.assertFalse(form.is_valid())
+
+    def test_invalid_course(self):
+        form = forms.MenteeForm(data={
+            'email': 'jane.doe@mail.com',
+            'first_name': 'Jane',
+            'last_name': 'Doe',
+            'sex': 'O',
+            'year_applied': 'A2',
+            'hear_about_us': 'WM',
+            'entrance_exam_experience': ['UCAT'],
+            'interview_experience': ['P'],
+            'area_of_support': ['PS'],
+            'course': 'Medicine',
             'current_application': True,
             'mentor_need': "I want a mentor because ...",
             'mentor_help': "Help me with ...",
