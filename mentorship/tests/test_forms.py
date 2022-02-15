@@ -98,6 +98,20 @@ class AddMentorFormTests(TestCase):
             'occupation': 'MD'})
         self.assertFalse(form.is_valid())
 
+    def test_invalid_interview_experience(self):
+        form = forms.MentorForm(data={
+            'email': 'john.doe@mail.com',
+            'first_name': 'John',
+            'last_name': 'Doe',
+            'sex': 'M',
+            'year_applied': 'A2',
+            'hear_about_us': 'WM',
+            'entrance_exam_experience': ['UCAT'],
+            'interview_experience': ['Panel'],
+            'area_of_support': ['PS'],
+            'occupation': 'MD'})
+        self.assertFalse(form.is_valid())
+
     def test_invalid_sex(self):
         form = forms.MentorForm(data={
             'email': 'john.doe@mail.com',
