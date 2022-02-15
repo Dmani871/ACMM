@@ -2,11 +2,11 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.postgres.fields import ArrayField
 
-#TODO:Turn into env import
-SEX_TYPES=("M","F","O")
-SEX_CHOICES = list(zip(SEX_TYPES,SEX_TYPES))
-ENTRANCE_EXAMS_TYPES=('BMAT','UCAT','GAMSAT')
-ENTRANCE_EXAM_CHOICES = list(zip(ENTRANCE_EXAMS_TYPES,ENTRANCE_EXAMS_TYPES))
+# TODO:Turn into env import
+SEX_TYPES = ("M", "F", "O")
+SEX_CHOICES = list(zip(SEX_TYPES, SEX_TYPES))
+ENTRANCE_EXAMS_TYPES = ('BMAT', 'UCAT', 'GAMSAT')
+ENTRANCE_EXAM_CHOICES = list(zip(ENTRANCE_EXAMS_TYPES, ENTRANCE_EXAMS_TYPES))
 INTERVIEW_EXPERIENCE_CHOICES = [
     ("P", 'Panel'),
     ("M", 'MMI'),
@@ -33,7 +33,7 @@ EDUCATION_LEVEL_CHOICES = [
     ("A2", 'A Level'),
     ("AS", 'A/S Level'),
     ('IB', 'International Baccalaureate'),
-    ('SH','Scottish Highers and Advanced Highers'),
+    ('SH', 'Scottish Highers and Advanced Highers'),
     ("UG", 'Undergraduate'),
     ("M", 'Masters'),
     ("D", 'Doctorate')
@@ -44,8 +44,8 @@ OCCUPATION_CHOICES = [
     ('MS', 'Medical Student'),
     ('DS', 'Dental Student')
 ]
-GRADES=("A*","A","B","C","D","E","F","1","2","3","4","5","6","7","1st","2:1","2:2","3rd")
-GRADE_CHOICES = list(zip(GRADES,GRADES))
+GRADES = ("A*", "A", "B", "C", "D", "E", "F", "1", "2", "3", "4", "5", "6", "7", "1st", "2:1", "2:2", "3rd")
+GRADE_CHOICES = list(zip(GRADES, GRADES))
 TRUE_FALSE_CHOICES = [
     (True, 'Yes'),
     (False, 'No')
@@ -55,10 +55,11 @@ COURSE_CHOICES = [
     ('D', 'Dentistry'),
 ]
 
-class MentorProfile(models.Model):
-    email=models.EmailField(max_length=150)
-    first_name=models.CharField(max_length=50)
-    last_name=models.CharField(max_length=150)
+
+class CommonProfileInfo(models.Model):
+    email = models.EmailField(max_length=150)
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=150)
     sex = models.CharField(max_length=1, choices=SEX_CHOICES)
     year_applied = models.CharField(max_length=10, choices=YEAR_APPLIED_CHOICES)
     date_joined = models.DateTimeField(default=timezone.now)
@@ -66,8 +67,26 @@ class MentorProfile(models.Model):
     entrance_exam_experience = ArrayField(models.CharField(max_length=10, choices=ENTRANCE_EXAM_CHOICES), default=list)
     interview_experience = ArrayField(models.CharField(max_length=10, choices=INTERVIEW_EXPERIENCE_CHOICES))
     area_of_support = ArrayField(models.CharField(max_length=10, choices=SPECIALTY_CHOICES), default=list)
-    occupation = models.CharField(max_length=10,choices=OCCUPATION_CHOICES)
+
+    class Meta:
+        abstract = True
+
+
+class MentorProfile(CommonProfileInfo):
+    """ Profile info for mentor applicants."""
+    occupation = models.CharField(max_length=10, choices=OCCUPATION_CHOICES)
     is_active = models.BooleanField(default=True)
 
     def __str__(self):
         return self.occupation + "-" + self.email
+
+
+class MenteeProfile(CommonProfileInfo):
+    """ Profile info for mentee applicants."""
+    mentor_need = models.TextField(null=True, blank=True)
+    mentor_help = models.TextField(null=True, blank=True)
+    mentor_relationship = models.TextField(null=True, blank=True)
+    course = models.CharField(max_length=10, choices=COURSE_CHOICES)
+    current_application = models.BooleanField(default=True, choices=TRUE_FALSE_CHOICES)
+    accepted = models.BooleanField(default=False, choices=TRUE_FALSE_CHOICES)
+    mentor = models.ForeignKey(MentorProfile, on_delete=models.SET_NULL, null=True, blank=True)
