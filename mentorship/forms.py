@@ -87,3 +87,11 @@ class MenteeForm(forms.ModelForm):
             'year_applied': 'What is your current education level?',
             'hear_about_us': 'How did you hear about us?'
         }
+
+
+class MenteeQualificationForm(forms.ModelForm):
+    predicted = forms.ChoiceField(choices=models.TRUE_FALSE_CHOICES, required=True, label="Predicted ?")
+
+    class Meta:
+        model = models.MenteeQualification
+        exclude = ['profile']

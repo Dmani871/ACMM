@@ -230,7 +230,7 @@ class AddMenteeFormTests(TestCase):
             'interview_experience': ['P'],
             'area_of_support': ['PS'],
             'course': 'M',
-            'current_application':True,
+            'current_application': True,
             'mentor_need': "I want a mentor because ...",
             'mentor_help': "Help me with ...",
             'mentor_relationship': "I will build a relationship by ..."})
@@ -248,7 +248,7 @@ class AddMenteeFormTests(TestCase):
             'interview_experience': ['P'],
             'area_of_support': ['PS'],
             'course': 'M',
-            'current_application':True,
+            'current_application': True,
             'mentor_need': "",
             'mentor_help': "",
             'mentor_relationship': ""})
@@ -266,7 +266,7 @@ class AddMenteeFormTests(TestCase):
             'interview_experience': ['P'],
             'area_of_support': ['PS'],
             'course': 'M',
-            'current_application':True,
+            'current_application': True,
             'mentor_need': "I want a mentor because ...",
             'mentor_help': "Help me with ...",
             'mentor_relationship': "I will build a relationship by ..."})
@@ -284,7 +284,7 @@ class AddMenteeFormTests(TestCase):
             'interview_experience': ['P'],
             'area_of_support': ['PS'],
             'course': 'M',
-            'current_application':True,
+            'current_application': True,
             'mentor_need': "I want a mentor because ...",
             'mentor_help': "Help me with ...",
             'mentor_relationship': "I will build a relationship by ..."})
@@ -302,7 +302,7 @@ class AddMenteeFormTests(TestCase):
             'interview_experience': ['P'],
             'area_of_support': ['PS'],
             'course': 'M',
-            'current_application':True,
+            'current_application': True,
             'mentor_need': "I want a mentor because ...",
             'mentor_help': "Help me with ...",
             'mentor_relationship': "I will build a relationship by ..."})
@@ -320,7 +320,7 @@ class AddMenteeFormTests(TestCase):
             'interview_experience': ['P'],
             'area_of_support': ['PS'],
             'course': 'M',
-            'current_application':True,
+            'current_application': True,
             'mentor_need': "I want a mentor because ...",
             'mentor_help': "Help me with ...",
             'mentor_relationship': "I will build a relationship by ..."})
@@ -338,7 +338,7 @@ class AddMenteeFormTests(TestCase):
             'interview_experience': ['Panel'],
             'area_of_support': ['PS'],
             'course': 'M',
-            'current_application':True,
+            'current_application': True,
             'mentor_need': "I want a mentor because ...",
             'mentor_help': "Help me with ...",
             'mentor_relationship': "I will build a relationship by ..."})
@@ -410,7 +410,7 @@ class AddMenteeFormTests(TestCase):
             'interview_experience': ['P'],
             'area_of_support': ['PS'],
             'course': 'M',
-            'current_application':True,
+            'current_application': True,
             'mentor_need': "I want a mentor because ...",
             'mentor_help': "Help me with ...",
             'mentor_relationship': "I will build a relationship by ..."})
@@ -423,7 +423,8 @@ class AddMenteeFormTests(TestCase):
         self.assertIn('<label>What entrance exam experience have you had?</label>', form.as_p())
         self.assertIn('<label>What interview experience have you had?</label>', form.as_p())
         self.assertIn('<label>What do you need help with?</label> ', form.as_p())
-        self.assertIn('<label for="id_mentor_need">Why do you want a mentor and what do you hope to gain ?</label>', form.as_p())
+        self.assertIn('<label for="id_mentor_need">Why do you want a mentor and what do you hope to gain ?</label>',
+                      form.as_p())
         self.assertIn('<label for="id_mentor_help">How will a mentor help with your application?</label>', form.as_p())
         self.assertIn('<label for="id_mentor_relationship">How will you go about fostering a good relationship your '
                       'mentor?</label>', form.as_p())
@@ -440,8 +441,17 @@ class AddMenteeFormTests(TestCase):
             'hear_about_us': 'WM',
             'area_of_support': ['PS'],
             'course': 'M',
-            'current_application':True,
+            'current_application': True,
             'mentor_need': "I want a mentor because ...",
             'mentor_help': "Help me with ...",
             'mentor_relationship': "I will build a relationship by ..."})
+        self.assertTrue(form.is_valid())
+
+
+class AddMenteeQualificationFormTests(TestCase):
+    def test_valid_form(self):
+        form = forms.MentorQualificationForm(data={
+            'name': 'Biology',
+            'education_level': 'A2',
+            'predicted': True})
         self.assertTrue(form.is_valid())
