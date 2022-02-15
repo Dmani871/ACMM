@@ -10,6 +10,9 @@ DEBUG = True
 # Empty allowed hosts
 ALLOWED_HOSTS = []
 
+# Database
+# https://docs.djangoproject.com/en/3.2/ref/settings/#databases
+
 # The database configuration for development
 DATABASES = {
     'default': {
