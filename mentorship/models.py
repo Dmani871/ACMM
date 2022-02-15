@@ -96,11 +96,25 @@ class MenteeProfile(CommonProfileInfo):
         return self.course + "-" + self.email
 
 
-class MentorQualification(models.Model):
-    """Mentor type Qualifications model"""
+class CommonQualificationInfo(models.Model):
+    """Common atributes of a qualification"""
     name = models.CharField(max_length=50)
     education_level = models.CharField(max_length=10, choices=EDUCATION_LEVEL_CHOICES)
-    profile = models.ForeignKey(MentorProfile, on_delete=models.CASCADE)
+
+    class Meta:
+        abstract = True
 
     def __str__(self):
         return self.education_level + "-" + self.name
+
+
+class MenteeQualification(CommonQualificationInfo):
+    """Mentee type Qualifications model"""
+    grade = models.CharField(max_length=10, choices=GRADE_CHOICES)
+    predicted = models.BooleanField(default=False, choices=TRUE_FALSE_CHOICES)
+    profile = models.ForeignKey(MenteeProfile, on_delete=models.CASCADE)
+
+
+class MentorQualification(CommonQualificationInfo):
+    """Mentor type Qualifications model"""
+    profile = models.ForeignKey(MentorProfile, on_delete=models.CASCADE)
