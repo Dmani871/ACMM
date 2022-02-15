@@ -18,3 +18,6 @@ class MentorTest(TestCase):
 
     def test_mentor(self):
         self.assertTrue(isinstance(self.mentor, models.MentorProfile))
+
+    def test_mentor_str_representation(self):
+        self.assertEqual(str(self.mentor),"MD-john.doe@mail.com")

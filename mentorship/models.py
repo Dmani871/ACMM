@@ -68,3 +68,6 @@ class MentorProfile(models.Model):
     area_of_support = ArrayField(models.CharField(max_length=10, choices=SPECIALTY_CHOICES), default=list)
     occupation = models.CharField(max_length=10,choices=OCCUPATION_CHOICES)
     is_active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.occupation + "-" + self.email
