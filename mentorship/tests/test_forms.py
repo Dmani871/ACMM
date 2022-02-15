@@ -215,3 +215,23 @@ class AddMentorQualificationFormTests(TestCase):
             'name': 'Biology',
             'education_level': 'Y13'})
         self.assertFalse(form.is_valid())
+
+
+class AddMenteeFormTests(TestCase):
+    def test_valid_form(self):
+        form = forms.MenteeForm(data={
+            'email': 'jane.doe@mail.com',
+            'first_name': 'Jane',
+            'last_name': 'Doe',
+            'sex': 'F',
+            'year_applied': 'A2',
+            'hear_about_us': 'WM',
+            'entrance_exam_experience': ['UCAT'],
+            'interview_experience': ['P'],
+            'area_of_support': ['PS'],
+            'course': 'M',
+            'current_application':True,
+            'mentor_need': "I want a mentor because ...",
+            'mentor_help': "Help me with ...",
+            'mentor_relationship': "I will build a relationship by ..."})
+        self.assertTrue(form.is_valid())
