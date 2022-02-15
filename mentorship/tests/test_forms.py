@@ -126,7 +126,6 @@ class AddMentorFormTests(TestCase):
             'occupation': 'MD'})
         self.assertFalse(form.is_valid())
 
-
     def test_invalid_sex(self):
         form = forms.MentorForm(data={
             'email': 'john.doe@mail.com',
@@ -194,7 +193,6 @@ class AddMentorFormTests(TestCase):
         self.assertIn('<label for="id_occupation">Occupation:</label>', form.as_p())
 
 
-
 class AddMentorQualificationFormTests(TestCase):
     def test_valid_form(self):
         form = forms.MentorQualificationForm(data={
@@ -212,4 +210,8 @@ class AddMentorQualificationFormTests(TestCase):
             'name': 'Biology'})
         self.assertFalse(form.is_valid())
 
-
+    def test_invalid_education_level(self):
+        form = forms.MentorQualificationForm(data={
+            'name': 'Biology',
+            'education_level': 'Y13'})
+        self.assertFalse(form.is_valid())
