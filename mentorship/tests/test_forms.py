@@ -70,6 +70,20 @@ class AddMentorFormTests(TestCase):
             'occupation': 'Doctor'})
         self.assertFalse(form.is_valid())
 
+    def test_missing_fields(self):
+        form = forms.MentorForm(data={
+            'email': '',
+            'first_name': '',
+            'last_name': '',
+            'sex': 'M',
+            'year_applied': 'A2',
+            'hear_about_us': 'WM',
+            'entrance_exam_experience': ['UCAT'],
+            'interview_experience': ['P'],
+            'area_of_support': ['PS'],
+            'occupation': 'MD'})
+        self.assertFalse(form.is_valid())
+
     def test_invalid_sex(self):
         form = forms.MentorForm(data={
             'email': 'john.doe@mail.com',
