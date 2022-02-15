@@ -2,6 +2,8 @@ from django import forms
 from . import models
 
 
+# TODO:Add honeypots
+
 class MentorForm(forms.ModelForm):
     area_of_support = forms.MultipleChoiceField(
         widget=forms.CheckboxSelectMultiple,
@@ -95,3 +97,24 @@ class MenteeQualificationForm(forms.ModelForm):
     class Meta:
         model = models.MenteeQualification
         exclude = ['profile']
+
+
+MenteeQualificationFormSet = forms.inlineformset_factory(
+    models.MenteeProfile,
+    model=models.MenteeQualification,
+    form=MenteeQualificationForm,
+    extra=2,
+    min_num=1,
+    max_num=10,
+    validate_min=True,
+    validate_max=True)
+
+MentorQualificationFormSet = forms.inlineformset_factory(
+    models.MentorProfile,
+    model=models.MentorQualification,
+    form=MentorQualificationForm,
+    extra=2,
+    min_num=1,
+    max_num=10,
+    validate_min=True,
+    validate_max=True)
