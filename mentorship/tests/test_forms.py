@@ -112,6 +112,21 @@ class AddMentorFormTests(TestCase):
             'occupation': 'MD'})
         self.assertFalse(form.is_valid())
 
+    def test_invalid_area_of_support(self):
+        form = forms.MentorForm(data={
+            'email': 'john.doe@mail.com',
+            'first_name': 'John',
+            'last_name': 'Doe',
+            'sex': 'M',
+            'year_applied': 'A2',
+            'hear_about_us': 'WM',
+            'entrance_exam_experience': ['UCAT'],
+            'interview_experience': ['P'],
+            'area_of_support': ['Personal Statement'],
+            'occupation': 'MD'})
+        self.assertFalse(form.is_valid())
+
+
     def test_invalid_sex(self):
         form = forms.MentorForm(data={
             'email': 'john.doe@mail.com',
@@ -178,7 +193,6 @@ class AddMentorFormTests(TestCase):
         self.assertIn('<label>What area can you provide support in?</label>', form.as_p())
         self.assertIn('<label for="id_occupation">Occupation:</label>', form.as_p())
 
-    ## TODO:More validation tests
 
 
 class AddMentorQualificationFormTests(TestCase):
