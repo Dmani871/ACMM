@@ -235,3 +235,21 @@ class AddMenteeFormTests(TestCase):
             'mentor_help': "Help me with ...",
             'mentor_relationship': "I will build a relationship by ..."})
         self.assertTrue(form.is_valid())
+
+    def test_missing_fields(self):
+        form = forms.MenteeForm(data={
+            'email': '',
+            'first_name': '',
+            'last_name': '',
+            'sex': 'F',
+            'year_applied': 'A2',
+            'hear_about_us': 'WM',
+            'entrance_exam_experience': ['UCAT'],
+            'interview_experience': ['P'],
+            'area_of_support': ['PS'],
+            'course': 'M',
+            'current_application':True,
+            'mentor_need': "I want a mentor because ...",
+            'mentor_help': "Help me with ...",
+            'mentor_relationship': "I will build a relationship by ..."})
+        self.assertFalse(form.is_valid())
