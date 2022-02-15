@@ -62,7 +62,7 @@ class MenteeForm(forms.ModelForm):
         'maxlength': '500',
     }),
         label="Why do you want a mentor and what do you hope to gain ?",
-        help_text="Max 500 Charecters")
+        help_text="Max 500 Characters")
 
     mentor_help = forms.CharField(widget=forms.Textarea(attrs={
         'rows': '5',
@@ -70,7 +70,7 @@ class MenteeForm(forms.ModelForm):
         'maxlength': '500',
     }),
         label="How will a mentor help with your application?",
-        help_text="Max 500 Charecters")
+        help_text="Max 500 Characters")
 
     mentor_relationship = forms.CharField(widget=forms.Textarea(attrs={
         'rows': '5',
@@ -78,7 +78,7 @@ class MenteeForm(forms.ModelForm):
         'maxlength': '500',
     }),
         label="How will you go about fostering a good relationship your mentor?",
-        help_text="Max 500 Charecters")
+        help_text="Max 500 Characters")
 
     class Meta:
         model = models.MenteeProfile
