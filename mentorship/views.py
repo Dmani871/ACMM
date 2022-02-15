@@ -11,6 +11,10 @@ def next_year_view(request):
     return render(request, 'mentorship/next_year.html', {'page_title': 'Apply Next Year'})
 
 
+def applications_view(request):
+    return render(request, 'mentorship/applications.html', {'page_title': 'ACMM Application Portal'})
+
+
 def mentor_signup_view(request):
     if request.method == "POST":
         form = forms.MentorForm(request.POST)
