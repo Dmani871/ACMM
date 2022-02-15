@@ -429,3 +429,19 @@ class AddMenteeFormTests(TestCase):
                       'mentor?</label>', form.as_p())
         self.assertIn('<label for="id_course">Course:</label>', form.as_p())
         self.assertIn('<label for="id_current_application">Are you applying this year?</label>', form.as_p())
+
+    def test_non_required_fields(self):
+        form = forms.MenteeForm(data={
+            'email': 'jane.doe@mail.com',
+            'first_name': 'Jane',
+            'last_name': 'Doe',
+            'sex': 'F',
+            'year_applied': 'A2',
+            'hear_about_us': 'WM',
+            'area_of_support': ['PS'],
+            'course': 'M',
+            'current_application':True,
+            'mentor_need': "I want a mentor because ...",
+            'mentor_help': "Help me with ...",
+            'mentor_relationship': "I will build a relationship by ..."})
+        self.assertTrue(form.is_valid())

@@ -41,12 +41,14 @@ class MenteeForm(forms.ModelForm):
     entrance_exam_experience = forms.MultipleChoiceField(
         widget=forms.CheckboxSelectMultiple,
         choices=models.ENTRANCE_EXAM_CHOICES,
-        label="What entrance exam experience have you had?")
+        label="What entrance exam experience have you had?",
+        required=False)
 
     interview_experience = forms.MultipleChoiceField(
         widget=forms.CheckboxSelectMultiple,
         choices=models.INTERVIEW_EXPERIENCE_CHOICES,
-        label="What interview experience have you had?")
+        label="What interview experience have you had?",
+        required=False)
 
     current_application = forms.ChoiceField(
         choices=models.TRUE_FALSE_CHOICES,
