@@ -450,20 +450,26 @@ class AddMenteeFormTests(TestCase):
 
 class AddMenteeQualificationFormTests(TestCase):
     def test_valid_form(self):
-        form = forms.MentorQualificationForm(data={
+        form = forms.MenteeQualificationForm(data={
             'name': 'Biology',
             'education_level': 'A2',
+            'grade': 'A',
             'predicted': True})
         self.assertTrue(form.is_valid())
 
     def test_name_required(self):
-        form = forms.MentorQualificationForm(data={
-            'education_level': 'A2','predicted': True})
+        form = forms.MenteeQualificationForm(data={
+            'education_level': 'A2', 'grade': 'A', 'predicted': True})
         self.assertFalse(form.is_valid())
 
     def test_education_level_required(self):
-        form = forms.MentorQualificationForm(data={
-            'name': 'Biology','predicted': True})
+        form = forms.MenteeQualificationForm(data={
+            'name': 'Biology', 'grade': 'A', 'predicted': True})
         self.assertFalse(form.is_valid())
 
-
+    def test_predicted_required(self):
+        form = forms.MenteeQualificationForm(data={
+            'name': 'Biology',
+            'education_level': 'A2',
+            'grade': 'A'})
+        self.assertFalse(form.is_valid())
