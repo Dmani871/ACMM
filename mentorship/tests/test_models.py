@@ -12,7 +12,7 @@ class MentorTest(TestCase):
             sex='M',
             year_applied='A2',
             hear_about_us='WM',
-            entrance_exam_experience=['UKCAT'],
+            entrance_exam_experience=['UCAT'],
             interview_experience=['P'],
             area_of_support=['PS'],
             occupation='MD')
@@ -85,7 +85,7 @@ class MenteeQualificationTestCase(TestCase):
             sex='F',
             year_applied='A2',
             hear_about_us='WM',
-            entrance_exam_experience=['UKCAT'],
+            entrance_exam_experience=['UCAT'],
             interview_experience=['P'],
             area_of_support=['PS'],
             course='M',
