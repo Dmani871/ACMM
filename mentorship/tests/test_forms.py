@@ -397,3 +397,35 @@ class AddMenteeFormTests(TestCase):
             'mentor_help': "Help me with ...",
             'mentor_relationship': "I will build a relationship by ..."})
         self.assertFalse(form.is_valid())
+
+    def test_labels(self):
+        form = forms.MenteeForm(data={
+            'email': 'jane.doe@mail.com',
+            'first_name': 'Jane',
+            'last_name': 'Doe',
+            'sex': 'F',
+            'year_applied': 'A2',
+            'hear_about_us': 'WM',
+            'entrance_exam_experience': ['UCAT'],
+            'interview_experience': ['P'],
+            'area_of_support': ['PS'],
+            'course': 'M',
+            'current_application':True,
+            'mentor_need': "I want a mentor because ...",
+            'mentor_help': "Help me with ...",
+            'mentor_relationship': "I will build a relationship by ..."})
+        self.assertIn('<label for="id_email">Email:</label>', form.as_p())
+        self.assertIn('<label for="id_first_name">First name:</label>', form.as_p())
+        self.assertIn('<label for="id_last_name">Last name:</label>', form.as_p())
+        self.assertIn('<label for="id_sex">Sex:</label>', form.as_p())
+        self.assertIn('<label for="id_year_applied">What is your current education level?</label> ', form.as_p())
+        self.assertIn('<label for="id_hear_about_us">How did you hear about us?</label>', form.as_p())
+        self.assertIn('<label>What entrance exam experience have you had?</label>', form.as_p())
+        self.assertIn('<label>What interview experience have you had?</label>', form.as_p())
+        self.assertIn('<label>What do you need help with?</label> ', form.as_p())
+        self.assertIn('<label for="id_mentor_need">Why do you want a mentor and what do you hope to gain ?</label>', form.as_p())
+        self.assertIn('<label for="id_mentor_help">How will a mentor help with your application?</label>', form.as_p())
+        self.assertIn('<label for="id_mentor_relationship">How will you go about fostering a good relationship your '
+                      'mentor?</label>', form.as_p())
+        self.assertIn('<label for="id_course">Course:</label>', form.as_p())
+        self.assertIn('<label for="id_current_application">Are you applying this year?</label>', form.as_p())

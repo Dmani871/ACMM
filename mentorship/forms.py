@@ -35,36 +35,48 @@ class MentorQualificationForm(forms.ModelForm):
 class MenteeForm(forms.ModelForm):
     area_of_support = forms.MultipleChoiceField(
         widget=forms.CheckboxSelectMultiple,
-        choices=models.SPECIALTY_CHOICES)
+        choices=models.SPECIALTY_CHOICES,
+        label="What do you need help with?")
 
     entrance_exam_experience = forms.MultipleChoiceField(
         widget=forms.CheckboxSelectMultiple,
-        choices=models.ENTRANCE_EXAM_CHOICES)
+        choices=models.ENTRANCE_EXAM_CHOICES,
+        label="What entrance exam experience have you had?")
 
     interview_experience = forms.MultipleChoiceField(
         widget=forms.CheckboxSelectMultiple,
-        choices=models.INTERVIEW_EXPERIENCE_CHOICES)
+        choices=models.INTERVIEW_EXPERIENCE_CHOICES,
+        label="What interview experience have you had?")
 
     current_application = forms.ChoiceField(
-        choices=models.TRUE_FALSE_CHOICES
+        choices=models.TRUE_FALSE_CHOICES,
+        label="Are you applying this year?",
+        help_text="Our mentor scheme is for students applying to Medicine/Dentistry this year only"
     )
 
     mentor_need = forms.CharField(widget=forms.Textarea(attrs={
         'rows': '5',
         'cols': '90',
         'maxlength': '500',
-    }))
+    }),
+        label="Why do you want a mentor and what do you hope to gain ?",
+        help_text="Max 500 Charecters")
+
     mentor_help = forms.CharField(widget=forms.Textarea(attrs={
         'rows': '5',
         'cols': '90',
         'maxlength': '500',
-    }))
+    }),
+        label="How will a mentor help with your application?",
+        help_text="Max 500 Charecters")
 
     mentor_relationship = forms.CharField(widget=forms.Textarea(attrs={
         'rows': '5',
         'cols': '90',
         'maxlength': '500',
-    }))
+    }),
+        label="How will you go about fostering a good relationship your mentor?",
+        help_text="Max 500 Charecters")
 
     class Meta:
         model = models.MenteeProfile
