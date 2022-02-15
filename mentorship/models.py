@@ -101,3 +101,6 @@ class MentorQualification(models.Model):
     name = models.CharField(max_length=50)
     education_level = models.CharField(max_length=10, choices=EDUCATION_LEVEL_CHOICES)
     profile = models.ForeignKey(MentorProfile, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.education_level + "-" + self.name

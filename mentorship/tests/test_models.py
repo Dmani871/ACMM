@@ -60,12 +60,14 @@ class MentorQualificationTestCase(TestCase):
             interview_experience =  ['P'],
             area_of_support = ['PS'],
             occupation ='MD')
-
-    def create_qualification(self, name ='Biology',education_level='AS'):
         self.mentor.save()
-        return models.MentorQualification.objects.create(name=name,education_level=education_level,profile=self.mentor)
-
+        self.qualification=models.MentorQualification.objects.create(
+            name='Biology',
+            education_level='AS',
+            profile=self.mentor)
 
     def test_create_qualification(self):
-        qualification = self.create_qualification()
-        self.assertTrue(isinstance(qualification, models.MentorQualification))
+        self.assertTrue(isinstance(self.qualification, models.MentorQualification))
+
+    def test_mentor_qualification_str_representation(self):
+        self.assertEqual(str(self.qualification), "AS-Biology")
