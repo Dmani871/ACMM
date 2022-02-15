@@ -56,6 +56,20 @@ class AddMentorFormTests(TestCase):
             'occupation': 'MD'})
         self.assertTrue(form.is_valid())
 
+    def test_invalid_occupation(self):
+        form = forms.MentorForm(data={
+            'email': 'john.doe@mail.com',
+            'first_name': 'John',
+            'last_name': 'Doe',
+            'sex': 'M',
+            'year_applied': 'A2',
+            'hear_about_us': 'WM',
+            'entrance_exam_experience': ['UCAT'],
+            'interview_experience': ['P'],
+            'area_of_support': ['PS'],
+            'occupation': 'Doctor'})
+        self.assertFalse(form.is_valid())
+
     def test_labels(self):
         form = forms.MentorForm(data={
             'email': 'john.doe@mail.com',
@@ -80,6 +94,8 @@ class AddMentorFormTests(TestCase):
         self.assertIn('<label>What area can you provide support in?</label>', form.as_p())
         self.assertIn('<label for="id_occupation">Occupation:</label>', form.as_p())
 
+    ## TODO:More validation tests
+
 
 class AddMentorQualificationFormTests(TestCase):
     def test_valid_form(self):
@@ -97,3 +113,5 @@ class AddMentorQualificationFormTests(TestCase):
         form = forms.MentorQualificationForm(data={
             'name': 'Biology'})
         self.assertFalse(form.is_valid())
+
+
