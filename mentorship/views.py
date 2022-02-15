@@ -1,6 +1,5 @@
 from django.shortcuts import render, redirect
 from . import forms
-from django.forms import formset_factory
 
 
 def thank_you_view(request):
