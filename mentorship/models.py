@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from django.urls import reverse
 from django.contrib.postgres.fields import ArrayField
 from encrypted_fields import fields
 from ACMM.settings.base import HASH_KEY
@@ -94,6 +95,9 @@ class MentorProfile(CommonProfileInfo):
 
     def __str__(self):
         return self.occupation + "-" + self.email
+
+    def get_admin_url(self):
+        return reverse("admin:%s_%s_change" % (self._meta.app_label, self._meta.model_name), args=(self.id,))
 
 
 class MenteeProfile(CommonProfileInfo):

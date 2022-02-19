@@ -1,4 +1,5 @@
 from django.contrib.admin.models import LogEntry, CHANGE
+from django.utils.html import format_html
 
 from .models import MentorProfile, MenteeProfile, MentorQualification, MenteeQualification
 from .forms import MentorForm, MenteeForm
@@ -91,9 +92,8 @@ class MenteeAdmin(admin.ModelAdmin):
     ]
     exclude = [""]
     form = MenteeForm
-    list_filter = ['course', 'date_joined', 'accepted', 'year_applied', 'hear_about_us']
-    list_display = ['email', 'first_name', 'last_name', 'entrance_exam_experience', 'interview_experience',
-                    'area_of_support']
+    list_filter = ['course', 'date_joined', 'accepted', 'year_applied']
+    list_display = ['email', 'first_name', 'last_name','area_of_support','mentor_link']
     fieldsets = [
         ('Personal Information', {'fields': ['first_name', 'last_name', 'email', 'sex']}),
         ('Background Information',
@@ -105,6 +105,14 @@ class MenteeAdmin(admin.ModelAdmin):
         ('Meta', {'fields': ['date_joined', 'hear_about_us']})
     ]
 
+    def mentor_link(self, obj):
+        mentor = obj.mentor
+        if mentor:
+            admin_url = mentor.get_admin_url()
+            return format_html('<a href="{}">{}</a>', admin_url, mentor)
+        else:
+            return None
+    mentor_link.short_description = 'Mentor'
     @admin.action(description='Export Matches Info')
     def export_matches_info(self, request, queryset):
         ct = ContentType.objects.get_for_model(queryset.model)
