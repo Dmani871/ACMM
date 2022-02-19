@@ -2,9 +2,12 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.postgres.fields import ArrayField
 
-# TODO:Turn into env import
-SEX_TYPES = ("M", "F", "O")
-SEX_CHOICES = list(zip(SEX_TYPES, SEX_TYPES))
+
+SEX_CHOICES = [
+    ('M', 'Male'),
+    ('F', 'Female'),
+    ('O', 'Other'),
+]
 ENTRANCE_EXAMS_TYPES = ('BMAT', 'UCAT', 'GAMSAT')
 ENTRANCE_EXAM_CHOICES = list(zip(ENTRANCE_EXAMS_TYPES, ENTRANCE_EXAMS_TYPES))
 INTERVIEW_EXPERIENCE_CHOICES = [
