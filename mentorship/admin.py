@@ -183,10 +183,6 @@ class MenteeAdmin(admin.ModelAdmin):
         matches_df = pd.DataFrame(mentee_preferences).fillna(-1)
         # mentee preferneces
         mentee_pref_df = matches_df
-        print(mentee_pref_df)
-        # mentor preferneces
-        mentor_pref_df = matches_df.transpose()
-        print(mentor_pref_df)
         mentor_list = matches_df.index.tolist()
         mentor_dict = dict.fromkeys(mentor_list, 0)
         waiting_list = defaultdict(list)
