@@ -30,7 +30,8 @@ class MentorAdmin(admin.ModelAdmin):
     list_filter = ['occupation', 'date_joined', 'is_active', 'year_applied']
     exclude = [""]
     form = MentorForm
-    list_display = ['email', 'first_name', 'last_name']
+    list_display = ['email', 'first_name', 'last_name', 'entrance_exam_experience', 'interview_experience',
+                    'area_of_support']
 
     fieldsets = [
         ('Personal Information', {'fields': ['first_name', 'last_name', 'email', 'sex']}),
