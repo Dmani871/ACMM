@@ -21,7 +21,7 @@ year_applied_opts = unpack_choices(models.YEAR_APPLIED_CHOICES)
 hear_about_us_opts = unpack_choices(models.HEAR_ABOUT_US_CHOICES)
 occupation_opts = unpack_choices(models.OCCUPATION_CHOICES)
 education_level_opt = unpack_choices(models.EDUCATION_LEVEL_CHOICES)
-
+sex_opts=unpack_choices(models.SEX_CHOICES)
 
 class MenteeFactory(factory.Factory):
     class Meta:
@@ -30,7 +30,7 @@ class MenteeFactory(factory.Factory):
     first_name = factory.Faker('first_name')
     last_name = factory.Faker('last_name')
     email = factory.LazyAttribute(lambda user: '{}.{}@example.com'.format(user.first_name, user.last_name).lower())
-    sex = factory.fuzzy.FuzzyChoice(models.SEX_TYPES)
+    sex = factory.fuzzy.FuzzyChoice(sex_opts)
     year_applied = factory.fuzzy.FuzzyChoice(year_applied_opts)
     hear_about_us = factory.fuzzy.FuzzyChoice(hear_about_us_opts)
     entrance_exam_experience = factory.fuzzy.FuzzyChoice(entrance_exam_experience_opts)
@@ -77,7 +77,7 @@ class MentorFactory(factory.Factory):
     first_name = factory.Faker('first_name')
     last_name = factory.Faker('last_name')
     email = factory.LazyAttribute(lambda user: '{}.{}@example.com'.format(user.first_name, user.last_name).lower())
-    sex = factory.fuzzy.FuzzyChoice(models.SEX_TYPES)
+    sex = factory.fuzzy.FuzzyChoice(sex_opts)
     year_applied = factory.fuzzy.FuzzyChoice(year_applied_opts)
     hear_about_us = factory.fuzzy.FuzzyChoice(hear_about_us_opts)
     entrance_exam_experience = factory.fuzzy.FuzzyChoice(entrance_exam_experience_opts)
@@ -102,7 +102,7 @@ class MentorQualificationFactory(factory.Factory):
 
     name = factory.fuzzy.FuzzyChoice([
         'Biology',
-        'Chemisty',
+        'Chemistry',
         'Mathematics',
         'Further Mathematics',
         'Physics',
