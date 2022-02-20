@@ -1,6 +1,6 @@
 from django.contrib.admin.models import LogEntry, CHANGE
 from django.utils.html import format_html
-
+from django.contrib.sessions.models import Session
 from .models import MentorProfile, MenteeProfile, MentorQualification, MenteeQualification
 from .forms import MentorForm, MenteeForm
 import csv
@@ -10,7 +10,6 @@ from collections import defaultdict
 import pandas as pd
 import numpy as np
 from django.contrib.contenttypes.models import ContentType
-from collections import Counter
 
 
 @admin.action(description='Export Selected Profiles')
@@ -180,7 +179,7 @@ class MenteeAdmin(admin.ModelAdmin):
                 if 'I' in mentee.area_of_support:
                     interview_factor *= 10
                 # calculates the mentor factor
-                mentor_factor = 1 + ((exam_factor + interview_factor) * 2)
+                mentor_factor = 1 + ((exam_factor + interview_factor) * 10)
                 # calculates the overall ranking
                 ranking = ranking * support_factor * mentor_factor
                 # if the mentor can be of use add to the ma
@@ -203,7 +202,7 @@ class MenteeAdmin(admin.ModelAdmin):
                 new_mentor_dict = defaultdict(int)
                 for k, v in waiting_list.items():
                     if len(v) > 1:
-                        v_t = mentee_pref_df[k].filter(items=v).sort_values(ascending=True).index.tolist()
+                        v_t = mentee_pref_df[k].filter(items=v).sort_values(ascending=False).index.tolist()
                         print(v_t)
                         for x in v_t[1:]:
                             new_mentor_dict[x] = mentor_dict[x]
@@ -213,16 +212,7 @@ class MenteeAdmin(admin.ModelAdmin):
             pass
         return waiting_list
 
-    @admin.action(description='Assign a mentor to each mentee')
-    def assign_mentor(self, request, queryset):
-        ct = ContentType.objects.get_for_model(queryset.model)
-        available_mentors = MentorProfile.objects.filter(is_active=True, menteeprofile__isnull=True)
-        available_medicine_mentors = available_mentors.filter(occupation__startswith='M')
-        unmatched_mentees = MenteeProfile.objects.filter(mentor__isnull=True)
-        unmatched_medicine_mentees = unmatched_mentees.filter(course__startswith='M')
-        matches = self.generate_matches(available_medicine_mentors, unmatched_medicine_mentees)
-        print(matches)
-
+    def save_matches(self,request,matches,ct):
         for k, v in matches.items():
             mentor = MentorProfile.objects.get(id=v[0])
             mentee = MenteeProfile.objects.get(id=k)
@@ -238,9 +228,76 @@ class MenteeAdmin(admin.ModelAdmin):
         l = LogEntry(user_id=request.user.id, action_flag=CHANGE, content_type_id=ct.pk,
                      change_message="Mentee-Mentor matches ran")
         l.save()
+    @admin.action(description='Assign a mentor to each mentee')
+    def assign_mentor(self, request, queryset):
+        ct = ContentType.objects.get_for_model(queryset.model)
+        available_mentors = MentorProfile.objects.filter(is_active=True, menteeprofile__isnull=True)
+        available_medicine_mentors = available_mentors.filter(occupation__startswith='M')
+        available_dentistry_mentors = available_mentors.difference(available_medicine_mentors)
+        unmatched_mentees = queryset
+        unmatched_medicine_mentees = unmatched_mentees.filter(course__startswith='M')
+        unmatched_dentistry_mentees = unmatched_mentees.difference(unmatched_medicine_mentees)
+        medicine_matches = self.generate_matches(available_medicine_mentors, unmatched_medicine_mentees)
+        dentistry_matches = self.generate_matches(available_dentistry_mentors, unmatched_dentistry_mentees)
+        self.save_matches(request,medicine_matches,ct)
+        self.save_matches(request,dentistry_matches,ct)
+
+
 
     actions = [export_as_csv, "assign_mentor", "export_matches_info"]
 
 
+class LogEntryAdmin(admin.ModelAdmin):
+    date_hierarchy = 'action_time'
+    fields = (
+        'action_time', 'user', 'content_type', 'object_id',
+        'object_repr', 'action_flag', 'change_message',
+    )
+    readonly_fields = fields
+
+    list_display = (
+        'action_time', 'user', 'action_message', 'content_type'
+    )
+    list_filter = (
+        'action_flag', 'content_type',
+    )
+    search_fields = (
+        'object_repr', 'change_message', 'user',
+    )
+
+    def action_message(self, obj):
+        change_message = obj.get_change_message()
+        if not change_message:
+            change_message = '{}.'.format(obj.get_action_flag_display())
+        return change_message
+
+    action_message.short_description = 'action'
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+
+class SessionAdmin(admin.ModelAdmin):
+    def _session_data(self, obj):
+        return obj.get_decoded()
+
+    list_display = ['session_key', '_session_data', 'expire_date']
+    list_filter = ['expire_date']
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
+    def has_add_permission(self, request):
+        return False
+
+
+admin.site.register(Session, SessionAdmin)
 admin.site.register(MentorProfile, MentorAdmin)
 admin.site.register(MenteeProfile, MenteeAdmin)
+admin.site.register(LogEntry, LogEntryAdmin)
