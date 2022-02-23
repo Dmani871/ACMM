@@ -89,7 +89,7 @@ class MenteeQualificationInline(admin.TabularInline):
     can_delete = True
 
 
-def generate_matches(mentors, mentees):
+def apply_matches_weights(mentors, mentees):
     mentee_preferences = defaultdict(dict)
     for mentee in mentees:
         rankings = defaultdict(dict)
@@ -126,31 +126,46 @@ def generate_matches(mentors, mentees):
             if ranking > 0:
                 rankings[mentor.id] = ranking
             mentee_preferences[mentee.id] = rankings
+    return mentee_preferences
 
+
+def stable_matching(mentee_preferences):
     matches_df = pd.DataFrame(mentee_preferences).fillna(-1)
-    # mentee preferneces
+    # mentee preferences
     mentee_pref_df = matches_df
     mentor_list = matches_df.index.tolist()
+    # tracks proposals of every mentor
     mentor_dict = dict.fromkeys(mentor_list, 0)
+    # list containing all proposals per a mentee
     waiting_list = defaultdict(list)
     try:
+        # while there are still proposals to be still be made by a mentor
         while bool(mentor_dict):
             for k, v in mentor_dict.items():
-                # chose the mentor with the highest rank
+                # mentor highest choice propose to mentee by adding to its proposal list
                 waiting_list[mentee_pref_df.loc[k].nlargest().index[v]].append(k)
+                # increment proposal counter
                 mentor_dict[k] += 1
             new_mentor_dict = defaultdict(int)
             for k, v in waiting_list.items():
+                # if one mentee has multiple proposals
                 if len(v) > 1:
-                    v_t = mentee_pref_df[k].filter(items=v).sort_values(ascending=False).index.tolist()
-                    print(v_t)
-                    for x in v_t[1:]:
-                        new_mentor_dict[x] = mentor_dict[x]
-                    waiting_list[k] = v_t[:1]
+                    # order the list of mentors by ranking
+                    ordered_mentors = mentee_pref_df[k].filter(items=v).sort_values(ascending=False).index.tolist()
+                    for rejected_mentor in ordered_mentors[1:]:
+                        new_mentor_dict[rejected_mentor] = mentor_dict[rejected_mentor]
+                    # only keeps the top weighted mentor for the mentee
+                    waiting_list[k] = ordered_mentors[:1]
             mentor_dict = new_mentor_dict
+    # catches any x choices that don't exisist
     except IndexError:
         pass
     return waiting_list
+
+
+def generate_matches(mentors, mentees):
+    mentee_preferences = apply_matches_weights(mentors, mentees)
+    return stable_matching(mentee_preferences)
 
 
 def save_matches(request, matches, ct):
@@ -200,11 +215,9 @@ class MenteeAdmin(admin.ModelAdmin):
 
     mentor_link.short_description = 'Mentor'
 
-
     @admin.action(description='Export Matches Info')
     def export_matches_info(self, request, queryset):
         ct = ContentType.objects.get_for_model(queryset.model)
-        meta = self.model._meta
         column_names = ["mentee.id", "mentor.id",
                         "mentee.course", "mentor.occupation",
                         "mentee.year_applied", "mentor.year_applied",
@@ -228,12 +241,12 @@ class MenteeAdmin(admin.ModelAdmin):
                     mentee.interview_experience, mentor.interview_experience,
                     mentee.entrance_exam_experience, mentor.entrance_exam_experience
                 ]
-                row = writer.writerow(row_contents)
+                writer.writerow(row_contents)
                 LogEntry.objects.log_action(
                     user_id=request.user.id,
                     content_type_id=ct.pk,
                     object_id=mentee.pk,
-                    object_repr=mentee.__str__(),
+                    object_repr=str(mentee),
                     action_flag=CHANGE,
                     change_message="Exported Matches Info")
         return response
