@@ -111,7 +111,7 @@ def apply_matches_weights(mentors, mentees):
             # ensures the mentor can support the mentee based on their experiences
             if ('EE' in mentee.area_of_support and exam_factor == 0) or (
                     'I' in mentee.area_of_support and interview_factor == 0):
-                support_factor = 0
+                support_factor = 0.01
             # amplifies the exam factor if they need support for entrance exams
             if 'EE' in mentee.area_of_support:
                 exam_factor *= 10
@@ -137,30 +137,34 @@ def stable_matching(mentee_preferences):
     # tracks proposals of every mentor
     mentor_dict = dict.fromkeys(mentor_list, 0)
     # list containing all proposals per a mentee
-    waiting_list = defaultdict(list)
-    try:
-        # while there are still proposals to be still be made by a mentor
-        while bool(mentor_dict):
-            for k, v in mentor_dict.items():
+    waiting_dict = defaultdict(list)
+    rejected_mentors_list = []
+    # while there are still proposals to be still be made by a mentor
+    #TODO:loop until all mentors in dict has no
+    while bool(mentor_dict):
+        for k, v in mentor_dict.items():
+            try:
                 # mentor highest choice propose to mentee by adding to its proposal list
-                waiting_list[mentee_pref_df.loc[k].nlargest().index[v]].append(k)
+                waiting_dict[mentee_pref_df.loc[k].nlargest().index[v]].append(k)
                 # increment proposal counter
                 mentor_dict[k] += 1
-            new_mentor_dict = defaultdict(int)
-            for k, v in waiting_list.items():
-                # if one mentee has multiple proposals
-                if len(v) > 1:
-                    # order the list of mentors by ranking
-                    ordered_mentors = mentee_pref_df[k].filter(items=v).sort_values(ascending=False).index.tolist()
-                    for rejected_mentor in ordered_mentors[1:]:
-                        new_mentor_dict[rejected_mentor] = mentor_dict[rejected_mentor]
-                    # only keeps the top weighted mentor for the mentee
-                    waiting_list[k] = ordered_mentors[:1]
-            mentor_dict = new_mentor_dict
-    # catches any x choices that don't exisist
-    except IndexError:
-        pass
-    return waiting_list
+            except IndexError:
+                rejected_mentors_list.append(k)
+        rejected_mentors=set(rejected_mentors_list)-set(mentor_dict)
+        for rejected_mentor in rejected_mentors:
+            del mentor_dict[rejected_mentor]
+        new_mentor_dict = defaultdict(int)
+        for k, mentors in waiting_dict.items():
+            # if one mentee has multiple proposals
+            if len(mentors) > 1:
+                # order the list of mentors by ranking
+                ordered_mentors = mentee_pref_df[k].filter(items=mentors).sort_values(ascending=False).index.tolist()
+                for rejected_mentor in ordered_mentors[1:]:
+                    new_mentor_dict[rejected_mentor] = mentor_dict[rejected_mentor]
+                # only keeps the top weighted mentor for the mentee
+                waiting_dict[k] = ordered_mentors[:1]
+        mentor_dict = new_mentor_dict
+    return waiting_dict
 
 
 def generate_matches(mentors, mentees):
