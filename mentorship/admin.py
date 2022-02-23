@@ -138,10 +138,10 @@ def stable_matching(mentee_preferences):
     mentor_dict = dict.fromkeys(mentor_list, 0)
     # list containing all proposals per a mentee
     waiting_dict = defaultdict(list)
-    rejected_mentors_list = []
+
     # while there are still proposals to be still be made by a mentor
-    #TODO:loop until all mentors in dict has no
     while bool(mentor_dict):
+        rejected_mentors_list = []
         for k, v in mentor_dict.items():
             try:
                 # mentor highest choice propose to mentee by adding to its proposal list
