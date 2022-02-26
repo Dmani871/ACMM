@@ -8,7 +8,7 @@ from django.http import HttpResponse
 from .models import MentorProfile, MenteeProfile, MentorQualification, MenteeQualification
 from .forms import MentorForm, MenteeForm
 from .matching import generate_matches
-from .filters import MentorListFilter
+from .filters import MentorListFilter,MenteeListFilter
 
 
 @admin.action(description='Export Selected Profiles')
@@ -64,7 +64,7 @@ class MentorAdmin(admin.ModelAdmin):
     inlines = [
         MentorQualificationInline, MenteeInline
     ]
-    list_filter = ['occupation', 'date_joined', 'is_active', 'year_applied']
+    list_filter = ['occupation', 'date_joined', 'is_active', 'year_applied',MenteeListFilter]
     exclude = [""]
     form = MentorForm
     list_display = ['email', 'first_name', 'last_name', 'entrance_exam_experience', 'interview_experience',
