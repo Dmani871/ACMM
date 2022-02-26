@@ -1,13 +1,14 @@
+import csv
+from django.contrib import admin
+from django.contrib.contenttypes.models import ContentType
 from django.contrib.admin.models import LogEntry, CHANGE
-from django.utils.html import format_html
 from django.contrib.sessions.models import Session
+from django.utils.html import format_html
+from django.http import HttpResponse
 from .models import MentorProfile, MenteeProfile, MentorQualification, MenteeQualification
 from .forms import MentorForm, MenteeForm
-import csv
-from django.http import HttpResponse
-from django.contrib import admin
 from .matching import generate_matches
-from django.contrib.contenttypes.models import ContentType
+from .filters import MentorListFilter
 
 
 @admin.action(description='Export Selected Profiles')
@@ -46,7 +47,6 @@ class MentorQualificationInline(admin.TabularInline):
     extra = 0
     can_delete = True
 
-
 class MenteeInline(admin.StackedInline):
     model = MenteeProfile
     extra = 0
@@ -59,7 +59,6 @@ class MenteeInline(admin.StackedInline):
          {'fields': ['year_applied', 'entrance_exam_experience', 'interview_experience', 'area_of_support']}),
         ('Mentee Application Information', {'fields': ['course', 'mentor_need', 'mentor_help', 'mentor_relationship']}),
     ]
-
 
 class MentorAdmin(admin.ModelAdmin):
     inlines = [
@@ -80,7 +79,6 @@ class MentorAdmin(admin.ModelAdmin):
     ]
     actions = [export_as_csv]
 
-
 class MenteeQualificationInline(admin.TabularInline):
     model = MenteeQualification
     extra = 0
@@ -95,13 +93,13 @@ def save_matches(request, matches, ct):
             user_id=request.user.id,
             content_type_id=ct.pk,
             object_id=mentee.pk,
-            object_repr=mentee.__str__(),
+            object_repr=str(mentee),
             action_flag=CHANGE,
             change_message="Added mentor match")
         mentee.save()
-    l = LogEntry(user_id=request.user.id, action_flag=CHANGE, content_type_id=ct.pk,
+    entry = LogEntry(user_id=request.user.id, action_flag=CHANGE, content_type_id=ct.pk,
                  change_message="Mentee-Mentor matches ran")
-    l.save()
+    entry.save()
 
 
 class MenteeAdmin(admin.ModelAdmin):
@@ -110,8 +108,9 @@ class MenteeAdmin(admin.ModelAdmin):
     ]
     exclude = [""]
     form = MenteeForm
-    list_filter = ['course', 'date_joined', 'accepted', 'year_applied']
     list_display = ['email', 'first_name', 'last_name', 'area_of_support', 'mentor_link']
+    list_filter = ['course', 'date_joined', 'accepted', 'year_applied', MentorListFilter]
+
     fieldsets = [
         ('Personal Information', {'fields': ['first_name', 'last_name', 'email', 'sex']}),
         ('Background Information',
@@ -132,6 +131,13 @@ class MenteeAdmin(admin.ModelAdmin):
             return None
 
     mentor_link.short_description = 'Mentor'
+
+    def has_mentor(self, obj):
+        mentor = obj.mentor
+        if mentor:
+            return True
+        else:
+            return False
 
     @admin.action(description='Export Matches Info')
     def export_matches_info(self, request, queryset):
