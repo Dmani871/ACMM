@@ -1,8 +1,8 @@
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 
-class MentorListFilter(admin.SimpleListFilter):
 
+class MentorListFilter(admin.SimpleListFilter):
     title = _('has mentor')
 
     parameter_name = 'mentor'
@@ -18,11 +18,13 @@ class MentorListFilter(admin.SimpleListFilter):
             return queryset.filter(mentor__isnull=False)
         if self.value() == 'N':
             return queryset.filter(mentor__isnull=True)
+
+
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 
-class MenteeListFilter(admin.SimpleListFilter):
 
+class MenteeListFilter(admin.SimpleListFilter):
     title = _('has mentees')
 
     parameter_name = 'mentees'
