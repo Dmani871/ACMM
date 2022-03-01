@@ -33,7 +33,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'crispy_forms'
+    'encrypted_model_fields',
+    'crispy_forms',
+
 ]
 
 MIDDLEWARE = [
@@ -114,5 +116,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 
-SALT_KEY = [key for key in env.list('SALT_KEY')]
+FIELD_ENCRYPTION_KEY=b'uB-SGG59tO0vQb3_6tLEwG4saQKaZvQdAwXkq4uFxj0='
 

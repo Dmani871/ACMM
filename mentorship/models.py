@@ -2,12 +2,12 @@ from django.db import models
 from django.utils import timezone
 from django.urls import reverse
 from django.contrib.postgres.fields import ArrayField
-from encrypted_fields import fields
+from encrypted_model_fields import fields
 
 SEX_CHOICES = [
     ('M', 'Male'),
     ('F', 'Female'),
-    ('O', 'Other'),
+    ('O', 'Other')
 ]
 ENTRANCE_EXAMS_TYPES = ('BMAT', 'UCAT', 'GAMSAT')
 ENTRANCE_EXAM_CHOICES = list(zip(ENTRANCE_EXAMS_TYPES, ENTRANCE_EXAMS_TYPES))
@@ -65,7 +65,7 @@ class CommonProfileInfo(models.Model):
     email = fields.EncryptedEmailField(default="", null=True)
     first_name = fields.EncryptedCharField(max_length=150, default="", null=True)
     last_name = fields.EncryptedCharField(max_length=150, default="", null=True)
-    sex = fields.EncryptedCharField(max_length=1, default="M", choices=SEX_CHOICES)
+    sex = fields.EncryptedCharField(max_length=1, choices=SEX_CHOICES)
     year_applied = models.CharField(max_length=10, choices=YEAR_APPLIED_CHOICES)
     date_joined = models.DateTimeField(default=timezone.now)
     hear_about_us = models.CharField(max_length=10, choices=HEAR_ABOUT_US_CHOICES, default=None)
