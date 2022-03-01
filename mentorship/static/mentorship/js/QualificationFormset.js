@@ -6,7 +6,7 @@ let qualificationContainer = document.querySelector(
     "#qualification-container"
   );
 let qualificationFormCount = qualificationForm.length - 1;
-let totalForms = document.querySelector('[id$="qualification_set_set-TOTAL_FORMS"]');
+let totalForms = document.querySelector('[id$="qualification_set-TOTAL_FORMS"]');
 const formRegex = RegExp(`_set-(\\d)-`, "g");
 function updateForms() {
     let count = 0;
