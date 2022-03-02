@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 from .env_config import env
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -33,9 +34,16 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'encrypted_model_fields',
+    'encrypted_fields',
     'crispy_forms',
+    'axes'
+]
 
+AUTHENTICATION_BACKENDS = [
+    # AxesBackend should be the first backend in the AUTHENTICATION_BACKENDS list.
+    'axes.backends.AxesBackend',
+    # Django ModelBackend is the default authentication backend.
+    'django.contrib.auth.backends.ModelBackend',
 ]
 
 MIDDLEWARE = [
@@ -46,6 +54,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'axes.middleware.AxesMiddleware'
 ]
 
 ROOT_URLCONF = 'ACMM.urls'
@@ -115,6 +124,13 @@ STATIC_ROOT = 'static'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
+# AXES
+AXES_ENABLED=True
+AXES_FAILURE_LIMIT=3
+AXES_COOLOFF_TIME = timedelta(minutes=10)
+AXES_LOCK_OUT_BY_COMBINATION_USER_AND_IP = True
+AXES_LOCK_OUT_BY_USER_OR_IP=True
+AXES_VERBOSE=True
 
-FIELD_ENCRYPTION_KEY=b'uB-SGG59tO0vQb3_6tLEwG4saQKaZvQdAwXkq4uFxj0='
-
+FIELD_ENCRYPTION_KEYS = [x for x in env.list('FIELD_ENCRYPTION_KEYS')]
+HASH_KEY = env("HASH_KEY")
