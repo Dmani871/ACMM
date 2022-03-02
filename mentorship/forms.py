@@ -19,6 +19,7 @@ class MentorForm(forms.ModelForm):
         label="What exam experience do you have?",
         required=False)
 
+    honeypot = forms.CharField(widget=forms.HiddenInput(), required=False)
     class Meta:
         model = models.MentorProfile
         exclude = ['is_active', 'date_joined']
@@ -82,6 +83,7 @@ class MenteeForm(forms.ModelForm):
         label="How will you go about fostering a good relationship your mentor?",
         help_text="Max 500 Characters")
 
+    honeypot = forms.CharField(widget=forms.HiddenInput(), required=False)
     class Meta:
         model = models.MenteeProfile
         exclude = ['date_joined', 'assigned_mentor', 'accepted']
