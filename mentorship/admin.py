@@ -8,8 +8,10 @@ from django.http import HttpResponse
 from .models import MentorProfile, MenteeProfile, MentorQualification, MenteeQualification
 from .forms import MentorForm, MenteeForm
 from .matching import generate_matches
-from .filters import MentorListFilter,MenteeListFilter
+from .filters import MentorListFilter, MenteeListFilter
 
+
+# TODO add default messages for email - from django.conf import settings
 
 @admin.action(description='Export Selected Profiles')
 def export_as_csv(self, request, queryset):
@@ -47,6 +49,7 @@ class MentorQualificationInline(admin.TabularInline):
     extra = 0
     can_delete = True
 
+
 class MenteeInline(admin.StackedInline):
     model = MenteeProfile
     extra = 0
@@ -60,11 +63,12 @@ class MenteeInline(admin.StackedInline):
         ('Mentee Application Information', {'fields': ['course', 'mentor_need', 'mentor_help', 'mentor_relationship']}),
     ]
 
+
 class MentorAdmin(admin.ModelAdmin):
     inlines = [
         MentorQualificationInline, MenteeInline
     ]
-    list_filter = ['occupation', 'date_joined', 'is_active', 'year_applied',MenteeListFilter]
+    list_filter = ['occupation', 'date_joined', 'is_active', 'year_applied', MenteeListFilter]
     exclude = [""]
     form = MentorForm
     list_display = ['email', 'first_name', 'last_name', 'entrance_exam_experience', 'interview_experience',
@@ -79,10 +83,12 @@ class MentorAdmin(admin.ModelAdmin):
     ]
     actions = [export_as_csv]
 
+
 class MenteeQualificationInline(admin.TabularInline):
     model = MenteeQualification
     extra = 0
     can_delete = True
+
 
 def save_matches(request, matches, ct):
     for k, v in matches.items():
@@ -98,7 +104,7 @@ def save_matches(request, matches, ct):
             change_message="Added mentor match")
         mentee.save()
     entry = LogEntry(user_id=request.user.id, action_flag=CHANGE, content_type_id=ct.pk,
-                 change_message="Mentee-Mentor matches ran")
+                     change_message="Mentee-Mentor matches ran")
     entry.save()
 
 
@@ -246,3 +252,6 @@ admin.site.register(Session, SessionAdmin)
 admin.site.register(MentorProfile, MentorAdmin)
 admin.site.register(MenteeProfile, MenteeAdmin)
 admin.site.register(LogEntry, LogEntryAdmin)
+admin.site.site_header = "ACMM Database"
+admin.site.site_title = "ACMM Database"
+admin.site.index_title = "ACMM Database"
