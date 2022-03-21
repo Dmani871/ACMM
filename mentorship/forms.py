@@ -2,8 +2,6 @@ from django import forms
 from . import models
 
 
-# TODO:Add honeypots
-
 class MentorForm(forms.ModelForm):
     area_of_support = forms.MultipleChoiceField(
         widget=forms.CheckboxSelectMultiple,
@@ -20,9 +18,11 @@ class MentorForm(forms.ModelForm):
         required=False)
 
     honeypot = forms.CharField(widget=forms.HiddenInput(), required=False)
+
     class Meta:
         model = models.MentorProfile
-        exclude = ['is_active', 'date_joined']
+        exclude = ['is_active', 'date_joined', '_email_data', '_default_first_name', '_default_last_name',
+                   '_default_sex']
         labels = {
             'year_applied': 'Qualification level prior to studying Medicine/Dentistry',
             'hear_about_us': 'How did you hear about us?'
@@ -84,9 +84,11 @@ class MenteeForm(forms.ModelForm):
         help_text="Max 500 Characters")
 
     honeypot = forms.CharField(widget=forms.HiddenInput(), required=False)
+
     class Meta:
         model = models.MenteeProfile
-        exclude = ['date_joined', 'assigned_mentor', 'accepted']
+        exclude = ['date_joined', 'assigned_mentor', 'accepted', '_email_data', '_default_first_name',
+                   '_default_last_name', '_default_sex']
         labels = {
             'year_applied': 'What is your current education level?',
             'hear_about_us': 'How did you hear about us?'
@@ -100,7 +102,8 @@ class MenteeQualificationForm(forms.ModelForm):
         model = models.MenteeQualification
         exclude = ['profile']
 
-#TODO:Add tests
+
+# TODO:Add tests
 MenteeQualificationFormSet = forms.inlineformset_factory(
     models.MenteeProfile,
     model=models.MenteeQualification,
