@@ -17,7 +17,6 @@ from datetime import timedelta
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
@@ -34,7 +33,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'encrypted_fields',
+    'admin_honeypot',
     'crispy_forms',
     'axes'
 ]
@@ -78,7 +77,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'ACMM.wsgi.application'
 
-
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 
@@ -97,7 +95,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
@@ -110,7 +107,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
@@ -125,12 +121,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 # AXES
-AXES_ENABLED=True
-AXES_FAILURE_LIMIT=3
+AXES_ENABLED = True
+AXES_FAILURE_LIMIT = 3
 AXES_COOLOFF_TIME = timedelta(minutes=10)
 AXES_LOCK_OUT_BY_COMBINATION_USER_AND_IP = True
-AXES_LOCK_OUT_BY_USER_OR_IP=True
-AXES_VERBOSE=True
+AXES_LOCK_OUT_BY_USER_OR_IP = True
+AXES_VERBOSE = True
+# ADMIN settings
+ADMIN_URL = env('ADMIN_URL')
 
-FIELD_ENCRYPTION_KEYS = [x for x in env.list('FIELD_ENCRYPTION_KEYS')]
-HASH_KEY = env("HASH_KEY")
