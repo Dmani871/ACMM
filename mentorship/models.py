@@ -2,7 +2,7 @@ from django.db import models
 from django.utils import timezone
 from django.urls import reverse
 from django.contrib.postgres.fields import ArrayField
-from encrypted_model_fields import fields
+from django_cryptography.fields import encrypt
 
 SEX_CHOICES = [
     ('M', 'Male'),
@@ -62,10 +62,10 @@ COURSE_CHOICES = [
 
 class CommonProfileInfo(models.Model):
     """ Common profile info for all applicants."""
-    email = fields.EncryptedEmailField(default="", null=True)
-    first_name = fields.EncryptedCharField(max_length=150, default="", null=True)
-    last_name = fields.EncryptedCharField(max_length=150, default="", null=True)
-    sex = fields.EncryptedCharField(max_length=1, choices=SEX_CHOICES)
+    email = encrypt(models.EmailField(max_length=254))
+    first_name = encrypt(models.CharField(max_length=30))
+    last_name = encrypt(models.CharField(max_length=130))
+    sex = encrypt(models.CharField(max_length=1, choices=SEX_CHOICES))
     year_applied = models.CharField(max_length=10, choices=YEAR_APPLIED_CHOICES)
     date_joined = models.DateTimeField(default=timezone.now)
     hear_about_us = models.CharField(max_length=10, choices=HEAR_ABOUT_US_CHOICES, default=None)
@@ -83,7 +83,7 @@ class MentorProfile(CommonProfileInfo):
     is_active = models.BooleanField(default=True)
 
     def __str__(self):
-        return self.occupation + "-" + self.email
+        return self.occupation + "-" + str(self.email)
 
     def get_admin_url(self):
         return reverse("admin:%s_%s_change" % (self._meta.app_label, self._meta.model_name), args=(self.id,))
@@ -100,7 +100,7 @@ class MenteeProfile(CommonProfileInfo):
     mentor = models.ForeignKey(MentorProfile, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
-        return self.course + "-" + self.email
+        return self.course + "-" + str(self.email)
 
 
 class CommonQualificationInfo(models.Model):
