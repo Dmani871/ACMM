@@ -29,6 +29,7 @@ class AddMentorFormTests(TestCase):
             'interview_experience': ['P'],
             'occupation': 'MD'})
         self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors, {'area_of_support': ['This field is required.']})
 
     def test_interview_experience_required(self):
         form = forms.MentorForm(data={
@@ -42,6 +43,7 @@ class AddMentorFormTests(TestCase):
             'area_of_support': ['PS'],
             'occupation': 'MD'})
         self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors, {'interview_experience': ['This field is required.']})
 
     def test_entrance_exam_experience_not_required(self):
         form = forms.MentorForm(data={
@@ -69,6 +71,8 @@ class AddMentorFormTests(TestCase):
             'area_of_support': ['PS'],
             'occupation': 'Doctor'})
         self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors['occupation'],
+                         ['Select a valid choice. Doctor is not one of the available choices.'])
 
     def test_missing_fields(self):
         form = forms.MentorForm(data={
@@ -97,6 +101,8 @@ class AddMentorFormTests(TestCase):
             'area_of_support': ['PS'],
             'occupation': 'MD'})
         self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors['entrance_exam_experience'],
+                         ['Select a valid choice. UKCAT is not one of the available choices.'])
 
     def test_invalid_interview_experience(self):
         form = forms.MentorForm(data={
@@ -111,6 +117,8 @@ class AddMentorFormTests(TestCase):
             'area_of_support': ['PS'],
             'occupation': 'MD'})
         self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors['interview_experience'],
+                         ['Select a valid choice. Panel is not one of the available choices.'])
 
     def test_invalid_area_of_support(self):
         form = forms.MentorForm(data={
@@ -125,6 +133,8 @@ class AddMentorFormTests(TestCase):
             'area_of_support': ['Personal Statement'],
             'occupation': 'MD'})
         self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors['area_of_support'],
+                         ['Select a valid choice. Personal Statement is not one of the available choices.'])
 
     def test_invalid_sex(self):
         form = forms.MentorForm(data={
@@ -139,6 +149,8 @@ class AddMentorFormTests(TestCase):
             'area_of_support': ['PS'],
             'occupation': 'MD'})
         self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors['sex'],
+                         ['Select a valid choice. T is not one of the available choices.'])
 
     def test_invalid_hear_about_us(self):
         form = forms.MentorForm(data={
@@ -153,6 +165,8 @@ class AddMentorFormTests(TestCase):
             'area_of_support': ['PS'],
             'occupation': 'MD'})
         self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors['hear_about_us'],
+                         ['Select a valid choice. Word of Mouth is not one of the available choices.'])
 
     def test_invalid_year_applied(self):
         form = forms.MentorForm(data={
@@ -167,6 +181,8 @@ class AddMentorFormTests(TestCase):
             'area_of_support': ['PS'],
             'occupation': 'MD'})
         self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors['year_applied'],
+                         ['Select a valid choice. Y13 is not one of the available choices.'])
 
     def test_labels(self):
         form = forms.MentorForm(data={
@@ -204,17 +220,21 @@ class AddMentorQualificationFormTests(TestCase):
         form = forms.MentorQualificationForm(data={
             'education_level': 'A2'})
         self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors,{'name': ['This field is required.']})
 
     def test_education_level_required(self):
         form = forms.MentorQualificationForm(data={
             'name': 'Biology'})
         self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors, {'education_level': ['This field is required.']})
 
     def test_invalid_education_level(self):
         form = forms.MentorQualificationForm(data={
             'name': 'Biology',
             'education_level': 'Y13'})
         self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors['education_level'],['Select a valid choice. Y13 is not one of the available '
+                                                         'choices.'])
 
 
 class AddMenteeFormTests(TestCase):
@@ -271,6 +291,8 @@ class AddMenteeFormTests(TestCase):
             'mentor_help': "Help me with ...",
             'mentor_relationship': "I will build a relationship by ..."})
         self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors['sex'],
+                         ['Select a valid choice. T is not one of the available choices.'])
 
     def test_invalid_year_applied(self):
         form = forms.MenteeForm(data={
@@ -289,6 +311,8 @@ class AddMenteeFormTests(TestCase):
             'mentor_help': "Help me with ...",
             'mentor_relationship': "I will build a relationship by ..."})
         self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors['year_applied'],
+                         ['Select a valid choice. Y13 is not one of the available choices.'])
 
     def test_invalid_hear_about_us(self):
         form = forms.MenteeForm(data={
@@ -307,6 +331,8 @@ class AddMenteeFormTests(TestCase):
             'mentor_help': "Help me with ...",
             'mentor_relationship': "I will build a relationship by ..."})
         self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors['hear_about_us'],
+                         ['Select a valid choice. Word of Mouth is not one of the available choices.'])
 
     def test_invalid_entrance_exam_experience(self):
         form = forms.MenteeForm(data={
@@ -325,6 +351,8 @@ class AddMenteeFormTests(TestCase):
             'mentor_help': "Help me with ...",
             'mentor_relationship': "I will build a relationship by ..."})
         self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors['entrance_exam_experience'],
+                         ['Select a valid choice. UKCAT is not one of the available choices.'])
 
     def test_invalid_interview_experience(self):
         form = forms.MenteeForm(data={
@@ -343,6 +371,8 @@ class AddMenteeFormTests(TestCase):
             'mentor_help': "Help me with ...",
             'mentor_relationship': "I will build a relationship by ..."})
         self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors['interview_experience'],
+                         ['Select a valid choice. Panel is not one of the available choices.'])
 
     def test_invalid_area_of_support(self):
         form = forms.MenteeForm(data={
@@ -361,6 +391,8 @@ class AddMenteeFormTests(TestCase):
             'mentor_help': "Help me with ...",
             'mentor_relationship': "I will build a relationship by ..."})
         self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors['area_of_support'],
+                         ['Select a valid choice. Personal Statement is not one of the available choices.'])
 
     def test_invalid_course(self):
         form = forms.MenteeForm(data={
@@ -379,6 +411,8 @@ class AddMenteeFormTests(TestCase):
             'mentor_help': "Help me with ...",
             'mentor_relationship': "I will build a relationship by ..."})
         self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors['course'],
+                         ['Select a valid choice. Medicine is not one of the available choices.'])
 
     def test_invalid_current_application(self):
         form = forms.MenteeForm(data={
@@ -397,6 +431,9 @@ class AddMenteeFormTests(TestCase):
             'mentor_help': "Help me with ...",
             'mentor_relationship': "I will build a relationship by ..."})
         self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors['current_application'],
+                         ['This field is required.'])
+
 
     def test_labels(self):
         form = forms.MenteeForm(data={
@@ -459,13 +496,19 @@ class AddMenteeQualificationFormTests(TestCase):
 
     def test_name_required(self):
         form = forms.MenteeQualificationForm(data={
-            'education_level': 'A2', 'grade': 'A', 'predicted': True})
+            'education_level': 'A2',
+            'grade': 'A',
+            'predicted': True})
         self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors, {'name': ['This field is required.']})
 
     def test_education_level_required(self):
         form = forms.MenteeQualificationForm(data={
-            'name': 'Biology', 'grade': 'A', 'predicted': True})
+            'name': 'Biology',
+            'grade': 'A',
+            'predicted': True})
         self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors, {'education_level': ['This field is required.']})
 
     def test_predicted_required(self):
         form = forms.MenteeQualificationForm(data={
@@ -473,6 +516,7 @@ class AddMenteeQualificationFormTests(TestCase):
             'education_level': 'A2',
             'grade': 'A'})
         self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors, {'predicted': ['This field is required.']})
 
     def test_grade_required(self):
         form = forms.MenteeQualificationForm(data={
@@ -480,6 +524,7 @@ class AddMenteeQualificationFormTests(TestCase):
             'education_level': 'A2',
             'predicted': True})
         self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors, {'grade': ['This field is required.']})
 
     def test_invalid_education_level(self):
         form = forms.MenteeQualificationForm(data={
@@ -488,6 +533,8 @@ class AddMenteeQualificationFormTests(TestCase):
             'grade': 'A',
             'predicted': True})
         self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors['education_level'], ['Select a valid choice. Y13 is not one of the available '
+                                                          'choices.'])
 
     def test_invalid_grade(self):
         form = forms.MenteeQualificationForm(data={
@@ -496,6 +543,8 @@ class AddMenteeQualificationFormTests(TestCase):
             'grade': 'A+',
             'predicted': True})
         self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors['grade'], ['Select a valid choice. A+ is not one of the available '
+                                                          'choices.'])
 
     def test_invalid_predicted(self):
         form = forms.MenteeQualificationForm(data={
@@ -504,3 +553,4 @@ class AddMenteeQualificationFormTests(TestCase):
             'grade': 'A',
             'predicted': None})
         self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors['predicted'],['This field is required.'])
