@@ -5,6 +5,7 @@ from mentorship import forms
 class AddMentorFormTests(TestCase):
     def test_valid_form(self):
         form = forms.MentorForm(data={
+            'tcs_check': True,
             'email': 'john.doe@mail.com',
             'first_name': 'John',
             'last_name': 'Doe',
@@ -17,8 +18,25 @@ class AddMentorFormTests(TestCase):
             'occupation': 'MD'})
         self.assertTrue(form.is_valid())
 
+    def test_tcs_check_required(self):
+        form = forms.MentorForm(data={
+            'tcs_check': False,
+            'email': 'john.doe@mail.com',
+            'first_name': 'John',
+            'last_name': 'Doe',
+            'sex': 'M',
+            'year_applied': 'A2',
+            'hear_about_us': 'WM',
+            'entrance_exam_experience': ['UCAT'],
+            'interview_experience': ['P'],
+            'area_of_support': ['PS'],
+            'occupation': 'MD'})
+        self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors, {'tcs_check': ['This field is required.']})
+
     def test_area_of_support_required(self):
         form = forms.MentorForm(data={
+            'tcs_check': True,
             'email': 'john.doe@mail.com',
             'first_name': 'John',
             'last_name': 'Doe',
@@ -33,6 +51,7 @@ class AddMentorFormTests(TestCase):
 
     def test_interview_experience_required(self):
         form = forms.MentorForm(data={
+            'tcs_check': True,
             'email': 'john.doe@mail.com',
             'first_name': 'John',
             'last_name': 'Doe',
@@ -47,6 +66,7 @@ class AddMentorFormTests(TestCase):
 
     def test_entrance_exam_experience_not_required(self):
         form = forms.MentorForm(data={
+            'tcs_check': True,
             'email': 'john.doe@mail.com',
             'first_name': 'John',
             'last_name': 'Doe',
@@ -60,6 +80,7 @@ class AddMentorFormTests(TestCase):
 
     def test_invalid_occupation(self):
         form = forms.MentorForm(data={
+            'tcs_check': True,
             'email': 'john.doe@mail.com',
             'first_name': 'John',
             'last_name': 'Doe',
@@ -76,6 +97,7 @@ class AddMentorFormTests(TestCase):
 
     def test_missing_fields(self):
         form = forms.MentorForm(data={
+            'tcs_check': True,
             'email': '',
             'first_name': '',
             'last_name': '',
@@ -90,6 +112,7 @@ class AddMentorFormTests(TestCase):
 
     def test_invalid_entrance_exam_experience(self):
         form = forms.MentorForm(data={
+            'tcs_check': True,
             'email': 'john.doe@mail.com',
             'first_name': 'John',
             'last_name': 'Doe',
@@ -106,6 +129,7 @@ class AddMentorFormTests(TestCase):
 
     def test_invalid_interview_experience(self):
         form = forms.MentorForm(data={
+            'tcs_check': True,
             'email': 'john.doe@mail.com',
             'first_name': 'John',
             'last_name': 'Doe',
@@ -122,6 +146,7 @@ class AddMentorFormTests(TestCase):
 
     def test_invalid_area_of_support(self):
         form = forms.MentorForm(data={
+            'tcs_check': True,
             'email': 'john.doe@mail.com',
             'first_name': 'John',
             'last_name': 'Doe',
@@ -138,6 +163,7 @@ class AddMentorFormTests(TestCase):
 
     def test_invalid_sex(self):
         form = forms.MentorForm(data={
+            'tcs_check': True,
             'email': 'john.doe@mail.com',
             'first_name': 'John',
             'last_name': 'Doe',
@@ -154,6 +180,7 @@ class AddMentorFormTests(TestCase):
 
     def test_invalid_hear_about_us(self):
         form = forms.MentorForm(data={
+            'tcs_check': True,
             'email': 'john.doe@mail.com',
             'first_name': 'John',
             'last_name': 'Doe',
@@ -170,6 +197,7 @@ class AddMentorFormTests(TestCase):
 
     def test_invalid_year_applied(self):
         form = forms.MentorForm(data={
+            'tcs_check': True,
             'email': 'john.doe@mail.com',
             'first_name': 'John',
             'last_name': 'Doe',
@@ -186,6 +214,7 @@ class AddMentorFormTests(TestCase):
 
     def test_labels(self):
         form = forms.MentorForm(data={
+            'tcs_check': True,
             'email': 'john.doe@mail.com',
             'first_name': 'John',
             'last_name': 'Doe',
@@ -220,7 +249,7 @@ class AddMentorQualificationFormTests(TestCase):
         form = forms.MentorQualificationForm(data={
             'education_level': 'A2'})
         self.assertFalse(form.is_valid())
-        self.assertEqual(form.errors,{'name': ['This field is required.']})
+        self.assertEqual(form.errors, {'name': ['This field is required.']})
 
     def test_education_level_required(self):
         form = forms.MentorQualificationForm(data={
@@ -233,13 +262,14 @@ class AddMentorQualificationFormTests(TestCase):
             'name': 'Biology',
             'education_level': 'Y13'})
         self.assertFalse(form.is_valid())
-        self.assertEqual(form.errors['education_level'],['Select a valid choice. Y13 is not one of the available '
-                                                         'choices.'])
+        self.assertEqual(form.errors['education_level'], ['Select a valid choice. Y13 is not one of the available '
+                                                          'choices.'])
 
 
 class AddMenteeFormTests(TestCase):
     def test_valid_form(self):
         form = forms.MenteeForm(data={
+            'tcs_check': True,
             'email': 'jane.doe@mail.com',
             'first_name': 'Jane',
             'last_name': 'Doe',
@@ -256,8 +286,29 @@ class AddMenteeFormTests(TestCase):
             'mentor_relationship': "I will build a relationship by ..."})
         self.assertTrue(form.is_valid())
 
+    def test_tcs_check_required(self):
+        form = forms.MenteeForm(data={
+            'tcs_check': False,
+            'email': 'jane.doe@mail.com',
+            'first_name': 'Jane',
+            'last_name': 'Doe',
+            'sex': 'F',
+            'year_applied': 'A2',
+            'hear_about_us': 'WM',
+            'entrance_exam_experience': ['UCAT'],
+            'interview_experience': ['P'],
+            'area_of_support': ['PS'],
+            'course': 'M',
+            'current_application': True,
+            'mentor_need': "I want a mentor because ...",
+            'mentor_help': "Help me with ...",
+            'mentor_relationship': "I will build a relationship by ..."})
+        self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors, {'tcs_check': ['This field is required.']})
+
     def test_missing_fields(self):
         form = forms.MenteeForm(data={
+            'tcs_check': True,
             'email': '',
             'first_name': '',
             'last_name': '',
@@ -276,6 +327,7 @@ class AddMenteeFormTests(TestCase):
 
     def test_invalid_sex(self):
         form = forms.MenteeForm(data={
+            'tcs_check': True,
             'email': 'jane.doe@mail.com',
             'first_name': 'Jane',
             'last_name': 'Doe',
@@ -296,6 +348,7 @@ class AddMenteeFormTests(TestCase):
 
     def test_invalid_year_applied(self):
         form = forms.MenteeForm(data={
+            'tcs_check': True,
             'email': 'jane.doe@mail.com',
             'first_name': 'Jane',
             'last_name': 'Doe',
@@ -316,6 +369,7 @@ class AddMenteeFormTests(TestCase):
 
     def test_invalid_hear_about_us(self):
         form = forms.MenteeForm(data={
+            'tcs_check': True,
             'email': 'jane.doe@mail.com',
             'first_name': 'Jane',
             'last_name': 'Doe',
@@ -336,6 +390,7 @@ class AddMenteeFormTests(TestCase):
 
     def test_invalid_entrance_exam_experience(self):
         form = forms.MenteeForm(data={
+            'tcs_check': True,
             'email': 'jane.doe@mail.com',
             'first_name': 'Jane',
             'last_name': 'Doe',
@@ -356,6 +411,7 @@ class AddMenteeFormTests(TestCase):
 
     def test_invalid_interview_experience(self):
         form = forms.MenteeForm(data={
+            'tcs_check': True,
             'email': 'jane.doe@mail.com',
             'first_name': 'Jane',
             'last_name': 'Doe',
@@ -376,6 +432,7 @@ class AddMenteeFormTests(TestCase):
 
     def test_invalid_area_of_support(self):
         form = forms.MenteeForm(data={
+            'tcs_check': True,
             'email': 'jane.doe@mail.com',
             'first_name': 'Jane',
             'last_name': 'Doe',
@@ -396,6 +453,7 @@ class AddMenteeFormTests(TestCase):
 
     def test_invalid_course(self):
         form = forms.MenteeForm(data={
+            'tcs_check': True,
             'email': 'jane.doe@mail.com',
             'first_name': 'Jane',
             'last_name': 'Doe',
@@ -416,6 +474,7 @@ class AddMenteeFormTests(TestCase):
 
     def test_invalid_current_application(self):
         form = forms.MenteeForm(data={
+            'tcs_check': True,
             'email': 'jane.doe@mail.com',
             'first_name': 'Jane',
             'last_name': 'Doe',
@@ -434,9 +493,9 @@ class AddMenteeFormTests(TestCase):
         self.assertEqual(form.errors['current_application'],
                          ['This field is required.'])
 
-
     def test_labels(self):
         form = forms.MenteeForm(data={
+            'tcs_check': True,
             'email': 'jane.doe@mail.com',
             'first_name': 'Jane',
             'last_name': 'Doe',
@@ -470,6 +529,7 @@ class AddMenteeFormTests(TestCase):
 
     def test_non_required_fields(self):
         form = forms.MenteeForm(data={
+            'tcs_check': True,
             'email': 'jane.doe@mail.com',
             'first_name': 'Jane',
             'last_name': 'Doe',
@@ -544,7 +604,7 @@ class AddMenteeQualificationFormTests(TestCase):
             'predicted': True})
         self.assertFalse(form.is_valid())
         self.assertEqual(form.errors['grade'], ['Select a valid choice. A+ is not one of the available '
-                                                          'choices.'])
+                                                'choices.'])
 
     def test_invalid_predicted(self):
         form = forms.MenteeQualificationForm(data={
@@ -553,4 +613,4 @@ class AddMenteeQualificationFormTests(TestCase):
             'grade': 'A',
             'predicted': None})
         self.assertFalse(form.is_valid())
-        self.assertEqual(form.errors['predicted'],['This field is required.'])
+        self.assertEqual(form.errors['predicted'], ['This field is required.'])

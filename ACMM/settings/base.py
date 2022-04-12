@@ -33,6 +33,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+    'django.contrib.flatpages',
     'admin_honeypot',
     'crispy_forms',
     'axes'
@@ -130,3 +132,5 @@ AXES_VERBOSE = True
 # ADMIN settings
 ADMIN_URL = env('ADMIN_URL')
 
+
+SITE_ID = 1
