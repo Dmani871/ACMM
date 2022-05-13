@@ -21,7 +21,8 @@ year_applied_opts = unpack_choices(models.YEAR_APPLIED_CHOICES)
 hear_about_us_opts = unpack_choices(models.HEAR_ABOUT_US_CHOICES)
 occupation_opts = unpack_choices(models.OCCUPATION_CHOICES)
 education_level_opt = unpack_choices(models.EDUCATION_LEVEL_CHOICES)
-sex_opts=unpack_choices(models.SEX_CHOICES)
+sex_opts = unpack_choices(models.SEX_CHOICES)
+
 
 class MenteeFactory(factory.Factory):
     class Meta:

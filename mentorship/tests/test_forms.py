@@ -514,11 +514,11 @@ class AddMenteeFormTests(TestCase):
         self.assertIn('<label for="id_first_name">First name:</label>', form.as_p())
         self.assertIn('<label for="id_last_name">Last name:</label>', form.as_p())
         self.assertIn('<label for="id_sex">Sex:</label>', form.as_p())
-        self.assertIn('<label for="id_year_applied">What is your current education level?</label> ', form.as_p())
+        self.assertIn('<label for="id_year_applied">What is your current education level?</label>', form.as_p())
         self.assertIn('<label for="id_hear_about_us">How did you hear about us?</label>', form.as_p())
         self.assertIn('<label>What entrance exam experience have you had?</label>', form.as_p())
         self.assertIn('<label>What interview experience have you had?</label>', form.as_p())
-        self.assertIn('<label>What do you need help with?</label> ', form.as_p())
+        self.assertIn('<label>What do you need help with?</label>', form.as_p())
         self.assertIn('<label for="id_mentor_need">Why do you want a mentor and what do you hope to gain ?</label>',
                       form.as_p())
         self.assertIn('<label for="id_mentor_help">How will a mentor help with your application?</label>', form.as_p())

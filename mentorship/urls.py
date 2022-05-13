@@ -8,7 +8,5 @@ urlpatterns = [
     path('mentee/signup', views.mentee_signup_view, name='mentee'),
     path('thanks', views.thank_you_view, name='thank_you'),
     path('next_year', views.next_year_view, name='next_year'),
-    path('about-us/', flat_views.flatpage, {'url': 'mentorship/about-us/'}, name='about'),
-    path('tcs/', flat_views.flatpage, {'url': 'mentorship/tcs/'}, name='tcs'),
     path('privacy/', flat_views.flatpage, {'url': 'mentorship/privacy/'}, name='privacy')
 ]

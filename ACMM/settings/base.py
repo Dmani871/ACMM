@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 from .env_config import env
-from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -35,16 +34,20 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'django.contrib.flatpages',
-    'admin_honeypot',
     'crispy_forms',
-    'axes'
+    'axes',
+    'django_otp',
+    'django_otp.plugins.otp_static',
+    'django_otp.plugins.otp_totp',
+    'two_factor',
+    'otp_yubikey'
 ]
 
 AUTHENTICATION_BACKENDS = [
     # AxesBackend should be the first backend in the AUTHENTICATION_BACKENDS list.
     'axes.backends.AxesBackend',
     # Django ModelBackend is the default authentication backend.
-    'django.contrib.auth.backends.ModelBackend',
+    'django.contrib.auth.backends.ModelBackend'
 ]
 
 MIDDLEWARE = [
@@ -55,7 +58,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'axes.middleware.AxesMiddleware'
+    'axes.middleware.AxesMiddleware',
+    'django_otp.middleware.OTPMiddleware',
+    'csp.middleware.CSPMiddleware'
 ]
 
 ROOT_URLCONF = 'ACMM.urls'
@@ -125,12 +130,34 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 # AXES
 AXES_ENABLED = True
 AXES_FAILURE_LIMIT = 3
-AXES_COOLOFF_TIME = timedelta(minutes=10)
+AXES_COOLOFF_TIME = 2
 AXES_LOCK_OUT_BY_COMBINATION_USER_AND_IP = True
 AXES_LOCK_OUT_BY_USER_OR_IP = True
 AXES_VERBOSE = True
-# ADMIN settings
+AXES_ENABLE_ACCESS_FAILURE_LOG = True
+
+# Admin site settings
 ADMIN_URL = env('ADMIN_URL')
+LOGIN_URL = 'two_factor:login'
+LOGIN_REDIRECT_URL = 'two_factor:profile'
 
-
+# Flat page settings
 SITE_ID = 1
+
+ADMINS = [x.split(':') for x in env.list('DJANGO_ADMINS')]
+
+# CSP settings
+CSP_DEFAULT_SRC = ("'none'",)
+CSP_STYLE_SRC = ("'self'", "https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css",
+                 "'sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO'")
+CSP_SCRIPT_SRC = ("'self'",)
+CSP_IMG_SRC = ("'self'",)
+CSP_FONT_SRC = ("'self'",)
+CSP_CONNECT_SRC = ("'self'",)
+CSP_OBJECT_SRC = ("'none'",)
+CSP_BASE_URI = ("'none'",)
+CSP_FRAME_ANCESTORS = ("'none'",)
+CSP_FORM_ACTION = ("'self'",)
+CSP_INCLUDE_NONCE_IN = ('script-src',)
+
+EMAIL_CONFIG = env.email_url('EMAIL_URL')
