@@ -1,4 +1,5 @@
 import csv
+from django.core import mail
 from django.contrib import admin
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.admin.models import LogEntry, CHANGE
@@ -9,6 +10,7 @@ from .models import MentorProfile, MenteeProfile, MentorQualification, MenteeQua
 from .forms import MentorForm, MenteeForm
 from .matching import generate_matches
 from .filters import MentorListFilter, MenteeListFilter
+from django.conf import settings
 
 
 # TODO add default messages for email - from django.conf import settings
@@ -60,7 +62,7 @@ class MenteeInline(admin.StackedInline):
         ('Mentee Personal Information', {'fields': ['first_name', 'last_name', 'email', 'sex']}),
         ('Mentee Background Information',
          {'fields': ['year_applied', 'entrance_exam_experience', 'interview_experience', 'area_of_support']}),
-        ('Mentee Application Information', {'fields': ['course', 'mentor_need', 'mentor_help', 'mentor_relationship']}),
+        ('Mentee Application Information', {'fields': ['course', 'mentor_need', 'mentor_help', 'mentor_relationship']})
     ]
 
 
@@ -79,7 +81,7 @@ class MentorAdmin(admin.ModelAdmin):
         ('Background Information', {
             'fields': ['occupation', 'year_applied', 'entrance_exam_experience', 'interview_experience',
                        'area_of_support']}),
-        ('Meta', {'fields': ['date_joined', 'hear_about_us', 'is_active']})
+        ('Meta', {'fields': ['date_joined', 'hear_about_us', 'is_active', 'tcs_check']})
     ]
     actions = [export_as_csv]
 
@@ -116,7 +118,6 @@ class MenteeAdmin(admin.ModelAdmin):
     form = MenteeForm
     list_display = ['email', 'first_name', 'last_name', 'area_of_support', 'mentor_link']
     list_filter = ['course', 'date_joined', 'accepted', 'year_applied', MentorListFilter]
-
     fieldsets = [
         ('Personal Information', {'fields': ['first_name', 'last_name', 'email', 'sex']}),
         ('Background Information',
@@ -125,7 +126,7 @@ class MenteeAdmin(admin.ModelAdmin):
             'fields': ['course', 'mentor_need', 'mentor_help', 'mentor_relationship', 'current_application',
                        'accepted']}),
         ('Mentor', {'fields': ['mentor']}),
-        ('Meta', {'fields': ['date_joined', 'hear_about_us']})
+        ('Meta', {'fields': ['date_joined', 'hear_about_us', 'tcs_check']})
     ]
 
     def mentor_link(self, obj):
@@ -144,6 +145,31 @@ class MenteeAdmin(admin.ModelAdmin):
             return True
         else:
             return False
+
+    def generate_matches_messages(self, mentees):
+        emails = []
+        subject = settings.EMAIL_MATCH_SUBJECT
+        slack_link_msg = f'\nPlease join our slack community to communicate with each other : {settings.SLACK_URL}'
+        for mentee in mentees:
+            if mentee.mentor is not None:
+                mentor = mentee.mentor
+                mentor_body = settings.EMAIL_MATCH_BODY + f'\nYou have been matched with mentee : {mentee.first_name}  {mentee.last_name}' + slack_link_msg + settings.DEFAULT_MSG_CLOSING
+                mentee_body = settings.EMAIL_MATCH_BODY + f'\nYou have been matched with mentor : {mentor.first_name}  {mentor.last_name}' + slack_link_msg + settings.DEFAULT_MSG_CLOSING
+                mentee_email = mail.EmailMessage(subject=subject, body=mentee_body, to=[mentee.email],
+                                                 reply_to=[settings.DEFAULT_EMAIL_REPLY_TO])
+                mentor_email = mail.EmailMessage(subject=subject, body=mentor_body, to=[mentor.email],
+                                                 reply_to=[settings.DEFAULT_EMAIL_REPLY_TO])
+                mentor_email.attach_file('static/mentorship/docs/Code of Conduct for Volunteers.pdf')
+                mentor_email.attach_file('static/mentorship/docs/Medicine Mentor Guide 2021.docx.pdf')
+                emails.append(mentor_email)
+                emails.append(mentee_email)
+        return emails
+
+    @admin.action(description='Email Match(es)')
+    def email_matches(self, request, queryset):
+        with mail.get_connection() as connection:
+            messages = self.generate_matches_messages(queryset)
+            connection.send_messages(messages)
 
     @admin.action(description='Export Matches Info')
     def export_matches_info(self, request, queryset):
@@ -195,7 +221,7 @@ class MenteeAdmin(admin.ModelAdmin):
         save_matches(request, medicine_matches, ct)
         save_matches(request, dentistry_matches, ct)
 
-    actions = [export_as_csv, "assign_mentor", "export_matches_info"]
+    actions = [export_as_csv, "assign_mentor", "export_matches_info", "email_matches"]
 
 
 class LogEntryAdmin(admin.ModelAdmin):
