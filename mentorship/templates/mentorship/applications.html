@@ -1,0 +1,62 @@
+{% extends 'mentorship/base.html' %} {% block content %}
+    <div class="jumbotron">
+        <h1 class="display-4">Welcome to the ACMM Application Portal!</h1>
+        <p class="lead">Dear mentors and mentees, welcome to our mentoring scheme this coming year. This is our 5th year
+            of helping
+            African Caribbean prospective medical and dental students achieve their dreams with mentoring on a 1 to 1
+            basis during the course of UCAS applications.
+            <br/>
+            <br/>
+            ACMM started after identifying the need to have more black students represented in medical school and
+            therefore within the profession. On our journey into and during medical school, we found a lack of support
+            for black students, combined with a lack of representation within the field. This was backed up by various
+            statistics that demonstrate our underrepresentation in Medicine and Dentistry. We therefore co- founded ACMM
+            to help further the chances of prospective Afro-Caribbean students into medical school, to realise the
+            potential of these students and to encourage future applicants to think about a career in medicine.
+            <br/>
+            <br/>
+            What does the ACMM mentoring scheme involve?
+            <br/>
+            <br/>
+            As a mentor you will be matched with one mentee, who you will support for a year – from May until May of the
+            next year.
+            You will support your mentee in their medical school application by providing help and advice on entrance
+            exams, personal statements and hopefully interview preparation. We will try and match you with a mentee who
+            has similar personal characteristics to you in order to make the mentoring relationship as beneficial as
+            possible. You will commit to monthly contact as a bare minimum, with more contact and support given in the
+            summer prior to application.
+            <br/>
+            <br/>
+        </p>
+        <p class="lead">How ACMM will support mentors and mentees:</p>
+        <ul class="lead">
+            <li>Provision of interview and personal statement guides to support your mentee</li>
+            <li>Continuing to be available by email/social media if you have any difficulties</li>
+            <li>Monthly emails reminding you to contact your mentor/mentee, with relevant topics to guide discussions
+            </li>
+            <li>A mentor brief to further understand your role as a mentor</li>
+            <li>A mentor checklist to ensure you have supported your mentee for all the important topics</li>
+        </ul>
+        <br/>
+        <br/>
+        <p class="lead">You can contact us at any time through the following avenues:</p>
+        <ul class="lead">
+            <li>Twitter: @ACMM</li>
+            <li>LinkedIn: African Caribbean Medical Mentors</li>
+            <li>Email: mentoring@acmedicalmentors.co.uk
+            </li>
+            <li>Website contact forms: www.acmedicalmentors.co.uk</li>
+        </ul>
+        <p class="lead">Thank you for your interest in ACMM.Please complete select which application you would like to
+            complete.</p>
+        <hr class="my-4">
+        <p>Please note that we will only accept one application per an applicant. </p>
+        <p>ACMM applications are very competitive so prior to submission please ensure questions are answered and all
+            details are accurate. </p>
+        <p>If you are interested our schemes or just want to find out more please go to our website. </p>
+        <p class="lead">
+            <a class="btn btn-secondary btn-lg" href="{% url 'mentorship:mentor' %}" role="button">Mentor Sign-Up</a>
+            <a class="btn btn-secondary btn-lg" href="{% url 'mentorship:mentee' %}" role="button">Mentee Sign-Up</a>
+        </p>
+    </div>
+{% endblock %}
