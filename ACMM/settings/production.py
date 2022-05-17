@@ -1,13 +1,13 @@
 from .base import *
-
+from urllib.parse import urlparse
 """
 Settings configuration for production purposes.
 """
 # Ensures that no debug data is shown upon an error
 DEBUG = False
 
-# list of domains supported for the project
-ALLOWED_HOSTS = ['*']
+APPENGINE_URL = env("APPENGINE_URL", default=None)
+ALLOWED_HOSTS = ["acmm-mentorship-app-350411.nw.r.appspot.com"]
 
 # the database configuration for production
 DATABASES = {
