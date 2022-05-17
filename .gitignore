@@ -131,4 +131,4 @@ dmypy.json
 app.yaml
 
 # static docs
-static
+/static
