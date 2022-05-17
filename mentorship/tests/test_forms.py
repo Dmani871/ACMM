@@ -1,5 +1,5 @@
 from django.test import TestCase
-from mentorship import forms
+from ACMM.mentorship import forms
 
 
 class AddMentorFormTests(TestCase):
