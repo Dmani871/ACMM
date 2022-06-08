@@ -1,5 +1,5 @@
 from django.test import TestCase
-from ACMM.mentorship import models
+from mentorship import models
 
 
 class MentorTest(TestCase):
@@ -7,6 +7,7 @@ class MentorTest(TestCase):
     def setUp(self):
         self.mentor = models.MentorProfile.objects.create(
             email='john.doe@mail.com',
+            work_email='john.doe@nhs.com',
             first_name='John',
             last_name='Doe',
             sex='M',

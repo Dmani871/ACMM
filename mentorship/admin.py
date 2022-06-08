@@ -77,7 +77,7 @@ class MentorAdmin(admin.ModelAdmin):
                     'area_of_support']
 
     fieldsets = [
-        ('Personal Information', {'fields': ['first_name', 'last_name', 'email', 'sex']}),
+        ('Personal Information', {'fields': ['first_name', 'last_name', 'email','work_email', 'sex']}),
         ('Background Information', {
             'fields': ['occupation', 'year_applied', 'entrance_exam_experience', 'interview_experience',
                        'area_of_support']}),

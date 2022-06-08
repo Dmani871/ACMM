@@ -29,6 +29,10 @@ class MentorForm(forms.ModelForm):
             'year_applied': 'Qualification level prior to studying Medicine/Dentistry',
             'hear_about_us': 'How did you hear about us?'
         }
+        help_texts = {
+            'email': 'Email to be contacted regarding mentorship.',
+            'work_email': 'Email to verify work/study status.'
+        }
 
 
 class MentorQualificationForm(forms.ModelForm):

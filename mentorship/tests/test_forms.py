@@ -1,5 +1,5 @@
 from django.test import TestCase
-from ACMM.mentorship import forms
+from mentorship import forms
 
 
 class AddMentorFormTests(TestCase):
@@ -7,6 +7,7 @@ class AddMentorFormTests(TestCase):
         form = forms.MentorForm(data={
             'tcs_check': True,
             'email': 'john.doe@mail.com',
+            'work_email': 'john.doe@nhs.co.uk',
             'first_name': 'John',
             'last_name': 'Doe',
             'sex': 'M',
@@ -22,6 +23,7 @@ class AddMentorFormTests(TestCase):
         form = forms.MentorForm(data={
             'tcs_check': False,
             'email': 'john.doe@mail.com',
+            'work_email': 'john.doe@nhs.co.uk',
             'first_name': 'John',
             'last_name': 'Doe',
             'sex': 'M',
@@ -38,6 +40,7 @@ class AddMentorFormTests(TestCase):
         form = forms.MentorForm(data={
             'tcs_check': True,
             'email': 'john.doe@mail.com',
+            'work_email': 'john.doe@nhs.co.uk',
             'first_name': 'John',
             'last_name': 'Doe',
             'sex': 'M',
@@ -49,10 +52,27 @@ class AddMentorFormTests(TestCase):
         self.assertFalse(form.is_valid())
         self.assertEqual(form.errors, {'area_of_support': ['This field is required.']})
 
+    def test_work_email_required(self):
+        form = forms.MentorForm(data={
+            'tcs_check': True,
+            'email': 'john.doe@mail.com',
+            'first_name': 'John',
+            'last_name': 'Doe',
+            'sex': 'M',
+            'year_applied': 'A2',
+            'hear_about_us': 'WM',
+            'entrance_exam_experience': ['UCAT'],
+            'interview_experience': ['P'],
+            'area_of_support': ['PS'],
+            'occupation': 'MD'})
+        self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors, {'work_email': ['This field is required.']})
+
     def test_interview_experience_required(self):
         form = forms.MentorForm(data={
             'tcs_check': True,
             'email': 'john.doe@mail.com',
+            'work_email': 'john.doe@nhs.co.uk',
             'first_name': 'John',
             'last_name': 'Doe',
             'sex': 'M',
@@ -68,6 +88,7 @@ class AddMentorFormTests(TestCase):
         form = forms.MentorForm(data={
             'tcs_check': True,
             'email': 'john.doe@mail.com',
+            'work_email': 'john.doe@nhs.co.uk',
             'first_name': 'John',
             'last_name': 'Doe',
             'sex': 'M',

@@ -79,6 +79,7 @@ class CommonProfileInfo(models.Model):
 
 class MentorProfile(CommonProfileInfo):
     """ Profile info for mentor applicants."""
+    work_email = encrypt(models.EmailField(max_length=254))
     occupation = models.CharField(max_length=10, choices=OCCUPATION_CHOICES)
     is_active = models.BooleanField(default=True)
 

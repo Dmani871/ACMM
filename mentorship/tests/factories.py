@@ -78,6 +78,7 @@ class MentorFactory(factory.Factory):
     first_name = factory.Faker('first_name')
     last_name = factory.Faker('last_name')
     email = factory.LazyAttribute(lambda user: '{}.{}@example.com'.format(user.first_name, user.last_name).lower())
+    work_email = factory.LazyAttribute(lambda user: '{}.{}@example.com'.format(user.first_name, user.last_name).lower())
     sex = factory.fuzzy.FuzzyChoice(sex_opts)
     year_applied = factory.fuzzy.FuzzyChoice(year_applied_opts)
     hear_about_us = factory.fuzzy.FuzzyChoice(hear_about_us_opts)
