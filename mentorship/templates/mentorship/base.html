@@ -18,10 +18,11 @@
         {{ page_title }}
     </title>
 </head>
-<body class="bg-light">
+<body class="bg-light min-vh-100" >
 <img src="{% static 'mentorship/images/favicon.png' %}" width="300" height="300"/>
 <div class="container p-5">{% block content %} {% endblock %}</div>
-<footer class="text-center text-white">
+</body>
+<footer class="text-center text-white page-footer">
     <!-- Copyright -->
     <div class="text-center text-white p-3 bg-secondary">
         © 2023 Copyright:
@@ -29,5 +30,4 @@
      Registered charity number: 1190968
     </div>
 </footer>
-</body>
 </html>
