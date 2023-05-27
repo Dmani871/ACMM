@@ -7,7 +7,7 @@ Settings configuration for production purposes.
 DEBUG = False
 
 APPENGINE_URL = env("APPENGINE_URL", default=None)
-ALLOWED_HOSTS = ["acmm-387217.uc.r.appspot.com"]
+ALLOWED_HOSTS = ["acmm-387217.nw.r.appspot.com"]
 
 # the database configuration for production
 DATABASES = {
@@ -35,7 +35,7 @@ CSRF_COOKIE_SECURE = True
 # Makes it difficult for cross-site scripting
 CSRF_COOKIE_HTTPONLY = True
 
-CSRF_TRUSTED_ORIGINS=["acmm-387217.uc.r.appspot.com"]
+CSRF_TRUSTED_ORIGINS=["acmm-387217.nw.r.appspot.com"]
 """
 XSS settings
 """

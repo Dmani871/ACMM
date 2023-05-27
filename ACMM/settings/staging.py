@@ -14,8 +14,20 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'HOST': env.str('DEV_DB_HOST'),
-        'USER': env.str('PROD_DB_USER'),
-        'PASSWORD': env.str('PROD_DB_PASSWORD'),
+        'USER': "dbmanager",
+        'PASSWORD': "e(&2h,hiJ,IiUiPk",
         'NAME': env.str('PROD_DB_NAME'),
     }
 }
+
+from django.db import connections
+from django.db.utils import OperationalError
+db_conn = connections['default']
+try:
+    c = db_conn.cursor()
+except OperationalError:
+    connected = False
+else:
+    connected = True
+print(connected)
+print(DATABASES)
