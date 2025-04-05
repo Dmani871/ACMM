@@ -19,7 +19,6 @@ HEAR_ABOUT_US_CHOICES = [
     ("C", "Contact from ACMM team"),
     ("SM", "Social Media"),
     ("SU", "School/University"),
-    ("SU", "School/University"),
     ("E", "Employer"),
 ]
 YEAR_APPLIED_CHOICES = [
@@ -101,14 +100,12 @@ class CommonProfileInfo(models.Model):
 
 class MentorProfile(CommonProfileInfo):
     """Profile info for mentor applicants."""
-
-    # TODO:DELETE
-    #work_email = encrypt(models.EmailField(max_length=254))
     occupation = models.CharField(max_length=10, choices=OCCUPATION_CHOICES)
     is_active = models.BooleanField(default=True)
+    additional_info = models.TextField(null=True, blank=True,default='')
 
     def __str__(self):
-        return self.occupation + "-" + str(self.email)
+        return str(self.occupation) + "-" + str(self.email)
 
     def get_admin_url(self):
         return reverse(
@@ -126,6 +123,12 @@ class MenteeProfile(CommonProfileInfo):
     course = models.CharField(max_length=10, choices=COURSE_CHOICES)
     current_application = models.BooleanField(default=True, choices=TRUE_FALSE_CHOICES)
     accepted = models.BooleanField(default=False, choices=TRUE_FALSE_CHOICES)
+    commitment = models.BooleanField(default=False, choices=TRUE_FALSE_CHOICES)
+    state_educated= models.BooleanField(default=False, choices=TRUE_FALSE_CHOICES)
+    family_support=models.BooleanField(default=False, choices=TRUE_FALSE_CHOICES)
+    applied_before= models.BooleanField(default=False, choices=TRUE_FALSE_CHOICES)
+    wp_scheme = models.BooleanField(default=False, choices=TRUE_FALSE_CHOICES)
+
     mentor = models.ForeignKey(
         MentorProfile, on_delete=models.SET_NULL, null=True, blank=True
     )

@@ -8,7 +8,6 @@ class MentorTest(TestCase):
     def setUp(self):
         self.mentor = models.MentorProfile.objects.create(
             email="john.doe@mail.com",
-            work_email="john.doe@nhs.com",
             first_name="John",
             last_name="Doe",
             year_applied="A2",

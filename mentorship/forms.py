@@ -3,7 +3,17 @@ from django.utils.html import format_html
 
 from . import models
 
-
+LABELS={
+            "year_applied": "Qualification level prior to studying Medicine/Dentistry",
+            "hear_about_us": "How did you hear about us?",
+            "number": "Contact Number",
+            "contact_consent": "Would you be happy to be added to the WhatsApp Broadcast group where you will receive key information on the mentoring scheme?",
+    "commitment":"Are you able to commit to monthly meetings with your mentor throughout the year of the mentoring programme?",
+                 "state_educated":"Do you attend a state school?",
+    "family_support":"Do you have a parent(s) who are doctors?",
+    "wp_scheme":"Are you applying via a widening participation (WP) scheme?",
+    "applied_before":"Have you applied before?"
+        }
 class MentorForm(forms.ModelForm):
     area_of_support = forms.MultipleChoiceField(
         widget=forms.CheckboxSelectMultiple,
@@ -21,7 +31,18 @@ class MentorForm(forms.ModelForm):
         label="What exam experience do you have?",
         required=False,
     )
-
+    additional_info = forms.CharField(
+        widget=forms.Textarea(
+            attrs={
+                "rows": "2",
+                "cols": "90",
+                "maxlength": "500",
+            }
+        ),
+        label="Any additional comments?",
+        help_text="Max 500 Characters",
+        required=False
+    )
     honeypot = forms.CharField(widget=forms.HiddenInput(), required=False)
     tcs_check = forms.BooleanField(
         required=True,
@@ -34,15 +55,9 @@ class MentorForm(forms.ModelForm):
     class Meta:
         model = models.MentorProfile
         exclude = ["is_active", "date_joined"]
-        labels = {
-            "year_applied": "Qualification level prior to studying Medicine/Dentistry",
-            "hear_about_us": "How did you hear about us?",
-            "number": "Contact Number",
-            "contact_consent": "Would you be happy to be added to the WhatsApp Broadcast group where you will receive key information on the mentoring scheme?",
-        }
+        labels = LABELS
         help_texts = {
             "email": "Email to verify work/study status (NHS or University email).",
-            "work_email": "Email to verify work/study status (NHS or University email).",
         }
 
 
@@ -53,6 +68,7 @@ class MentorQualificationForm(forms.ModelForm):
 
 
 class MenteeForm(forms.ModelForm):
+
     area_of_support = forms.MultipleChoiceField(
         widget=forms.CheckboxSelectMultiple,
         choices=models.SPECIALTY_CHOICES,
@@ -127,9 +143,8 @@ class MenteeForm(forms.ModelForm):
     class Meta:
         model = models.MenteeProfile
         exclude = ["date_joined", "assigned_mentor", "accepted"]
-        labels = {
+        labels = {**LABELS,
             "year_applied": "What is your current education level?",
-            "hear_about_us": "How did you hear about us?",
         }
 
 
