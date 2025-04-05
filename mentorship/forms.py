@@ -55,9 +55,12 @@ class MentorForm(forms.ModelForm):
     class Meta:
         model = models.MentorProfile
         exclude = ["is_active", "date_joined"]
-        labels = LABELS
+        labels = {**LABELS,"wp_scheme": "Did you apply via a widening participation (WP) scheme?",
+            "applied_before": "Did you apply multiple times before being accepted on a course?"}
         help_texts = {
             "email": "Email to verify work/study status (NHS or University email).",
+            "wp_scheme": "Useful for matching you with a mentee who is part of a WP scheme.",
+            "applied_before": "Useful for matching you with a mentee who had a similar experience."
         }
 
 

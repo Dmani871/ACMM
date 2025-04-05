@@ -40,8 +40,16 @@ def apply_matches_weights(mentors, mentees):
                 interview_factor *= 10
             # calculates the mentor factor
             mentor_factor = 1 + ((exam_factor + interview_factor) * 5)
+            both_used_wp_scheme = mentee.wp_scheme and mentor.wp_scheme
+            both_applied_before = mentee.applied_before and mentor.applied_before
+            if both_used_wp_scheme or both_applied_before:
+                mentor_factor*=1.3
             # calculates the overall ranking
             ranking = ranking * support_factor * mentor_factor
+
+            if mentee.family_support or  not mentee.state_educated:
+                ranking*=0.01
+
             # if the mentor can be of use add to the ranking with score
             if ranking > 0:
                 rankings[mentor.id] = ranking

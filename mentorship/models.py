@@ -93,6 +93,8 @@ class CommonProfileInfo(models.Model):
     area_of_support = ArrayField(
         models.CharField(max_length=10, choices=SPECIALTY_CHOICES), default=list
     )
+    wp_scheme = models.BooleanField(default=False, choices=TRUE_FALSE_CHOICES)
+    applied_before = models.BooleanField(default=False, choices=TRUE_FALSE_CHOICES)
 
     class Meta:
         abstract = True
@@ -126,8 +128,6 @@ class MenteeProfile(CommonProfileInfo):
     commitment = models.BooleanField(default=False, choices=TRUE_FALSE_CHOICES)
     state_educated= models.BooleanField(default=False, choices=TRUE_FALSE_CHOICES)
     family_support=models.BooleanField(default=False, choices=TRUE_FALSE_CHOICES)
-    applied_before= models.BooleanField(default=False, choices=TRUE_FALSE_CHOICES)
-    wp_scheme = models.BooleanField(default=False, choices=TRUE_FALSE_CHOICES)
 
     mentor = models.ForeignKey(
         MentorProfile, on_delete=models.SET_NULL, null=True, blank=True
