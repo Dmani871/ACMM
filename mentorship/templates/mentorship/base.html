@@ -19,13 +19,14 @@
     </title>
 </head>
 <body class="bg-light min-vh-100" >
-<img src="{% static 'mentorship/images/favicon.png' %}" width="300" height="300"/>
+<a href="{% url 'mentorship:index' %}">
+<img src="{% static 'mentorship/images/favicon.png' %}" width="300" height="300"/></a>
 <div class="container p-5">{% block content %} {% endblock %}</div>
 </body>
 <footer class="text-center text-white page-footer">
     <!-- Copyright -->
     <div class="text-center text-white p-3 bg-secondary">
-        © 2023 Copyright:
+        © 2025 Copyright:
         <a class="text-white" href="https://www.acmedicalmentors.co.uk/">African Caribbean Medical Mentors </a> | ALL RIGHTS RESERVED |
      Registered charity number: 1190968
     </div>

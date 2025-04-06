@@ -31,6 +31,7 @@ year_applied_opts = unpack_choices(models.YEAR_APPLIED_CHOICES)
 hear_about_us_opts = unpack_choices(models.HEAR_ABOUT_US_CHOICES)
 occupation_opts = unpack_choices(models.OCCUPATION_CHOICES)
 education_level_opt = unpack_choices(models.EDUCATION_LEVEL_CHOICES)
+boolean_opt = [True,False]
 
 
 class MenteeFactory(factory.Factory):
@@ -42,6 +43,13 @@ class MenteeFactory(factory.Factory):
     email = factory.LazyAttribute(
         lambda user: "{}.{}@example.com".format(user.first_name, user.last_name).lower()
     )
+    number = factory.fuzzy.FuzzyText(length=12,chars=['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'])
+    contact_consent =factory.fuzzy.FuzzyChoice(boolean_opt)
+    wp_scheme =factory.fuzzy.FuzzyChoice(boolean_opt)
+    applied_before =factory.fuzzy.FuzzyChoice(boolean_opt)
+    commitment = factory.fuzzy.FuzzyChoice(boolean_opt)
+    state_educated = factory.fuzzy.FuzzyChoice(boolean_opt)
+    family_support = factory.fuzzy.FuzzyChoice(boolean_opt)
     year_applied = factory.fuzzy.FuzzyChoice(year_applied_opts)
     hear_about_us = factory.fuzzy.FuzzyChoice(hear_about_us_opts)
     entrance_exam_experience = factory.fuzzy.FuzzyChoice(entrance_exam_experience_opts)
@@ -93,6 +101,11 @@ class MentorFactory(factory.Factory):
     email = factory.LazyAttribute(
         lambda user: "{}.{}@example.com".format(user.first_name, user.last_name).lower()
     )
+    number = factory.fuzzy.FuzzyText(length=12, chars=['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'])
+    contact_consent = factory.fuzzy.FuzzyChoice(boolean_opt)
+    wp_scheme = factory.fuzzy.FuzzyChoice(boolean_opt)
+    applied_before = factory.fuzzy.FuzzyChoice(boolean_opt)
+
     year_applied = factory.fuzzy.FuzzyChoice(year_applied_opts)
     hear_about_us = factory.fuzzy.FuzzyChoice(hear_about_us_opts)
     entrance_exam_experience = factory.fuzzy.FuzzyChoice(entrance_exam_experience_opts)

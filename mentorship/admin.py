@@ -73,12 +73,17 @@ class MenteeInline(admin.StackedInline):
     fieldsets = [
         (
             "Mentee Personal Information",
-            {"fields": ["first_name", "last_name", "email"]},
+            {"fields": ["first_name", "last_name", "email","number","contact_consent"]},
         ),
         (
             "Mentee Background Information",
             {
                 "fields": [
+                    "applied_before",
+                    "state_educated",
+                    "family_support",
+                    "commitment",
+                    "wp_scheme",
                     "year_applied",
                     "entrance_exam_experience",
                     "interview_experience",
@@ -109,6 +114,9 @@ class MentorAdmin(admin.ModelAdmin):
         "date_joined",
         "is_active",
         "year_applied",
+        "contact_consent",
+        "wp_scheme",
+        "applied_before",
         MenteeListFilter,
     ]
     exclude = [""]
@@ -125,7 +133,7 @@ class MentorAdmin(admin.ModelAdmin):
     fieldsets = [
         (
             "Personal Information",
-            {"fields": ["first_name", "last_name", "email", "work_email"]},
+            {"fields": ["first_name", "last_name", "email","number","contact_consent"]},
         ),
         (
             "Background Information",
@@ -136,6 +144,9 @@ class MentorAdmin(admin.ModelAdmin):
                     "entrance_exam_experience",
                     "interview_experience",
                     "area_of_support",
+                    "wp_scheme",
+                    "applied_before",
+                    "additional_info"
                 ]
             },
         ),
@@ -194,6 +205,12 @@ class MenteeAdmin(admin.ModelAdmin):
         "date_joined",
         "accepted",
         "year_applied",
+        "contact_consent",
+        "wp_scheme",
+        "applied_before",
+        "commitment",
+        "state_educated",
+        "family_support",
         MentorListFilter,
     ]
     fieldsets = [
@@ -362,9 +379,11 @@ class MenteeAdmin(admin.ModelAdmin):
         medicine_matches = generate_matches(
             available_medicine_mentors, unmatched_medicine_mentees
         )
+        print(medicine_matches)
         dentistry_matches = generate_matches(
             available_dentistry_mentors, unmatched_dentistry_mentees
         )
+        print(dentistry_matches)
         save_matches(request, medicine_matches, ct)
         save_matches(request, dentistry_matches, ct)
 
