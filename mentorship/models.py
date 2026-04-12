@@ -68,6 +68,13 @@ GRADES = (
 )
 GRADE_CHOICES = list(zip(GRADES, GRADES))
 
+OCCUPATION_CHOICES = [
+    ("MD", "Doctor"),
+    ("D", "Dentist"),
+    ("MS", "Medical Student"),
+    ("DS", "Dental Student"),
+]
+
 
 class CommonProfileInfo(models.Model):
     """Common profile info for all applicants."""
@@ -139,3 +146,14 @@ class MenteeQualification(models.Model):
 
     def __str__(self):
         return f"{self.education_level}-{str(self.name)}"
+
+
+class MentorProfile(CommonProfileInfo):
+    """Profile info for mentor applicants."""
+
+    occupation = models.CharField(max_length=2, choices=OCCUPATION_CHOICES)
+    is_active = models.BooleanField(default=False)
+    additional_info = models.TextField(null=True, blank=True, default="")
+
+    def __str__(self):
+        return f"{self.occupation}-{self.personal_email}"
