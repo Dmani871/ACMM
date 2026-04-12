@@ -6,6 +6,7 @@ from freezegun import freeze_time
 import datetime as dt
 import re
 
+from parameterized import parameterized
 from django.db.utils import IntegrityError
 
 from mentorship.models import MenteeProfile
@@ -37,14 +38,6 @@ def mock_data():
         "state_educated": False,
         "family_support": True,
     }
-
-
-import unittest
-from parameterized import parameterized
-
-
-def sum_even_numbers(numbers):
-    return sum(filter(lambda x: x % 2 == 0, numbers))
 
 
 class MenteeProfileTestCase(TestCase):
@@ -164,7 +157,7 @@ class MenteeProfileTestCase(TestCase):
         self.assertEqual(mentee.year_applied, value)
 
     @parameterized.expand(["A22", "GRD", "wrong"])
-    def test_year_appliedinvalid_options(self, value):
+    def test_year_applied_invalid_options(self, value):
         mentee_data = mock_data()
         mentee_data["year_applied"] = value
         with self.assertRaises(ValidationError):
