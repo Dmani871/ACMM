@@ -3,7 +3,6 @@ from .base import *
 """
 Settings configuration for development purposes.
 """
-print("Using dev")
 # Ensures that errors are shown with debug data
 DEBUG = True
 
