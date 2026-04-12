@@ -157,7 +157,7 @@ class MenteeProfileTestCase(TestCase):
         self.assertEqual(mentee.year_applied, value)
 
     @parameterized.expand(["A22", "GRD", "wrong"])
-    def test_year_appliedinvalid_options(self, value):
+    def test_year_applied_invalid_options(self, value):
         mentee_data = mock_data()
         mentee_data["year_applied"] = value
         with self.assertRaises(ValidationError):
