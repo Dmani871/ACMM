@@ -36,6 +36,38 @@ COURSE_CHOICES = [
     ("D", "Dentistry"),
 ]
 
+EDUCATION_LEVEL_CHOICES = [
+    ("A2", "A Level"),
+    ("AS", "A/S Level"),
+    ("IB", "International Baccalaureate"),
+    ("SH", "Scottish Highers and Advanced Highers"),
+    ("UG", "Undergraduate"),
+    ("M", "Masters"),
+    ("D", "Doctorate"),
+]
+
+GRADES = (
+    "A*",
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "1st",
+    "2:1",
+    "2:2",
+    "3rd",
+)
+GRADE_CHOICES = list(zip(GRADES, GRADES))
+
 
 class CommonProfileInfo(models.Model):
     """Common profile info for all applicants."""
@@ -94,3 +126,16 @@ class MenteeProfile(CommonProfileInfo):
 
     def __str__(self):
         return f"{self.course}-{str(self.personal_email)}"
+
+
+class MenteeQualification(models.Model):
+    """Mentee type Qualifications model"""
+
+    name = models.CharField(max_length=50)
+    education_level = models.CharField(max_length=10, choices=EDUCATION_LEVEL_CHOICES)
+    grade = models.CharField(max_length=10, choices=GRADE_CHOICES)
+    predicted = models.BooleanField(default=False, choices=TRUE_FALSE_CHOICES)
+    profile = models.ForeignKey(MenteeProfile, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.education_level}-{str(self.name)}"
