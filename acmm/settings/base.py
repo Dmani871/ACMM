@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 from datetime import timedelta
 import os
 from .env_config import env, BASE_DIR
+from csp.constants import NONE, SELF
 
 DEBUG = env("DEBUG")
 
@@ -34,6 +35,7 @@ INSTALLED_APPS = [
     "crispy_forms",
     "crispy_bootstrap4",
     "axes",
+    "csp",
     # OTP for admin only
     "django_otp",
     "django_otp.plugins.otp_totp",
@@ -47,6 +49,7 @@ MIDDLEWARE = [
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
+    "csp.middleware.CSPMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django_otp.middleware.OTPMiddleware",  # ← Add this
     "django.contrib.messages.middleware.MessageMiddleware",
@@ -170,18 +173,38 @@ OTP_TOTP_ISSUER = "African Caribbean Medical Mentors"
 ADMINS = [x.split(":") for x in env.list("DJANGO_ADMINS")]
 
 # CSP settings
-CSP_DEFAULT_SRC = ("'none'",)
-CSP_STYLE_SRC = (
-    "'self'",
-    "https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css",
-    "'sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO'",
-)
-CSP_SCRIPT_SRC = ("'self'",)
-CSP_IMG_SRC = ("'self'",)
-CSP_FONT_SRC = ("'self'",)
-CSP_CONNECT_SRC = ("'self'",)
-CSP_OBJECT_SRC = ("'none'",)
-CSP_BASE_URI = ("'none'",)
-CSP_FRAME_ANCESTORS = ("'none'",)
-CSP_FORM_ACTION = ("'self'",)
-CSP_INCLUDE_NONCE_IN = ("script-src",)
+CONTENT_SECURITY_POLICY = {
+    "DIRECTIVES": {
+        "default-src": [NONE],
+        "frame-ancestors": [SELF],
+        "form-action": [SELF],
+        "report-uri": "/csp-report/",
+        "script-src": [
+            SELF,
+            "https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css",
+            "'sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO'",
+        ],
+    },
+}
+
+CONTENT_SECURITY_POLICY_REPORT_ONLY = {
+    "DIRECTIVES": {
+        "default-src": [NONE],
+        "connect-src": [SELF],
+        "img-src": [SELF],
+        "form-action": [SELF],
+        "frame-ancestors": [SELF],
+        "script-src": [SELF],
+        "style-src": [SELF],
+        "upgrade-insecure-requests": True,
+        "report-uri": "/csp-report/",
+    },
+}
+
+
+EMAIL_CONFIG = env.email_url("EMAIL_URL")
+vars().update(EMAIL_CONFIG)
+EMAIL_MATCH_SUBJECT = env.str("MATCHES_MSG_SUBJECT")
+EMAIL_MATCH_BODY = env.str("MATCHES_MSG_BODY")
+DEFAULT_MSG_CLOSING = env.str("DEFAULT_MSG_CLOSING", multiline=True)
+DEFAULT_EMAIL_REPLY_TO = env.str("DEFAULT_EMAIL_REPLY_TO")

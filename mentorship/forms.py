@@ -52,7 +52,7 @@ class MentorForm(forms.ModelForm):
         required=True,
         label=format_html(
             """I have read and agree to the <a href="{}">Privacy Policy</a> """,
-            "/mentorship/privacy/",
+            "/mentorship/privacy",
         ),
     )
 

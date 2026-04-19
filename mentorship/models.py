@@ -109,7 +109,7 @@ class CommonProfileInfo(models.Model):
     # Metadata
     date_joined = models.DateTimeField(default=timezone.now)
     hear_about_us = models.CharField(
-        max_length=2, choices=HEAR_ABOUT_US_CHOICES, default=None
+        max_length=2, choices=HEAR_ABOUT_US_CHOICES, default=None, null=True, blank=True
     )
 
     def get_admin_url(self):

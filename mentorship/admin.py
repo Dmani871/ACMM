@@ -231,7 +231,7 @@ class MenteeAdmin(admin.ModelAdmin):
     fieldsets = [
         (
             "Personal Information",
-            {"fields": ["first_name", "last_name", "email"]},
+            {"fields": ["first_name", "last_name", "personal_email", "work_email"]},
         ),
         (
             "Background Information",
@@ -281,20 +281,17 @@ class MenteeAdmin(admin.ModelAdmin):
     def generate_matches_messages(self, mentees):
         emails = []
         subject = settings.EMAIL_MATCH_SUBJECT
-        slack_link_msg = f"\nPlease join our slack community to communicate with each other : {settings.SLACK_URL}"
         for mentee in mentees:
             if mentee.mentor is not None:
                 mentor = mentee.mentor
                 mentor_body = (
                     settings.EMAIL_MATCH_BODY
                     + f"\nYou have been matched with mentee : {mentee.first_name}  {mentee.last_name}"
-                    + slack_link_msg
                     + settings.DEFAULT_MSG_CLOSING
                 )
                 mentee_body = (
                     settings.EMAIL_MATCH_BODY
                     + f"\nYou have been matched with mentor : {mentor.first_name}  {mentor.last_name}"
-                    + slack_link_msg
                     + settings.DEFAULT_MSG_CLOSING
                 )
                 mentee_email = mail.EmailMessage(
