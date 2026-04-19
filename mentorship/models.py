@@ -1,5 +1,6 @@
 from django.contrib.postgres.fields import ArrayField
 from django.db import models
+from django.urls import reverse
 from django.utils import timezone
 from encrypted_fields.fields import EncryptedEmailField, EncryptedCharField
 
@@ -81,6 +82,7 @@ class CommonProfileInfo(models.Model):
 
     # Personal Info
     personal_email = EncryptedEmailField(max_length=254)
+    work_email = EncryptedEmailField(max_length=254)
     first_name = EncryptedCharField(max_length=30)
     last_name = EncryptedCharField(max_length=130)
     number = EncryptedCharField(max_length=130)
@@ -102,15 +104,19 @@ class CommonProfileInfo(models.Model):
 
     # Consent
     contact_consent = models.BooleanField(default=False, choices=TRUE_FALSE_CHOICES)
-    terms_policy_consent = models.BooleanField(
-        default=False, choices=TRUE_FALSE_CHOICES
-    )
+    tcs_consent = models.BooleanField(default=False, choices=TRUE_FALSE_CHOICES)
 
     # Metadata
     date_joined = models.DateTimeField(default=timezone.now)
     hear_about_us = models.CharField(
         max_length=2, choices=HEAR_ABOUT_US_CHOICES, default=None
     )
+
+    def get_admin_url(self):
+        return reverse(
+            "admin:%s_%s_change" % (self._meta.app_label, self._meta.model_name),
+            args=(self.id,),
+        )
 
     class Meta:
         abstract = True

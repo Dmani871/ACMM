@@ -25,7 +25,7 @@ def mock_data():
         "wp_scheme": True,
         "applied_before": False,
         "contact_consent": True,
-        "terms_policy_consent": True,
+        "tcs_consent": True,
         "date_joined": timezone.now(),
         "hear_about_us": "SM",
         "occupation": "MD",
@@ -39,7 +39,7 @@ class MentorProfileTestCase(TestCase):
         "wp_scheme",
         "applied_before",
         "contact_consent",
-        "terms_policy_consent",
+        "tcs_consent",
         "is_active",
     ]
 
@@ -59,7 +59,7 @@ class MentorProfileTestCase(TestCase):
         self.assertTrue(mentor.wp_scheme)
         self.assertFalse(mentor.applied_before)
         self.assertTrue(mentor.contact_consent)
-        self.assertTrue(mentor.terms_policy_consent)
+        self.assertTrue(mentor.tcs_consent)
         self.assertEqual(mentor.hear_about_us, "SM")
         self.assertEqual(mentor.additional_info, "I want to help")
         self.assertEqual(mentor.occupation, "MD")

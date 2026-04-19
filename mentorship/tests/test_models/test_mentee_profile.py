@@ -25,7 +25,7 @@ def mock_data():
         "wp_scheme": True,
         "applied_before": False,
         "contact_consent": True,
-        "terms_policy_consent": True,
+        "tcs_consent": True,
         "date_joined": timezone.now(),
         "hear_about_us": "SM",
         "mentor_need": "Need mentoring for personal statement writing.",
@@ -45,7 +45,7 @@ class MenteeProfileTestCase(TestCase):
         "wp_scheme",
         "applied_before",
         "contact_consent",
-        "terms_policy_consent",
+        "tcs_consent",
         "current_application",
         "accepted",
         "commitment",
@@ -69,7 +69,7 @@ class MenteeProfileTestCase(TestCase):
         self.assertTrue(mentee.wp_scheme)
         self.assertFalse(mentee.applied_before)
         self.assertTrue(mentee.contact_consent)
-        self.assertTrue(mentee.terms_policy_consent)
+        self.assertTrue(mentee.tcs_consent)
         self.assertEqual(mentee.hear_about_us, "SM")
         self.assertEqual(
             mentee.mentor_need, "Need mentoring for personal statement writing."

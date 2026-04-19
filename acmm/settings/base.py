@@ -10,7 +10,9 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
-from .env_config import env
+from datetime import timedelta
+import os
+from .env_config import env, BASE_DIR
 
 DEBUG = env("DEBUG")
 
@@ -27,6 +29,16 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.postgres",
+    "django.contrib.sites",
+    "django.contrib.flatpages",
+    "crispy_forms",
+    "crispy_bootstrap4",
+    "axes",
+    # OTP for admin only
+    "django_otp",
+    "django_otp.plugins.otp_totp",
+    "django_otp.plugins.otp_static",
+    "two_factor",
     "mentorship.apps.MentorshipConfig",
 ]
 
@@ -36,8 +48,17 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django_otp.middleware.OTPMiddleware",  # ← Add this
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "axes.middleware.AxesMiddleware",
+]
+
+AUTHENTICATION_BACKENDS = [
+    # AxesStandaloneBackend should be the first backend in the AUTHENTICATION_BACKENDS list.
+    "axes.backends.AxesStandaloneBackend",
+    # Django ModelBackend is the default authentication backend.
+    "django.contrib.auth.backends.ModelBackend",
 ]
 
 ROOT_URLCONF = "acmm.urls"
@@ -94,4 +115,73 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
-STATIC_URL = "static/"
+STATIC_URL = "/static/"
+STATIC_ROOT = "static"
+
+# CRISPY Settings
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
+CRISPY_TEMPLATE_PACK = "bootstrap4"
+
+# Flat page settings
+SITE_ID = 1
+
+# Admin site settings
+ADMIN_URL = env("ADMIN_URL")
+LOGIN_URL = "two_factor:login"
+LOGIN_REDIRECT_URL = "two_factor:profile"
+
+LOGS_DIR = os.path.join(BASE_DIR, "logs")
+os.makedirs(LOGS_DIR, exist_ok=True)
+
+LOGGING = {
+    "version": 1,  # the dictConfig format version
+    "disable_existing_loggers": False,  # retain the default loggers
+    # Define where logs go
+    "handlers": {
+        # Write matching logs to file
+        "matching_file": {
+            "level": "INFO",
+            "class": "logging.FileHandler",
+            "filename": os.path.join(LOGS_DIR, "matching.log"),
+        },
+    },
+    "loggers": {
+        # Matching algorithm logger
+        "mentorship.matching": {
+            "handlers": ["matching_file"],
+            "level": "DEBUG",
+            "propagate": False,
+        },
+    },
+}
+
+# AXES
+AXES_ENABLED = True
+AXES_FAILURE_LIMIT = 3
+AXES_COOLOFF_TIME = None
+AXES_LOCKOUT_PARAMETERS = ["ip_address", ["username", "user_agent"]]
+AXES_VERBOSE = True
+AXES_ENABLE_ACCESS_FAILURE_LOG = True
+
+
+# OTP Settings
+OTP_TOTP_ISSUER = "African Caribbean Medical Mentors"
+
+ADMINS = [x.split(":") for x in env.list("DJANGO_ADMINS")]
+
+# CSP settings
+CSP_DEFAULT_SRC = ("'none'",)
+CSP_STYLE_SRC = (
+    "'self'",
+    "https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css",
+    "'sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO'",
+)
+CSP_SCRIPT_SRC = ("'self'",)
+CSP_IMG_SRC = ("'self'",)
+CSP_FONT_SRC = ("'self'",)
+CSP_CONNECT_SRC = ("'self'",)
+CSP_OBJECT_SRC = ("'none'",)
+CSP_BASE_URI = ("'none'",)
+CSP_FRAME_ANCESTORS = ("'none'",)
+CSP_FORM_ACTION = ("'self'",)
+CSP_INCLUDE_NONCE_IN = ("script-src",)
