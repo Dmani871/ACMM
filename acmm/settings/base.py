@@ -170,41 +170,26 @@ AXES_ENABLE_ACCESS_FAILURE_LOG = True
 # OTP Settings
 OTP_TOTP_ISSUER = "African Caribbean Medical Mentors"
 
+# Email settings
+EMAIL_BACKEND = env(
+    "EMAIL_BACKEND", default="django.core.mail.backends.smtp.EmailBackend"
+)
+EMAIL_HOST = env("EMAIL_HOST")
+EMAIL_PORT = env.int("EMAIL_PORT", default=587)
+EMAIL_HOST_USER = env("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
+EMAIL_USE_TLS = env.bool("EMAIL_USE_TLS", default=True)
+DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL")
+
+# Match email settings
+EMAIL_MATCH_SUBJECT = env(
+    "EMAIL_MATCH_SUBJECT", default="Mentor-Mentee Match Notification"
+)
+EMAIL_MATCH_BODY = env(
+    "EMAIL_MATCH_BODY", default="Congratulations! You have been matched."
+)
+DEFAULT_MSG_CLOSING = env("DEFAULT_MSG_CLOSING", default="Best regards, ACMM Team")
+DEFAULT_EMAIL_REPLY_TO = env("DEFAULT_EMAIL_REPLY_TO")
+
+
 ADMINS = [x.split(":") for x in env.list("DJANGO_ADMINS")]
-
-# CSP settings
-CONTENT_SECURITY_POLICY = {
-    "DIRECTIVES": {
-        "default-src": [NONE],
-        "frame-ancestors": [SELF],
-        "form-action": [SELF],
-        "report-uri": "/csp-report/",
-        "script-src": [
-            SELF,
-            "https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css",
-            "'sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO'",
-        ],
-    },
-}
-
-CONTENT_SECURITY_POLICY_REPORT_ONLY = {
-    "DIRECTIVES": {
-        "default-src": [NONE],
-        "connect-src": [SELF],
-        "img-src": [SELF],
-        "form-action": [SELF],
-        "frame-ancestors": [SELF],
-        "script-src": [SELF],
-        "style-src": [SELF],
-        "upgrade-insecure-requests": True,
-        "report-uri": "/csp-report/",
-    },
-}
-
-
-EMAIL_CONFIG = env.email_url("EMAIL_URL")
-vars().update(EMAIL_CONFIG)
-EMAIL_MATCH_SUBJECT = env.str("MATCHES_MSG_SUBJECT")
-EMAIL_MATCH_BODY = env.str("MATCHES_MSG_BODY")
-DEFAULT_MSG_CLOSING = env.str("DEFAULT_MSG_CLOSING", multiline=True)
-DEFAULT_EMAIL_REPLY_TO = env.str("DEFAULT_EMAIL_REPLY_TO")

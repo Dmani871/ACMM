@@ -6,6 +6,9 @@ Settings configuration for production purposes.
 # Ensures that no debug data is shown upon an error
 DEBUG = False
 
+# Allowed hosts for production
+ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")
+
 # The database configuration for production
 DATABASES = {
     "default": {
@@ -20,6 +23,16 @@ DATABASES = {
 SECRET_KEY = env("PROD_SECRET_KEY")
 
 SALT_KEY = env("PROD_SALT_KEY")
+
+# Security settings for production
+SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+SECURE_HSTS_SECONDS = 31536000  # 1 year
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
 
 
 APPENGINE_URL = env("APPENGINE_URL", default=None)

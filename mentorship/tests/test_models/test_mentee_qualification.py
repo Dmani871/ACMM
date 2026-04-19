@@ -6,6 +6,7 @@ class MenteeQualificationTestCase(TestCase):
     def setUp(self):
         self.mentee = MenteeProfile.objects.create(
             personal_email="jane.doe@mail.com",
+            work_email="jane.doe@mail.com",
             first_name="Jane",
             last_name="Doe",
             number="2",

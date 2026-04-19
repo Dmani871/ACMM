@@ -15,6 +15,7 @@ from mentorship.models import MentorProfile
 def mock_data():
     return {
         "personal_email": "test@example.com",
+        "work_email": "test@example.com",
         "first_name": "John",
         "last_name": "Doe",
         "number": "1234567890",

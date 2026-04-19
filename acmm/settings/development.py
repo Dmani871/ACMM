@@ -6,8 +6,8 @@ Settings configuration for development purposes.
 # Ensures that errors are shown with debug data
 DEBUG = True
 
-# Empty allowed hosts
-ALLOWED_HOSTS = []
+# Allowed hosts for development
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "0.0.0.0"]
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases

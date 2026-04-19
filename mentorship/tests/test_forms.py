@@ -3,9 +3,12 @@ from django.test import TestCase
 from mentorship import forms
 
 VALID_MENTOR_FORM = {
-    "tcs_check": True,
-    "email": "john.doe@mail.com",
-    "contact_consent": "Y",
+    "tcs_consent": True,
+    "personal_email": "john.doe@mail.com",
+    "work_email": "john.doe@mail.com",
+    "contact_consent": True,
+    "wp_scheme": True,
+    "applied_before": True,
     "number": "01",
     "first_name": "John",
     "last_name": "Doe",
@@ -21,9 +24,10 @@ VALID_MENTOR_FORM = {
 VALID_MENTEE_FORM = {
     "first_name": "John",
     "last_name": "Doe",
-    "email": "john.doe@mail.com",
+    "personal_email": "john.doe@mail.com",
+    "work_email": "john.doe@mail.com",
     "number": "01",
-    "contact_consent": "Y",
+    "contact_consent": True,
     "year_applied": "A2",
     "course": "M",
     "current_application": True,
@@ -39,7 +43,7 @@ VALID_MENTEE_FORM = {
     "mentor_help": "Help me with ...",
     "mentor_relationship": "I will build a relationship by ...",
     "hear_about_us": "WM",
-    "tcs_check": True,
+    "tcs_consent": True,
 }
 
 
@@ -72,8 +76,11 @@ class AddMentorFormTests(TestCase):
         self.assertFalse(form.is_valid())
         self.assertEqual(form.errors[field], [err_msg])
 
-    def test_email_required(self):
-        self._required("email")
+    def test_personal_email_required(self):
+        self._required("personal_email")
+
+    def test_work_email_required(self):
+        self._required("work_email")
 
     def test_first_name_required(self):
         self._required("first_name")
@@ -120,20 +127,17 @@ class AddMentorFormTests(TestCase):
     def test_invalid_area_of_support_experience(self):
         self._invalid("area_of_support", is_list=True)
 
-    def test_hear_about_us_required(self):
-        self._required("hear_about_us")
-
     def test_invalid_hear_about_us(self):
         self._invalid("hear_about_us")
 
-    def test_tcs_check_required(self):
-        self._required("tcs_check")
+    def test_tcs_consent_required(self):
+        self._required("tcs_consent")
 
-    def test_tcs_checked(self):
-        invalid_from = {**VALID_MENTOR_FORM, "tcs_check": False}
+    def test_tcs_consented(self):
+        invalid_from = {**VALID_MENTOR_FORM, "tcs_consent": False}
         form = forms.MentorForm(invalid_from)
         self.assertFalse(form.is_valid())
-        self.assertEqual(form.errors, {"tcs_check": ["This field is required."]})
+        self.assertEqual(form.errors, {"tcs_consent": ["This field is required."]})
 
     def test_missing_fields(self):
         invalid_from = {**VALID_MENTOR_FORM}
@@ -145,12 +149,15 @@ class AddMentorFormTests(TestCase):
     def test_labels(self):
         form = forms.MentorForm(data=VALID_MENTOR_FORM)
         # Personal Information
-        self.assertIn('<label for="id_email">Email:</label>', form.as_p())
+        self.assertIn(
+            '<label for="id_personal_email">Personal email:</label>', form.as_p()
+        )
+        self.assertIn('<label for="id_work_email">Work email:</label>', form.as_p())
         self.assertIn('<label for="id_first_name">First name:</label>', form.as_p())
         self.assertIn('<label for="id_last_name">Last name:</label>', form.as_p())
         self.assertIn('<label for="id_number">Contact Number:</label>', form.as_p())
         self.assertIn(
-            '<label for="id_contact_consent">Would you be happy to be added to the WhatsApp Broadcast group where you will receive key information on the mentoring scheme?</label>',
+            '<label for="id_contact_consent">Do you consent to being added to ACMM&#x27;s WhatsApp chat?</label>',
             form.as_p(),
         )
         # Background Information
@@ -206,8 +213,11 @@ class AddMenteeFormTests(TestCase):
         form = forms.MenteeForm(data=VALID_MENTEE_FORM)
         self.assertTrue(form.is_valid())
 
-    def test_email_required(self):
-        self._required("email")
+    def test_personal_email_required(self):
+        self._required("personal_email")
+
+    def test_work_email_required(self):
+        self._required("work_email")
 
     def test_first_name_required(self):
         self._required("first_name")
@@ -281,20 +291,17 @@ class AddMenteeFormTests(TestCase):
     def test_invalid_area_of_support_experience(self):
         self._invalid("area_of_support", is_list=True)
 
-    def test_hear_about_us_required(self):
-        self._required("hear_about_us")
-
     def test_invalid_hear_about_us(self):
         self._invalid("hear_about_us")
 
-    def test_tcs_check_required(self):
-        self._required("tcs_check")
+    def test_tcs_consent_required(self):
+        self._required("tcs_consent")
 
-    def test_tcs_checked(self):
-        invalid_from = {**VALID_MENTEE_FORM, "tcs_check": False}
+    def test_tcs_consented(self):
+        invalid_from = {**VALID_MENTEE_FORM, "tcs_consent": False}
         form = forms.MenteeForm(invalid_from)
         self.assertFalse(form.is_valid())
-        self.assertEqual(form.errors, {"tcs_check": ["This field is required."]})
+        self.assertEqual(form.errors, {"tcs_consent": ["This field is required."]})
 
     def test_missing_fields(self):
         invalid_from = {**VALID_MENTEE_FORM}
@@ -306,12 +313,15 @@ class AddMenteeFormTests(TestCase):
     def test_labels(self):
         form = forms.MenteeForm(data=VALID_MENTEE_FORM)
         # Personal Information
-        self.assertIn('<label for="id_email">Email:</label>', form.as_p())
+        self.assertIn(
+            '<label for="id_personal_email">Personal email:</label>', form.as_p()
+        )
+        self.assertIn('<label for="id_work_email">Work email:</label>', form.as_p())
         self.assertIn('<label for="id_first_name">First name:</label>', form.as_p())
         self.assertIn('<label for="id_last_name">Last name:</label>', form.as_p())
         self.assertIn('<label for="id_number">Contact Number:</label>', form.as_p())
         self.assertIn(
-            '<label for="id_contact_consent">Would you be happy to be added to the WhatsApp Broadcast group where you will receive key information on the mentoring scheme?</label>',
+            '<label for="id_contact_consent">Do you consent to being added to ACMM&#x27;s WhatsApp chat?</label>',
             form.as_p(),
         )
         # Background information
@@ -384,7 +394,7 @@ class AddMenteeFormTests(TestCase):
         )
 
         self.assertIn(
-            '<label for="id_tcs_check">I have read and agree to the <a href="/mentorship/privacy">Privacy Policy</a> :</label>',
+            '<label for="id_tcs_consent">I have read and agree to the <a href="/mentorship/privacy/">Privacy Policy</a> :</label>',
             form.as_p(),
         )
 

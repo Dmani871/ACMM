@@ -9,7 +9,7 @@ LABELS = {
     "year_applied": "Qualification level prior to studying Medicine/Dentistry",
     "hear_about_us": "How did you hear about us?",
     "number": "Contact Number",
-    "contact_consent": "Do you consent to being added to ACMM group chat?",
+    "contact_consent": "Do you consent to being added to ACMM's WhatsApp chat?",
     "commitment": "Are you able to commit to monthly meetings with your mentor throughout the year of the mentoring programme?",
     "state_educated": "Do you attend a state school?",
     "family_support": "Do you have a parent(s) who are doctors?",
@@ -52,7 +52,7 @@ class MentorForm(forms.ModelForm):
         required=True,
         label=format_html(
             """I have read and agree to the <a href="{}">Privacy Policy</a> """,
-            "/mentorship/privacy",
+            "/mentorship/privacy/",
         ),
     )
 
@@ -68,6 +68,7 @@ class MentorForm(forms.ModelForm):
             "work_email": "Email to verify work/study status (NHS or University email).",
             "wp_scheme": "Useful for matching you with a mentee who is part of a WP scheme.",
             "applied_before": "Useful for matching you with a mentee who had a similar experience.",
+            "contact_consent": "The chat would be with other mentors for communication purposes.",
         }
 
 
@@ -140,16 +141,20 @@ class MenteeForm(forms.ModelForm):
         required=True,
         label=format_html(
             """I have read and agree to the <a href="{}">Privacy Policy</a> """,
-            "/mentorship/privacy",
+            "/mentorship/privacy/",
         ),
     )
 
     class Meta:
         model = models.MenteeProfile
-        exclude = ["date_joined", "assigned_mentor", "accepted"]
+        exclude = ["date_joined", "mentor", "accepted"]
         labels = {
             **LABELS,
             "year_applied": "What is your current education level?",
+        }
+        help_texts = {
+            "work_email": "Email to verify study status (School or University email).",
+            "contact_consent": "The chat would be with other mentees for communication purposes.",
         }
 
 

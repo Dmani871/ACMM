@@ -118,6 +118,9 @@ class CommonProfileInfo(models.Model):
             args=(self.id,),
         )
 
+    def name(self):
+        return f"{str(self.first_name).capitalize()} {str(self.last_name).capitalize()}"
+
     class Meta:
         abstract = True
 

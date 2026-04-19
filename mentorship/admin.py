@@ -1,4 +1,5 @@
 import csv
+import os
 
 from django.conf import settings
 from django.contrib import admin
@@ -309,10 +310,16 @@ class MenteeAdmin(admin.ModelAdmin):
                     reply_to=[settings.DEFAULT_EMAIL_REPLY_TO],
                 )
                 mentor_email.attach_file(
-                    "static/mentorship/docs/Code of Conduct for Volunteers.pdf"
+                    os.path.join(
+                        settings.STATIC_ROOT,
+                        "mentorship/docs/Code of Conduct for Volunteers.pdf",
+                    )
                 )
                 mentor_email.attach_file(
-                    "static/mentorship/docs/Medicine Mentor Guide 2021.docx.pdf"
+                    os.path.join(
+                        settings.STATIC_ROOT,
+                        "mentorship/docs/Medicine Mentor Guide 2021.docx.pdf",
+                    )
                 )
                 emails.append(mentor_email)
                 emails.append(mentee_email)
@@ -330,6 +337,16 @@ class MenteeAdmin(admin.ModelAdmin):
         column_names = [
             "mentee.id",
             "mentor.id",
+            "mentee.personal_email",
+            "mentor.personal_email",
+            "mentee.work_email",
+            "mentor.work_email",
+            "mentee.name",
+            "mentor.name",
+            "mentee.first_name",
+            "mentor.first_name",
+            "mentee.last_name",
+            "mentor.last_name",
             "mentee.course",
             "mentor.occupation",
             "mentee.year_applied",
@@ -351,6 +368,16 @@ class MenteeAdmin(admin.ModelAdmin):
                 row_contents = [
                     mentee.id,
                     mentor.id,
+                    mentee.personal_email,
+                    mentor.personal_email,
+                    mentee.work_email,
+                    mentor.work_email,
+                    mentee.name(),
+                    mentor.name(),
+                    mentee.first_name,
+                    mentor.first_name,
+                    mentee.last_name,
+                    mentor.last_name,
                     mentee.course,
                     mentor.occupation[0],
                     mentee.year_applied,
