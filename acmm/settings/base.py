@@ -170,16 +170,6 @@ AXES_ENABLE_ACCESS_FAILURE_LOG = True
 # OTP Settings
 OTP_TOTP_ISSUER = "African Caribbean Medical Mentors"
 
-# Email settings
-EMAIL_BACKEND = env(
-    "EMAIL_BACKEND", default="django.core.mail.backends.smtp.EmailBackend"
-)
-EMAIL_HOST = env("EMAIL_HOST")
-EMAIL_PORT = env.int("EMAIL_PORT", default=587)
-EMAIL_HOST_USER = env("EMAIL_HOST_USER")
-EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
-EMAIL_USE_TLS = env.bool("EMAIL_USE_TLS", default=True)
-DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL")
 
 # Match email settings
 EMAIL_MATCH_SUBJECT = env(
@@ -190,6 +180,52 @@ EMAIL_MATCH_BODY = env(
 )
 DEFAULT_MSG_CLOSING = env("DEFAULT_MSG_CLOSING", default="Best regards, ACMM Team")
 DEFAULT_EMAIL_REPLY_TO = env("DEFAULT_EMAIL_REPLY_TO")
+
+
+# CSP settings
+CONTENT_SECURITY_POLICY = {
+    "DIRECTIVES": {
+        # Default: only your domain
+        "default-src": [SELF],
+        # JS sources
+        "script-src": [
+            SELF,
+            "https://cdn.jsdelivr.net",
+            "https://stackpath.bootstrapcdn.com",
+        ],
+        # CSS sources
+        "style-src": [
+            SELF,
+            "https://cdn.jsdelivr.net",
+            "https://stackpath.bootstrapcdn.com",
+            "'unsafe-inline'",  # often needed for Bootstrap unless you remove inline styles
+        ],
+        # Images
+        "img-src": [
+            SELF,
+            "data:",  # for inline images (e.g. base64)
+        ],
+        # Fonts (Bootstrap / Google fonts etc.)
+        "font-src": [
+            SELF,
+            "https://fonts.gstatic.com",
+        ],
+        # API / AJAX calls
+        "connect-src": [
+            SELF,
+        ],
+        # Prevent clickjacking
+        "frame-ancestors": [SELF],
+        # Restrict form submissions
+        "form-action": [SELF],
+        # Block plugins (Flash etc.)
+        "object-src": ["'none'"],
+        # Optional but recommended
+        "base-uri": [SELF],
+        # Reporting endpoint
+        "report-uri": "/csp-report/",
+    }
+}
 
 
 ADMINS = [x.split(":") for x in env.list("DJANGO_ADMINS")]
