@@ -1,6 +1,5 @@
-from email.policy import default
-
 from django import forms
+from django.templatetags.static import static
 from django.utils.html import format_html
 
 from . import models
@@ -52,7 +51,7 @@ class MentorForm(forms.ModelForm):
         required=True,
         label=format_html(
             """I have read and agree to the <a href="{}">Privacy Policy</a> """,
-            "/mentorship/privacy/",
+            static("mentorship/docs/privacy_policy.pdf"),
         ),
     )
 
@@ -141,7 +140,7 @@ class MenteeForm(forms.ModelForm):
         required=True,
         label=format_html(
             """I have read and agree to the <a href="{}">Privacy Policy</a> """,
-            "/mentorship/privacy/",
+            static("mentorship/docs/privacy_policy.pdf"),
         ),
     )
 

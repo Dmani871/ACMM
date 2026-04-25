@@ -4,10 +4,10 @@ from .base import *
 Settings configuration for staging purposes.
 """
 # Ensures that no debug data is shown upon an error
-DEBUG = False
+DEBUG = True
 
 # Allowed hosts for staging
-ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "0.0.0.0"]
 
 # The database configuration for staging
 DATABASES = {

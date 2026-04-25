@@ -14,14 +14,10 @@ from .filters import MenteeListFilter, MentorListFilter
 from .forms import MenteeForm, MentorForm
 from .matching import (
     generate_matches,
-    validate_stable_matching,
     print_matching_statistics,
+    validate_stable_matching,
 )
-from .models import (
-    MenteeProfile,
-    MenteeQualification,
-    MentorProfile,
-)
+from .models import MenteeProfile, MenteeQualification, MentorProfile
 
 
 @admin.action(description="Export Selected Profiles")
@@ -279,58 +275,6 @@ class MenteeAdmin(admin.ModelAdmin):
         else:
             return False
 
-    def generate_matches_messages(self, mentees):
-        emails = []
-        subject = settings.EMAIL_MATCH_SUBJECT
-        for mentee in mentees:
-            if mentee.mentor is not None:
-                mentor = mentee.mentor
-                mentor_body = (
-                    settings.EMAIL_MATCH_BODY
-                    + f"\nYou have been matched with mentee : {mentee.first_name}  {mentee.last_name}"
-                    + settings.DEFAULT_MSG_CLOSING
-                )
-                mentee_body = (
-                    settings.EMAIL_MATCH_BODY
-                    + f"\nYou have been matched with mentor : {mentor.first_name}  {mentor.last_name}"
-                    + settings.DEFAULT_MSG_CLOSING
-                )
-                mentee_email = mail.EmailMessage(
-                    subject=subject,
-                    body=mentee_body,
-                    to=[mentee.work_email],
-                    cc=[mentee.personal_email],
-                    reply_to=[settings.DEFAULT_EMAIL_REPLY_TO],
-                )
-                mentor_email = mail.EmailMessage(
-                    subject=subject,
-                    body=mentor_body,
-                    to=[mentor.work_email],
-                    cc=[mentor.personal_email],
-                    reply_to=[settings.DEFAULT_EMAIL_REPLY_TO],
-                )
-                mentor_email.attach_file(
-                    os.path.join(
-                        settings.STATIC_ROOT,
-                        "mentorship/docs/Code of Conduct for Volunteers.pdf",
-                    )
-                )
-                mentor_email.attach_file(
-                    os.path.join(
-                        settings.STATIC_ROOT,
-                        "mentorship/docs/Medicine Mentor Guide 2021.docx.pdf",
-                    )
-                )
-                emails.append(mentor_email)
-                emails.append(mentee_email)
-        return emails
-
-    @admin.action(description="Email Match(es)")
-    def email_matches(self, request, queryset):
-        with mail.get_connection() as connection:
-            messages = self.generate_matches_messages(queryset)
-            connection.send_messages(messages)
-
     @admin.action(description="Export Matches Info")
     def export_matches_info(self, request, queryset):
         ct = ContentType.objects.get_for_model(queryset.model)
@@ -431,7 +375,7 @@ class MenteeAdmin(admin.ModelAdmin):
         save_matches(request, medicine_matches, ct)
         save_matches(request, dentistry_matches, ct)
 
-    actions = [export_as_csv, "assign_mentor", "export_matches_info", "email_matches"]
+    actions = [export_as_csv, "assign_mentor", "export_matches_info"]
 
 
 class LogEntryAdmin(admin.ModelAdmin):

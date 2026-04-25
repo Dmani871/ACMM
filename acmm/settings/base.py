@@ -10,10 +10,12 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
-from datetime import timedelta
 import os
-from .env_config import env, BASE_DIR
+from datetime import timedelta
+
 from csp.constants import NONE, SELF
+
+from .env_config import BASE_DIR, env
 
 DEBUG = env("DEBUG")
 
@@ -51,7 +53,7 @@ MIDDLEWARE = [
     "django.middleware.csrf.CsrfViewMiddleware",
     "csp.middleware.CSPMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
-    "django_otp.middleware.OTPMiddleware",  # ← Add this
+    "django_otp.middleware.OTPMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "axes.middleware.AxesMiddleware",
@@ -118,8 +120,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
-STATIC_URL = "/static/"
 STATIC_ROOT = "static"
+STATIC_URL = "/static/"
+STATICFILES_DIRS = []
 
 # CRISPY Settings
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
@@ -133,31 +136,6 @@ ADMIN_URL = env("ADMIN_URL")
 LOGIN_URL = "two_factor:login"
 LOGIN_REDIRECT_URL = "two_factor:profile"
 
-LOGS_DIR = os.path.join(BASE_DIR, "logs")
-os.makedirs(LOGS_DIR, exist_ok=True)
-
-LOGGING = {
-    "version": 1,  # the dictConfig format version
-    "disable_existing_loggers": False,  # retain the default loggers
-    # Define where logs go
-    "handlers": {
-        # Write matching logs to file
-        "matching_file": {
-            "level": "INFO",
-            "class": "logging.FileHandler",
-            "filename": os.path.join(LOGS_DIR, "matching.log"),
-        },
-    },
-    "loggers": {
-        # Matching algorithm logger
-        "mentorship.matching": {
-            "handlers": ["matching_file"],
-            "level": "DEBUG",
-            "propagate": False,
-        },
-    },
-}
-
 # AXES
 AXES_ENABLED = True
 AXES_FAILURE_LIMIT = 3
@@ -169,17 +147,6 @@ AXES_ENABLE_ACCESS_FAILURE_LOG = True
 
 # OTP Settings
 OTP_TOTP_ISSUER = "African Caribbean Medical Mentors"
-
-
-# Match email settings
-EMAIL_MATCH_SUBJECT = env(
-    "EMAIL_MATCH_SUBJECT", default="Mentor-Mentee Match Notification"
-)
-EMAIL_MATCH_BODY = env(
-    "EMAIL_MATCH_BODY", default="Congratulations! You have been matched."
-)
-DEFAULT_MSG_CLOSING = env("DEFAULT_MSG_CLOSING", default="Best regards, ACMM Team")
-DEFAULT_EMAIL_REPLY_TO = env("DEFAULT_EMAIL_REPLY_TO")
 
 
 # CSP settings
@@ -198,7 +165,6 @@ CONTENT_SECURITY_POLICY = {
             SELF,
             "https://cdn.jsdelivr.net",
             "https://stackpath.bootstrapcdn.com",
-            "'unsafe-inline'",  # often needed for Bootstrap unless you remove inline styles
         ],
         # Images
         "img-src": [

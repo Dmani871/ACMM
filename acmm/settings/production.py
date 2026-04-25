@@ -1,3 +1,5 @@
+from urllib.parse import urlparse
+
 from .base import *
 
 """
@@ -6,27 +8,25 @@ Settings configuration for production purposes.
 # Ensures that no debug data is shown upon an error
 DEBUG = False
 
-# Allowed hosts for production
-ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")
+APPENGINE_URL = env("APPENGINE_URL", default=None)
+if APPENGINE_URL:
+    # Ensure a scheme is present in the URL before it's processed.
+    if not urlparse(APPENGINE_URL).scheme:
+        APPENGINE_URL = f"https://{APPENGINE_URL}"
+
+    ALLOWED_HOSTS = [urlparse(APPENGINE_URL).hostname]
+    CSRF_TRUSTED_ORIGINS = [APPENGINE_URL]
+else:
+    raise Exception(
+        "APPENGINE_URL environment variable is not set. Please set it to the URL of your deployed application."
+    )
 
 # The database configuration for production
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "HOST": env.str("PROD_DB_HOST"),
-        "USER": env.str("PROD_DB_USER"),
-        "PASSWORD": env.str("PROD_DB_PASSWORD"),
-        "NAME": env.str("PROD_DB_NAME"),
-    }
-}
+DATABASES = {"default": env.db()}
 
 SECRET_KEY = env("PROD_SECRET_KEY")
 
 SALT_KEY = env("PROD_SALT_KEY")
-
-
-APPENGINE_URL = env("APPENGINE_URL", default=None)
-ALLOWED_HOSTS = [""]
 
 """
 SSL settings
@@ -43,7 +43,6 @@ CSRF_COOKIE_SECURE = True
 # Makes it difficult for cross-site scripting
 CSRF_COOKIE_HTTPONLY = True
 
-CSRF_TRUSTED_ORIGINS = [""]
 """
 XSS settings
 """
@@ -60,6 +59,7 @@ SECURE_HSTS_SECONDS = 31536000
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 # Prevents preload
 SECURE_HSTS_PRELOAD = True
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 """
 Session
 """
